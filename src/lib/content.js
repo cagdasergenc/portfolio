@@ -21,19 +21,36 @@ export function parseFrontmatter(raw) {
   return { data, body: raw.slice(match[0].length) }
 }
 
-/** Splits a body into its `## ` sections, preserving order. */
+/**
+ * Splits a body into its `## ` sections, preserving order. Fence-aware: a
+ * `## ` line inside a ``` or ~~~ fence (any length >= 3, either char) is
+ * code, not a heading boundary.
+ */
 export function splitSections(body) {
   const sections = []
-  const re = /^## +(.+)$/gm
-  let match
-  const starts = []
-  while ((match = re.exec(body)) !== null) {
-    starts.push({ heading: match[1].trim(), from: match.index + match[0].length })
+  let current = null
+  let fence = null // the opening fence marker (e.g. '```'), or null if outside one
+
+  for (const line of body.split(/\r?\n/)) {
+    const fenceMatch = /^ {0,3}(`{3,}|~{3,})/.exec(line)
+    if (fenceMatch) {
+      const marker = fenceMatch[1]
+      if (!fence) fence = marker
+      else if (marker[0] === fence[0] && marker.length >= fence.length) fence = null
+    }
+
+    const headingMatch = !fence && /^## +(.+)$/.exec(line)
+    if (headingMatch) {
+      if (current) sections.push({ heading: current.heading, markdown: current.lines.join('\n') })
+      current = { heading: headingMatch[1].trim(), lines: [] }
+      continue
+    }
+
+    // Lines before the first `##` heading (no `current` yet) are dropped —
+    // intentional: the fixed six-section case-study model has no "intro" slot.
+    if (current) current.lines.push(line)
   }
-  starts.forEach((s, i) => {
-    const to = i + 1 < starts.length ? body.lastIndexOf('\n## ', starts[i + 1].from) : body.length
-    sections.push({ heading: s.heading, markdown: body.slice(s.from, to) })
-  })
+  if (current) sections.push({ heading: current.heading, markdown: current.lines.join('\n') })
   return sections
 }
 

@@ -56,6 +56,37 @@ describe('splitSections', () => {
   it('returns an empty array for empty content', () => {
     expect(splitSections('')).toEqual([])
   })
+
+  it('does not split on a ## line inside a fenced code block', () => {
+    const withFence = [
+      '## Context',
+      'Some intro text.',
+      '',
+      '```',
+      '## not a real heading, just a shell comment',
+      'echo hi',
+      '```',
+      '',
+      'more text after the fence',
+      '',
+      '## Outcome',
+      'final section',
+    ].join('\n')
+    const s = splitSections(withFence)
+    expect(s.map((x) => x.heading)).toEqual(['Context', 'Outcome'])
+  })
+
+  it('treats a ~~~ fence the same as backticks', () => {
+    const s = splitSections('## Context\n~~~\n## still code\n~~~\nafter')
+    expect(s).toHaveLength(1)
+    expect(s[0].markdown).toContain('## still code')
+  })
+
+  it('treats an unclosed fence as open for the rest of the document', () => {
+    const s = splitSections('## Context\n```\n## Outcome\nstill inside')
+    expect(s).toHaveLength(1)
+    expect(s[0].heading).toBe('Context')
+  })
 })
 
 describe('renderMarkdown', () => {
@@ -83,5 +114,10 @@ describe('renderMarkdown', () => {
 
   it('still renders ordinary markdown', () => {
     expect(renderMarkdown('**bold**', assets)).toContain('<strong>bold</strong>')
+  })
+
+  it('escapes a double quote in alt text', () => {
+    const html = renderMarkdown('![Say "hi" to the team](cover.jpg)', assets)
+    expect(html).toContain('alt="Say &quot;hi&quot; to the team"')
   })
 })

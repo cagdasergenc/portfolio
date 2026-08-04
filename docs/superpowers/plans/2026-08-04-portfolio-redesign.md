@@ -308,6 +308,7 @@ Turns the sun values into visible light. After this task the page is warm lit pa
 
 **Files:**
 - Modify: `src/index.css`
+- Modify: `index.html`
 
 **Interfaces:**
 - Consumes: `--sun-x` / `--sun-y` from Task 2.
@@ -445,7 +446,25 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.
 }
 ```
 
-- [ ] **Step 2: Wire the hook into `src/main.jsx` and render a probe**
+- [ ] **Step 2: Delete the Google Fonts CDN links from `index.html`**
+
+`index.html` has carried these since the initial commit. They violate the self-hosted-fonts constraint and load three typefaces the new design does not use. Remove all three lines:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600&family=Inter:wght@400;700&family=Karla:wght@400;500&display=swap" rel="stylesheet" />
+```
+
+Then confirm nothing else in the repo references `fonts.googleapis.com` or `fonts.gstatic.com`:
+
+```bash
+grep -rn "fonts.googleapis\|fonts.gstatic" . --exclude-dir=node_modules --exclude-dir=.git
+```
+
+Expected: no matches.
+
+- [ ] **Step 3: Wire the hook into `src/main.jsx` and render a probe**
 
 ```jsx
 import { StrictMode } from 'react'
@@ -472,19 +491,19 @@ createRoot(document.getElementById('root')).render(
 )
 ```
 
-- [ ] **Step 3: Verify the light behaves**
+- [ ] **Step 4: Verify the light behaves**
 
 Run: `npm run dev`, open the page, scroll.
 Expected: the card's shadow swings from right to left and lengthens as you scroll. The background's bright spot tracks with it. Contrast between `--paper` and `--paper-lit` must be *barely* perceptible — if it reads as a visible gradient band, lower the `62%` stop or move `--paper-lit` closer to `--paper`.
 
 Then verify contrast: sample `--muted` (`#6B6459`) on `--paper` (`#F2EEE6`) in DevTools. Must be ≥ 4.5:1. If it fails, darken `--muted` until it passes and update the token in both this file and the spec.
 
-- [ ] **Step 4: Verify reduced motion**
+- [ ] **Step 5: Verify reduced motion**
 
 In DevTools → Rendering → emulate `prefers-reduced-motion: reduce`, reload, scroll.
 Expected: shadows are present and static. No movement.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
 git add src/index.css src/main.jsx

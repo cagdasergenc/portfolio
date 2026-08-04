@@ -945,7 +945,7 @@ export default function Contact() {
       </h2>
       <ul className="mt-12 flex flex-wrap gap-x-10 gap-y-4 text-lg">
         <li><a className="underline underline-offset-4 decoration-1" href="mailto:rhinocu96@gmail.com">rhinocu96@gmail.com</a></li>
-        <li><a className="underline underline-offset-4 decoration-1" href="https://www.linkedin.com/in/cagdasergenc" target="_blank" rel="noreferrer">LinkedIn</a></li>
+        <li><a className="underline underline-offset-4 decoration-1" href="https://www.linkedin.com/in/cagdas-ergenc" target="_blank" rel="noreferrer">LinkedIn</a></li>
         <li><a className="underline underline-offset-4 decoration-1" href={resume} download>Resume (PDF)</a></li>
       </ul>
     </section>
@@ -953,7 +953,7 @@ export default function Contact() {
 }
 ```
 
-Confirm the LinkedIn URL with the user before shipping; if it is wrong, remove the item rather than guessing.
+The LinkedIn slug is confirmed: `cagdas-ergenc`.
 
 - [ ] **Step 4: Create the three route files**
 
@@ -1480,7 +1480,13 @@ export default function About() {
     <section id="about" className="mx-auto max-w-[1400px] px-6 py-24 md:px-12">
       <p className="label">About</p>
       <div className="mt-4 grid gap-12 md:grid-cols-[1fr_1.2fr]">
-        <div className="shadow-sun-lg aspect-[4/5] bg-paper-lit" aria-hidden="true" />
+        <img
+          src={portrait}
+          alt="Çağdaş Ergenç, photographed against a warm wall in afternoon light"
+          className="shadow-sun-lg aspect-[4/5] w-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
         <div className="max-w-[52ch] space-y-6 text-lg">
           <p>PLACEHOLDER — user-supplied bio. Two or three short paragraphs: what you do, where you trained, what you are looking for. No personality statement.</p>
         </div>
@@ -1490,7 +1496,11 @@ export default function About() {
 }
 ```
 
-Once the user supplies a photo at `src/assets/about.jpg`, replace the placeholder div with an `img` carrying real alt text.
+With `import portrait from '../assets/about.jpg'` at the top.
+
+**Keep the photo in the left column.** It is lit from frame-right, and About sits far enough down the page that `--sun-x` has travelled right too — so on the left, the portrait's light falls into the page in the same direction as every shadow around it. Moving it to the right column puts its light source in direct contradiction with the rest of the page, which is exactly the incoherence the single-sun rule exists to prevent.
+
+If `src/assets/about.jpg` is not present yet, render the placeholder `<div className="shadow-sun-lg aspect-[4/5] bg-paper-lit" aria-hidden="true" />` instead and leave a note — do not ship a broken image import.
 
 - [ ] **Step 4: Create `src/components/Prose.jsx`**
 

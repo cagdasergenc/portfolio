@@ -36,6 +36,9 @@ the problem this redesign exists to fix. Visual ambition is secondary to it.
   They are MP4 files dropped into an index that will already exist; nothing
   built here blocks them.
 - Product Renderings section. Deleted. `src/assets/products/` is removed.
+- Yes Chef. `src/assets/logos/yes_chef_logo.png` is removed — it was
+  unreferenced and no case study exists for it. The site ships with two case
+  studies: Pocket Pediatrics and D&B DTF.
 - PPTX viewing. Still deferred from the previous build.
 
 ## 3. Architecture
@@ -315,6 +318,12 @@ not a preference.
 
 Applies to headings, body, labels, buttons, alt text, empty states, and meta
 description.
+
+**Enforcement:** every string that ships passes through the `humanizer` and
+`stop-slop` skills before it lands in a component. Not a final polish pass —
+copy is written through them, then re-checked against the banned list in this
+section as a build gate. Any copy that cannot survive that check is rewritten,
+not softened.
 
 ## 10. Accessibility and quality floor
 

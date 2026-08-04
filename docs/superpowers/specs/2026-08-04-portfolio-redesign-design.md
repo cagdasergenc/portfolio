@@ -62,7 +62,7 @@ Add:
 | `react-router-dom` | Real, shareable case-study URLs. |
 | `gsap` (+ ScrollTrigger, SplitText) | Scroll choreography and type reveals. Free since 3.13. |
 | `@react-three/drei` | Contact shadows, loaders, `Html` overlay. |
-| `gray-matter`, `marked` | Content pipeline (§8). |
+| `marked` | Markdown rendering (§8). |
 
 Net bundle is smaller than the current build despite adding 3D.
 
@@ -271,8 +271,14 @@ Markdown references images by bare filename (`01-research.jpg`). A custom
 `marked` renderer rewrites those to the hashed URL from the asset glob, scoped
 to the project's own folder. Authors never write paths.
 
-Frontmatter parsed with `gray-matter`. Vite 8 removed the `as:` glob option;
-use `query` + `import` as shown.
+Frontmatter is parsed by a local ~20-line parser, not `gray-matter`.
+`gray-matter` depends on Node's `Buffer` and needs a polyfill to run in a
+browser bundle. The frontmatter format here is deliberately flat — one
+`key: value` per line, no nesting, no lists — so a local parser is both
+smaller and fully under test. Values may contain colons; split on the first
+one only.
+
+Vite 8 removed the `as:` glob option; use `query` + `import` as shown.
 
 ### 8.1 Asset requirements
 

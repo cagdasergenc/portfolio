@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { sunFromScroll } from './sun'
+import { sunFromScroll, sunFromPointer, blendSun } from './sun'
 
 describe('sunFromScroll', () => {
   it('starts the sun on the left at the top of the page', () => {
@@ -39,5 +39,61 @@ describe('sunFromScroll', () => {
     expect(Number.isFinite(x)).toBe(true)
     expect(Number.isFinite(y)).toBe(true)
     expect(progress).toBe(0)
+  })
+})
+
+describe('sunFromPointer', () => {
+  it('puts the light on the left when the cursor is on the left', () => {
+    expect(sunFromPointer(0, 500, 1000, 1000).x).toBe(-1)
+  })
+
+  it('puts the light on the right when the cursor is on the right', () => {
+    expect(sunFromPointer(1000, 500, 1000, 1000).x).toBe(1)
+  })
+
+  it('puts the light overhead when the cursor is at the top', () => {
+    expect(sunFromPointer(500, 0, 1000, 1000).y).toBe(1)
+  })
+
+  it('rakes the light low when the cursor is at the bottom', () => {
+    expect(sunFromPointer(500, 1000, 1000, 1000).y).toBeCloseTo(0.55)
+  })
+
+  it('clamps a pointer dragged outside the viewport', () => {
+    expect(sunFromPointer(-400, -400, 1000, 1000).x).toBe(-1)
+    expect(sunFromPointer(9999, 9999, 1000, 1000).x).toBe(1)
+    expect(sunFromPointer(9999, 9999, 1000, 1000).y).toBeCloseTo(0.55)
+  })
+
+  it('does not divide by zero on a zero-sized viewport', () => {
+    const { x, y } = sunFromPointer(10, 10, 0, 0)
+    expect(Number.isFinite(x)).toBe(true)
+    expect(Number.isFinite(y)).toBe(true)
+  })
+})
+
+describe('blendSun', () => {
+  const scroll = { x: -1, y: 1 }
+
+  it('returns the scroll arc untouched when there is no pointer', () => {
+    expect(blendSun(scroll, null)).toEqual({ x: -1, y: 1 })
+  })
+
+  it('lets the pointer lead at the default weight', () => {
+    // pointer hard right, scroll hard left: 0.7 pointer weight wins
+    expect(blendSun(scroll, { x: 1, y: 1 }).x).toBeCloseTo(0.4)
+  })
+
+  it('honours a custom weight', () => {
+    expect(blendSun(scroll, { x: 1, y: 1 }, 0).x).toBe(-1)
+    expect(blendSun(scroll, { x: 1, y: 1 }, 1).x).toBe(1)
+  })
+
+  it('keeps x within [-1, 1] and y within [0.55, 1]', () => {
+    const out = blendSun({ x: -5, y: 9 }, { x: 5, y: -9 })
+    expect(out.x).toBeGreaterThanOrEqual(-1)
+    expect(out.x).toBeLessThanOrEqual(1)
+    expect(out.y).toBeGreaterThanOrEqual(0.55)
+    expect(out.y).toBeLessThanOrEqual(1)
   })
 })

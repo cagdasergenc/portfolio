@@ -129,8 +129,25 @@ Rules:
 
 ### 4.1 The single light source
 
-`--sun-x` and `--sun-y` are CSS custom properties on `:root`, updated once per
-scroll frame via `requestAnimationFrame`.
+`--sun-x` and `--sun-y` are CSS custom properties on `:root`, updated at most
+once per animation frame via `requestAnimationFrame`.
+
+**The pointer leads; scroll provides the arc underneath it** (70/30). This was
+a correction made during implementation, not the original design. Scroll alone
+was built first and failed in practice: the sun crosses the whole document, so
+over a 780px scroll the shadow moved about 5px per 100px scrolled and the
+effect read as nothing happening at all. The pointer supplies the immediate,
+legible response — move the mouse, the light moves — which is what makes the
+surface read as *lit* rather than as a flat background with a gradient on it.
+Scroll still carries the slow arc, so the page still gets longer, lower
+shadows toward the bottom.
+
+Shadow magnitudes were raised for the same reason: `--shadow-x` spans ±38px
+and `--shadow-y` runs 10→50px, roughly 2.5× the original values. Raking light
+across paper throws long shadows; timid ones read as a default CSS card.
+
+With no pointer (touch, or before the first move) the scroll arc is used
+unchanged, so the effect degrades cleanly rather than disappearing.
 
 Every shadow derives from them: CSS box-shadows on cards, drop shadows under
 type, and the `directionalLight` position in the Three.js scene.

@@ -1,16 +1,135 @@
 @import "tailwindcss";
 
-*, *::before, *::after {
-  box-sizing: border-box;
+@import "@fontsource/instrument-serif/400.css";
+@import "@fontsource/instrument-serif/400-italic.css";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+/* Registered so they interpolate and so calc() can rely on <number>. */
+@property --sun-x { syntax: '<number>'; inherits: true; initial-value: -0.35; }
+@property --sun-y { syntax: '<number>'; inherits: true; initial-value: 0.92; }
+
+@theme {
+  --color-paper:     #F2EEE6;
+  --color-paper-lit: #FAF7F0;
+  --color-ink:       #17150F;
+  --color-muted:     #6B6459;
+  --color-accent:    #B54B2B;
+  --color-dark:      #12100C;
+
+  --font-display: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-sans:    "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    "Geist Mono Variable", ui-monospace, monospace;
 }
 
-html, body {
-  margin: 0;
-  background: transparent;
+:root {
+  /* Shadows fall opposite the sun, and lengthen as it sinks.
+     These magnitudes are deliberately large: the sun crosses the page over
+     the full scroll distance, so a small offset range changes by only a few
+     pixels per screenful and reads as nothing moving at all. Raking light
+     across paper throws long shadows — that is the effect, and it is what
+     carries the visual weight colour normally would. */
+  --shadow-x:    calc(var(--sun-x) * -38px);
+  --shadow-y:    calc((1 - var(--sun-y)) * 84px + 10px);
+  --shadow-blur: calc((1 - var(--sun-y)) * 64px + 22px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#root {
-  width: 100%;
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+@media (min-width: 768px) { body { font-size: 18px; } }
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.02; }
+
+/* The lit ground and the paper fibre share one fixed layer BEHIND the
+   content. Fixed rather than scrolling, because the sun is already
+   scroll-driven — the light moves without the layer having to. Keeping
+   both out of the content's stacking context is what stops the grain
+   painting over text: an absolutely-positioned ::after paints above all
+   in-flow siblings whatever its z-index, and multiply-blended noise over
+   every glyph wrecks the type. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* Held to a narrow luminance range on purpose: this must read as
+     "the paper is lit", never as "there is a gradient here". */
+  background:
+    radial-gradient(
+      120% 90% at calc(50% + var(--sun-x) * 42%) calc(6% + (1 - var(--sun-y)) * 30%),
+      var(--color-paper-lit) 0%,
+      var(--color-paper) 62%
+    );
+}
+
+/* Paper fibre. Without a surface for light to land on, light-key
+   volumetrics read as a dirty screen rather than as lit paper. */
+.backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* 0.32 over a rect already at 0.5 came out at ~0.16 effective and was
+     invisible. The fibre has to be legible up close without reading as a
+     dirty screen from a normal viewing distance. */
+  opacity: 0.85;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.55'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.shadow-sun {
+  box-shadow: var(--shadow-x) var(--shadow-y) var(--shadow-blur) rgb(23 21 15 / 0.14);
+}
+
+.shadow-sun-lg {
+  box-shadow:
+    calc(var(--shadow-x) * 1.6) calc(var(--shadow-y) * 1.6) calc(var(--shadow-blur) * 1.5) rgb(23 21 15 / 0.18),
+    var(--shadow-x) var(--shadow-y) var(--shadow-blur) rgb(23 21 15 / 0.10);
+}
+
+/* The 12-column grid. Content sits on a 6-column editorial rhythm,
+   deliberately off-centre rather than symmetrically boxed. */
+.shell { margin-inline: auto; max-width: 1400px; padding-inline: 1.5rem; }
+@media (min-width: 768px) { .shell { padding-inline: 3rem; } }
+
+.grid12 { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 2rem; }
+.col-read { grid-column: 1 / -1; }
+@media (min-width: 900px) { .col-read { grid-column: 3 / 10; } }
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,22 +1,36 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import './index.css'
 import { useSun } from './hooks/useSun'
+import Nav from './components/Nav'
+import Home from './routes/Home'
+import CaseStudy from './routes/CaseStudy'
+import NotFound from './routes/NotFound'
 
-function Probe() {
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => { window.scrollTo(0, 0) }, [pathname])
+  return null
+}
+
+function App() {
   useSun()
   return (
-    <>
+    <div className="min-h-screen">
       <div className="backdrop" aria-hidden="true" />
-      <main className="min-h-[300vh] p-16">
-        <p className="label">Sun probe</p>
-        <h1 className="text-[12vw]">Lit paper</h1>
-        <div className="shadow-sun-lg mt-16 h-64 w-80 bg-paper-lit" />
-      </main>
-    </>
+      <ScrollToTop />
+      <Nav />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/work/:slug" element={<CaseStudy />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
   )
 }
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode><Probe /></StrictMode>,
+  <StrictMode><BrowserRouter><App /></BrowserRouter></StrictMode>,
 )

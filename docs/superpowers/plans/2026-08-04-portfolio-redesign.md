@@ -311,7 +311,7 @@ Turns the sun values into visible light. After this task the page is warm lit pa
 
 **Interfaces:**
 - Consumes: `--sun-x` / `--sun-y` from Task 2.
-- Produces: CSS custom properties `--paper`, `--paper-lit`, `--ink`, `--muted`, `--accent`, `--dark`, `--shadow-x`, `--shadow-y`, `--shadow-blur`, and utility classes `.grain`, `.lit`, `.shadow-sun`, `.shadow-sun-lg`.
+- Produces: CSS custom properties `--paper`, `--paper-lit`, `--ink`, `--muted`, `--accent`, `--dark`, `--shadow-x`, `--shadow-y`, `--shadow-blur`, and utility classes `.backdrop` (lit ground + grain, fixed, behind content), `.shell`, `.grid12`, `.col-read`, `.label`, `.shadow-sun`, `.shadow-sun-lg`.
 
 - [ ] **Step 1: Replace `src/index.css`**
 
@@ -369,29 +369,37 @@ body {
 
 h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.02; }
 
-/* Paper fibre. Without a surface for light to land on, light-key
-   volumetrics read as a dirty screen rather than as lit paper. */
-.grain::after {
-  content: '';
-  position: absolute;
+/* The lit ground and the paper fibre share one fixed layer BEHIND the
+   content. Fixed rather than scrolling, because the sun is already
+   scroll-driven — the light moves without the layer having to. Keeping
+   both out of the content's stacking context is what stops the grain
+   painting over text: an absolutely-positioned ::after paints above all
+   in-flow siblings whatever its z-index, and multiply-blended noise over
+   every glyph wrecks the type. */
+.backdrop {
+  position: fixed;
   inset: 0;
+  z-index: -1;
   pointer-events: none;
-  z-index: 1;
-  opacity: 0.32;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-}
-
-/* The lit ground. Held to a narrow luminance range on purpose: this must
-   read as "the paper is lit", never as "there is a gradient here". */
-.lit {
-  position: relative;
+  /* Held to a narrow luminance range on purpose: this must read as
+     "the paper is lit", never as "there is a gradient here". */
   background:
     radial-gradient(
       120% 90% at calc(50% + var(--sun-x) * 42%) calc(6% + (1 - var(--sun-y)) * 30%),
       var(--color-paper-lit) 0%,
       var(--color-paper) 62%
     );
+}
+
+/* Paper fibre. Without a surface for light to land on, light-key
+   volumetrics read as a dirty screen rather than as lit paper. */
+.backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.32;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
 }
 
 .shadow-sun {
@@ -448,11 +456,14 @@ import { useSun } from './hooks/useSun'
 function Probe() {
   useSun()
   return (
-    <main className="lit grain min-h-[300vh] p-16">
-      <p className="label">Sun probe</p>
-      <h1 className="text-[12vw]">Lit paper</h1>
-      <div className="shadow-sun-lg mt-16 h-64 w-80 bg-paper-lit" />
-    </main>
+    <>
+      <div className="backdrop" aria-hidden="true" />
+      <main className="min-h-[300vh] p-16">
+        <p className="label">Sun probe</p>
+        <h1 className="text-[12vw]">Lit paper</h1>
+        <div className="shadow-sun-lg mt-16 h-64 w-80 bg-paper-lit" />
+      </main>
+    </>
   )
 }
 
@@ -1025,7 +1036,8 @@ function ScrollToTop() {
 function App() {
   useSun()
   return (
-    <div className="lit grain min-h-screen">
+    <div className="min-h-screen">
+      <div className="backdrop" aria-hidden="true" />
       <ScrollToTop />
       <Nav />
       <Routes>
@@ -1065,7 +1077,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Modify: `src/routes/Home.jsx`
 
 **Interfaces:**
-- Consumes: tokens and `.lit` / `.grain` from Task 3.
+- Consumes: tokens and `.backdrop` from Task 3 (already mounted in the app shell by Task 6 — the hero does not mount its own).
 - Produces: `<Hero />`, the LCP element. No WebGL, no blocking assets.
 
 - [ ] **Step 1: Create `src/components/Hero.jsx`**

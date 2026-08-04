@@ -25,7 +25,8 @@ Every task's requirements implicitly include this section. Values are copied ver
   - Copy is written *through* the `humanizer` and `stop-slop` skills, then re-checked against the banned list as a gate.
 - **Accessibility:** WCAG AA (4.5:1) on all text. Full keyboard nav. Visible focus rings, never removed. `prefers-reduced-motion` honoured by sun travel, GSAP, and WebGL. Real alt text. No horizontal scroll at any width.
 - **Performance:** the 3D canvas must never contribute to LCP. Target LCP < 2.5s.
-- **Two case studies ship:** Pocket Pediatrics, D&B DTF. No Yes Chef.
+- **Three case studies ship:** Pocket Pediatrics, EXE, and a sustainability report. **No D&B DTF case study** — the user has confirmed it was fabricated and it must not appear as a case study anywhere. The `dabdtf.com` shop stays in the E-commerce band as real client work.
+- **Contact email is `cagdasergencc@gmail.com`.** Not the address on the Claude account.
 - **Commit after every task.** Co-author trailer: `Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>`
 
 ---
@@ -751,10 +752,13 @@ Ships the authoring contract so content can be written in parallel with the rest
 
 **Files:**
 - Create: `content/pocket-pediatrics/index.md`
-- Create: `content/dnb-dtf/index.md`
+- Create: `content/exe/index.md`
+- Create: `content/sustainability-report/index.md`
 - Create: `content/README.md`
 - Move: `public/files/pocket_pediatrics.pdf` → `content/pocket-pediatrics/case-study.pdf`
-- Move: `public/files/DAB_DTF_UX_Case_Study.pdf` → `content/dnb-dtf/case-study.pdf`
+- Delete: `public/files/DAB_DTF_UX_Case_Study.pdf`
+
+**The D&B DTF case study is deleted, not moved.** The user has confirmed it was fabricated. It must not appear as a case study anywhere on the site. The `dabdtf.com` shop remains in the E-commerce band (Task 10) as real client work — that is a different thing and it stays.
 
 **Interfaces:**
 - Consumes: the frontmatter keys and six section headings that `getProjects()` (Task 4) reads.
@@ -763,9 +767,9 @@ Ships the authoring contract so content can be written in parallel with the rest
 - [ ] **Step 1: Move the PDFs into their project folders**
 
 ```bash
-mkdir -p content/pocket-pediatrics content/dnb-dtf
+mkdir -p content/pocket-pediatrics content/exe content/sustainability-report
 git mv public/files/pocket_pediatrics.pdf content/pocket-pediatrics/case-study.pdf
-git mv public/files/DAB_DTF_UX_Case_Study.pdf content/dnb-dtf/case-study.pdf
+git rm public/files/DAB_DTF_UX_Case_Study.pdf
 rmdir public/files 2>/dev/null || true
 ```
 
@@ -774,13 +778,15 @@ rmdir public/files 2>/dev/null || true
 ```markdown
 ---
 title: Pocket Pediatrics
-tagline: WRITE ONE SHARP LINE, MAX 12 WORDS
+tagline: Voice-first AI care coordination, because typing while your child is ill is the wrong interaction model
 role: UX Research, Product Design
-context: IED Barcelona
+context: IED Barcelona with Fujitsu
 year: 2025
 duration: FILL IN
 team: 4 designers
-tools: Figma, Miro
+tools: Figma, React Native, Expo, Supabase, GPT-4o-mini, Whisper
+live_url: https://pocpedv2.netlify.app
+live_hint: log in as oscar
 featured: true
 order: 1
 ---
@@ -810,17 +816,19 @@ The result, a number, or an honest learning. "We never tested it with
 children" is a stronger ending than a fabricated metric.
 ```
 
-- [ ] **Step 3: Create `content/dnb-dtf/index.md`**
+- [ ] **Step 3: Create `content/exe/index.md` and `content/sustainability-report/index.md`**
 
-Same six headings and the same inline prompts, with this frontmatter:
+Both get the same six headings and the same inline prompts as Step 2. Only the frontmatter differs. Neither has a `live_url`.
+
+`content/exe/index.md`:
 
 ```markdown
 ---
-title: D&B DTF
+title: EXE
 tagline: WRITE ONE SHARP LINE, MAX 12 WORDS
-role: UX Design, UI
-context: FILL IN
-year: FILL IN
+role: Concept, Interaction Design
+context: IED Barcelona, MA brief
+year: 2026
 duration: FILL IN
 team: FILL IN
 tools: Figma
@@ -828,6 +836,25 @@ featured: true
 order: 2
 ---
 ```
+
+`content/sustainability-report/index.md`:
+
+```markdown
+---
+title: FILL IN
+tagline: WRITE ONE SHARP LINE, MAX 12 WORDS
+role: FILL IN
+context: FILL IN
+year: FILL IN
+duration: FILL IN
+team: FILL IN
+tools: FILL IN
+featured: false
+order: 3
+---
+```
+
+The user supplies this project's material later. Leave `title` as `FILL IN` — do not invent a name for it.
 
 - [ ] **Step 4: Create `content/README.md`**
 
@@ -847,6 +874,10 @@ One folder per project. The folder name is the URL slug:
 
 - Frontmatter is flat `key: value`. No nesting, no lists. Values may
   contain colons.
+- `live_url` is optional. Add it when the project is deployed somewhere
+  people can use it, and the case study will lead with "Open the app"
+  instead of the PDF download. Pair it with `live_hint` for any login or
+  access note (for example `log in as oscar`).
 - The six `##` headings are fixed and required, in this order: Context,
   Problem, Research, Insight, Solution, Outcome. One layout serves every
   project because of this.
@@ -874,7 +905,7 @@ Write what happened. Numbers and names beat adjectives.
 - [ ] **Step 5: Verify the pipeline sees both projects**
 
 Add a temporary probe to `src/main.jsx`: `import { getProjects } from './lib/content'` then `console.log(getProjects())`. Run `npm run dev` and check the console.
-Expected: an array of two objects, `pocket-pediatrics` first (order 1), each with six `sections` and a `pdf` URL. Remove the probe afterwards.
+Expected: an array of three objects ordered `pocket-pediatrics`, `exe`, `sustainability-report`, each with six `sections`. Only `pocket-pediatrics` has a `pdf` URL and a `live_url`. Remove the probe afterwards.
 
 - [ ] **Step 6: Commit**
 
@@ -970,11 +1001,11 @@ export default function Contact() {
   return (
     <section id="contact" className="mx-auto max-w-[1400px] px-6 py-32 md:px-12">
       <p className="label">Contact</p>
-      <h2 className="mt-4 max-w-[14ch] text-[clamp(2.5rem,7vw,5.5rem)]">
-        Open to product design roles.
+      <h2 className="mt-4 max-w-[16ch] text-[clamp(2.5rem,7vw,5.5rem)]">
+        Barcelona. Available now, remote across the EU.
       </h2>
       <ul className="mt-12 flex flex-wrap gap-x-10 gap-y-4 text-lg">
-        <li><a className="underline underline-offset-4 decoration-1" href="mailto:rhinocu96@gmail.com">rhinocu96@gmail.com</a></li>
+        <li><a className="underline underline-offset-4 decoration-1" href="mailto:cagdasergencc@gmail.com">cagdasergencc@gmail.com</a></li>
         <li><a className="underline underline-offset-4 decoration-1" href="https://www.linkedin.com/in/cagdas-ergenc" target="_blank" rel="noreferrer">LinkedIn</a></li>
         <li><a className="underline underline-offset-4 decoration-1" href={resume} download>Resume (PDF)</a></li>
       </ul>
@@ -1107,20 +1138,20 @@ The positioning line states what the work is. It does not describe a personality
 export default function Hero() {
   return (
     <section className="relative mx-auto flex min-h-[92vh] max-w-[1400px] flex-col justify-end px-6 pb-24 pt-40 md:px-12">
-      <p className="label">Çağdaş Ergenç — UX and Product Design</p>
-      <h1 className="mt-6 max-w-[16ch] text-[clamp(3rem,11vw,10rem)] tracking-[-0.02em]">
-        Design for healthcare, and the shops that pay for it.
+      <p className="label">Çağdaş Ergenç — Product and UX Design</p>
+      <h1 className="mt-6 max-w-[19ch] text-[clamp(2.6rem,9.5vw,9rem)] tracking-[-0.02em]">
+        I work from research through to something people can actually click.
       </h1>
-      <p className="mt-10 max-w-[46ch] text-lg text-muted">
-        Two case studies below, written out in full. The PDFs are there if
-        you want them, but you should not need one.
+      <p className="mt-10 max-w-[48ch] text-lg text-muted">
+        Five years across industrial, digital, and AI-assisted design.
+        Turkey, Poland, Germany, now Barcelona.
       </p>
     </section>
   )
 }
 ```
 
-The h1 is a first draft. Task 11 runs it through the copy gate; do not treat it as final.
+The h1 is the user's own line, taken from their CV and confirmed. It is not a draft — do not "improve" it. It is the site's positioning statement and it has already passed the copy gate.
 
 - [ ] **Step 2: Add it to `src/routes/Home.jsx`**
 
@@ -1194,7 +1225,12 @@ export default function WorkGrid({ projects }) {
               )}
             </div>
             <div className="mt-5 flex items-baseline justify-between gap-4">
-              <h3 className="text-3xl">{p.title}</h3>
+              <h3 className="text-3xl">
+                {p.title}
+                {p.live_url && (
+                  <span className="label ml-3 align-middle text-accent">Live</span>
+                )}
+              </h3>
               <span className="label shrink-0">{p.year}</span>
             </div>
             <p className="mt-1 text-muted">{p.tagline}</p>
@@ -1519,7 +1555,9 @@ export default function About() {
           decoding="async"
         />
         <div className="max-w-[52ch] space-y-6 text-lg">
-          <p>PLACEHOLDER — user-supplied bio. Two or three short paragraphs: what you do, where you trained, what you are looking for. No personality statement.</p>
+          <p>Five years of design across industrial, digital, and AI-assisted work. Turkey, Poland, Germany, now Barcelona.</p>
+          <p>I work from research through to something people can actually click. Interviews and usability tests at one end; a functioning React Native build at the other, when static screens stop being enough. I read frontend and backend well enough to push back on engineers, and to explain what they built to people who weren&rsquo;t in the room.</p>
+          <p>Finishing an MA in Strategic Design Management at IED Barcelona, graduating December 2026. Based here, available now, open to remote across the EU.</p>
         </div>
       </div>
     </section>
@@ -1595,11 +1633,26 @@ export default function CaseStudy() {
             )
           })}
 
-          {project.pdf && (
-            <a href={project.pdf} download className="label inline-block border border-ink/20 px-6 py-4 transition-colors hover:bg-ink hover:text-paper">
-              Download the PDF
-            </a>
-          )}
+          <div className="flex flex-wrap items-center gap-4">
+            {project.live_url && (
+              <a
+                href={project.live_url}
+                target="_blank"
+                rel="noreferrer"
+                className="label inline-block bg-ink px-6 py-4 text-paper transition-opacity hover:opacity-80"
+              >
+                Open the app
+              </a>
+            )}
+            {project.pdf && (
+              <a href={project.pdf} download className="label inline-block border border-ink/20 px-6 py-4 transition-colors hover:bg-ink hover:text-paper">
+                Read the PDF
+              </a>
+            )}
+            {project.live_hint && (
+              <span className="label opacity-60">{project.live_hint}</span>
+            )}
+          </div>
         </div>
       </div>
 
@@ -1782,9 +1835,14 @@ Expected: no matches. Any match is rewritten, not softened.
 
 - [ ] **Step 3: Rewrite the collected copy through the skills**
 
-Invoke `anthropic-skills:humanizer` and `stop-slop` on the collected strings. Rewrite in place. Specific known offenders to fix:
-- The hero h1 from Task 7 is a first draft. Replace it with something the user confirms is true about the work.
-- The About placeholder needs the user's real bio.
+Invoke `anthropic-skills:humanizer` and `stop-slop` on the collected strings. Rewrite in place.
+
+**Do NOT rewrite these — they are the user's own words, already confirmed:**
+- The hero `h1` ("I work from research through to something people can actually click").
+- The three About paragraphs.
+- Any `tagline` or section copy inside `content/*/index.md`.
+
+Everything else — nav labels, button text, section headings, the 404, alt text, metadata — is yours to check and fix.
 
 - [ ] **Step 4: Write `index.html` head**
 
@@ -1883,4 +1941,6 @@ Recorded so they are not rediscovered as bugs:
 - **Sheet corner curl.** Task 9 ships flat sheets. Upgrade path is in the code comment.
 - **`pocket_pediatrics.pdf` is 33MB.** The user re-exports it under 8MB before ship. This is a blocker for launch, not for the build.
 - **Covers and in-page images.** Supplied by the user. Empty aspect-ratio boxes are the correct interim state.
-- **About bio and photo.** Supplied by the user.
+- **About photo.** The user must save it to `src/assets/about.jpg` (1600px wide, under 400KB). The bio itself is written and in the plan.
+- **The sustainability report.** Slug and folder exist; the user supplies title, copy, and assets.
+- **EXE content.** Folder exists; the user supplies copy and the slides as images.

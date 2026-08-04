@@ -37,8 +37,16 @@ the problem this redesign exists to fix. Visual ambition is secondary to it.
   built here blocks them.
 - Product Renderings section. Deleted. `src/assets/products/` is removed.
 - Yes Chef. `src/assets/logos/yes_chef_logo.png` is removed — it was
-  unreferenced and no case study exists for it. The site ships with two case
-  studies: Pocket Pediatrics and D&B DTF.
+  unreferenced and no case study exists for it.
+- **The D&B DTF case study.** The user has confirmed it was fabricated, so it
+  ships nowhere on the site and its PDF is deleted. The `dabdtf.com` shop is
+  real client work and stays in the E-commerce band.
+- The UNICEF project. Too early to show.
+
+The site ships **three** case studies: Pocket Pediatrics, EXE, and a
+sustainability report. Pocket Pediatrics is a deployed app
+(`pocpedv2.netlify.app`, log in as `oscar`); its case study leads with "Open
+the app" and offers the PDF second.
 - PPTX viewing. Still deferred from the previous build.
 
 ## 3. Architecture

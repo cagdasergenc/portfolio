@@ -29,7 +29,7 @@ than the screens.
 
 ## Solution
 What you made, and why those decisions and not the obvious ones. Reference
-images by bare filename: ![Triage flow, second round](01-triage.jpg)
+images by bare filename: ![Agent handoff, second pass](01-handoff.jpg)
 
 ## Outcome
 The result, a number, or an honest learning. "We never tested it with

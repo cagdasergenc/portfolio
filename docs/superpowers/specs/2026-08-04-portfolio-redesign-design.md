@@ -42,12 +42,12 @@ the problem this redesign exists to fix. Visual ambition is secondary to it.
   ships nowhere on the site and its PDF is deleted. The `dabdtf.com` shop is
   real client work and stays in the E-commerce band.
 - The UNICEF project. Too early to show.
+- PPTX viewing. Still deferred from the previous build.
 
 The site ships **three** case studies: Pocket Pediatrics, EXE, and a
 sustainability report. Pocket Pediatrics is a deployed app
 (`pocpedv2.netlify.app`, log in as `oscar`); its case study leads with "Open
 the app" and offers the PDF second.
-- PPTX viewing. Still deferred from the previous build.
 
 ## 3. Architecture
 
@@ -153,11 +153,24 @@ its own copy, so the two can never drift.
 | `--paper-lit` | `#FAF7F0` | Where light falls |
 | `--ink` | `#17150F` | Primary text |
 | `--muted` | `#6B6459` | Secondary text, metadata |
-| `--accent` | `#C1502E` | One signal colour, used sparingly |
+| `--accent` | `#B54B2B` | One signal colour, used sparingly |
 | `--dark` | `#12100C` | Punctuation sections |
 
-All text pairs must clear WCAG AA (4.5:1). `--muted` on `--paper` must be
-verified, not assumed.
+All text pairs must clear WCAG AA (4.5:1). Verified numerically:
+
+| Pair | Ratio |
+| --- | --- |
+| `--ink` on `--paper` | 15.77:1 |
+| `--muted` on `--paper` | 5.05:1 |
+| `--accent` on `--paper` | 4.53:1 |
+| `--paper` on `--dark` | 16.42:1 |
+
+`--accent` reaches only **3.62:1 on `--dark`**. That clears the 3:1 bar for
+non-text UI (a focus ring on a dark section is fine) but fails as text.
+**Never use `--accent` for text on a dark background.** If a later surface
+needs that, add a separate lighter `--accent-on-dark` token rather than
+weakening this one — a single mid-tone terracotta cannot clear 4.5:1 against
+both `#F2EEE6` and `#12100C`.
 
 ### 5.2 Type
 

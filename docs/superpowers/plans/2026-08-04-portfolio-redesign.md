@@ -12,7 +12,7 @@
 
 Every task's requirements implicitly include this section. Values are copied verbatim from `docs/superpowers/specs/2026-08-04-portfolio-redesign-design.md`.
 
-- **Colour tokens:** `--paper: #F2EEE6`, `--paper-lit: #FAF7F0`, `--ink: #17150F`, `--muted: #6B6459`, `--accent: #C1502E`, `--dark: #12100C`.
+- **Colour tokens:** `--paper: #F2EEE6`, `--paper-lit: #FAF7F0`, `--ink: #17150F`, `--muted: #6B6459`, `--accent: #B54B2B`, `--dark: #12100C`.
 - **Type:** Instrument Serif (display), Geist Sans (body/UI), Geist Mono (labels). Self-hosted woff2 only. **No Google Fonts CDN.**
 - **One light source.** No component may hardcode a shadow direction. Every shadow derives from `--sun-x` / `--sun-y`.
 - **Light-dominant.** ~85% paper. Dark (`--dark`) appears only at the work index set piece and at the Insight section of a case study.
@@ -23,6 +23,7 @@ Every task's requirements implicitly include this section. Values are copied ver
   - Banned labels: "SECTION 01", "OUR PROCESS", "QUESTION 05".
   - Banned CTAs: "Let's create something amazing together", "Get in touch to start your journey".
   - Copy is written *through* the `humanizer` and `stop-slop` skills, then re-checked against the banned list as a gate.
+- **`--accent` is never text on a dark background.** It is 4.53:1 on `--paper` (passes) but only 3.62:1 on `--dark` (fails as text, passes as a focus ring). If a dark surface needs an accent word, add an `--accent-on-dark` token — do not lighten this one.
 - **Accessibility:** WCAG AA (4.5:1) on all text. Full keyboard nav. Visible focus rings, never removed. `prefers-reduced-motion` honoured by sun travel, GSAP, and WebGL. Real alt text. No horizontal scroll at any width.
 - **Performance:** the 3D canvas must never contribute to LCP. Target LCP < 2.5s.
 - **Three case studies ship:** Pocket Pediatrics, EXE, and a sustainability report. **No D&B DTF case study** — the user has confirmed it was fabricated and it must not appear as a case study anywhere. The `dabdtf.com` shop stays in the E-commerce band as real client work.
@@ -334,7 +335,7 @@ Turns the sun values into visible light. After this task the page is warm lit pa
   --color-paper-lit: #FAF7F0;
   --color-ink:       #17150F;
   --color-muted:     #6B6459;
-  --color-accent:    #C1502E;
+  --color-accent:    #B54B2B;
   --color-dark:      #12100C;
 
   --font-display: "Instrument Serif", ui-serif, Georgia, serif;

@@ -11,11 +11,11 @@ export default function WorkGrid({ projects }) {
   return (
     <ul className="grid gap-x-8 gap-y-16 md:grid-cols-2">
       {projects.map((p) => (
-        <li key={p.slug}>
+        <li key={p.slug} data-reveal>
           <Link to={`/work/${p.slug}`} className="group block">
             {p.cover ? (
               <>
-                <div className="shadow-sun-lg overflow-hidden bg-paper-lit transition-transform duration-500 ease-out group-hover:-translate-y-1">
+                <div className="shadow-sun-lg overflow-hidden bg-paper-lit transition-transform duration-500 ease-out group-hover:-translate-y-1" data-reveal-mask>
                   <img
                     src={p.cover}
                     alt={`Cover of the ${p.title} case study`}

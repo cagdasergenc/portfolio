@@ -1,6 +1,7 @@
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, useRef } from 'react'
 import { getProjects } from '../lib/content'
 import { useLowFi } from '../hooks/useLowFi'
+import { useReveal } from '../hooks/useReveal'
 import WorkGrid from './WorkGrid'
 
 // Lazy, so three + drei (~890kB raw) land in their own chunk and are only
@@ -10,6 +11,8 @@ import WorkGrid from './WorkGrid'
 const WorkScene = lazy(() => import('../three/WorkScene'))
 
 export default function WorkIndex() {
+  const ref = useRef(null)
+  useReveal(ref)
   const projects = getProjects()
   const lowFi = useLowFi()
   // No `p.cover` exists until the site owner supplies content/<slug>/cover.jpg.
@@ -20,9 +23,9 @@ export default function WorkIndex() {
   const showScene = !lowFi && projects.some((p) => p.cover)
 
   return (
-    <section id="work" className="shell py-24 md:py-32">
-      <p className="label">Case studies</p>
-      <h2 className="mb-16 mt-4 text-[clamp(2rem,5vw,3.5rem)]">
+    <section ref={ref} id="work" className="shell py-24 md:py-32">
+      <p className="label" data-reveal>Case studies</p>
+      <h2 className="mb-16 mt-4 text-[clamp(2rem,5vw,3.5rem)]" data-reveal>
         {projects.length} projects, start to finish.
       </h2>
       {showScene ? (

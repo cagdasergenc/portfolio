@@ -1,3 +1,6 @@
+import { useRef } from 'react'
+import { useReveal } from '../hooks/useReveal'
+
 // src/assets/about.jpg does not exist yet — the site owner needs to supply a
 // portrait. import.meta.glob (rather than a static `import portrait from
 // '../assets/about.jpg'`) resolves to an empty object when no file matches,
@@ -7,9 +10,12 @@ const PORTRAIT_FILES = import.meta.glob('../assets/about.jpg', { eager: true, qu
 const portrait = PORTRAIT_FILES['../assets/about.jpg']
 
 export default function About() {
+  const ref = useRef(null)
+  useReveal(ref)
+
   return (
-    <section id="about" className="shell py-24">
-      <p className="label">About</p>
+    <section ref={ref} id="about" className="shell py-24">
+      <p className="label" data-reveal>About</p>
       <div className="mt-4 grid gap-12 md:grid-cols-[1fr_1.2fr]">
         {/* Photo stays in the left column: it's lit from frame-right, and by
             this point in the scroll --sun-x has travelled right too — so on
@@ -27,7 +33,7 @@ export default function About() {
           <div className="shadow-sun-lg aspect-[4/5] bg-paper-lit" aria-hidden="true" />
         )}
         <div className="max-w-[52ch] space-y-6 text-lg text-muted">
-          <p>
+          <p data-reveal>
             Bio placeholder — site owner to supply two or three short
             paragraphs: background and years of experience, how the work
             happens end to end, current status and availability. Replace

@@ -1,6 +1,8 @@
+import { useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getProject } from '../lib/content'
 import Prose from '../components/Prose'
+import { useReveal } from '../hooks/useReveal'
 import NotFound from './NotFound'
 
 const META = ['role', 'context', 'year', 'duration', 'team', 'tools']
@@ -8,13 +10,15 @@ const META = ['role', 'context', 'year', 'duration', 'team', 'tools']
 export default function CaseStudy() {
   const { slug } = useParams()
   const project = getProject(slug)
+  const ref = useRef(null)
+  useReveal(ref)
   if (!project) return <NotFound />
 
   return (
-    <article className="mx-auto max-w-[1400px] px-6 pb-32 pt-40 md:px-12">
-      <p className="label">Case study</p>
-      <h1 className="mt-4 max-w-[18ch] text-[clamp(2.5rem,8vw,7rem)] tracking-[-0.02em]">{project.title}</h1>
-      <p className="mt-6 max-w-[46ch] text-xl text-muted">{project.tagline}</p>
+    <article ref={ref} className="mx-auto max-w-[1400px] px-6 pb-32 pt-40 md:px-12">
+      <p className="label" data-reveal>Case study</p>
+      <h1 className="mt-4 max-w-[18ch] text-[clamp(2.5rem,8vw,7rem)] tracking-[-0.02em]" data-reveal>{project.title}</h1>
+      <p className="mt-6 max-w-[46ch] text-xl text-muted" data-reveal>{project.tagline}</p>
 
       {/* A deployed, working app is stronger evidence than a PDF, so it goes
           near the top, above the metadata rail — not buried at the bottom
@@ -54,7 +58,7 @@ export default function CaseStudy() {
                   ? 'my-16 -mx-6 bg-dark px-6 py-16 text-paper md:-mx-12 md:px-12'
                   : 'mb-16'}
               >
-                <h2 className={dark ? 'label mb-6 text-paper/60' : 'label mb-6'}>{s.heading}</h2>
+                <h2 className={dark ? 'label mb-6 text-paper/60' : 'label mb-6'} data-reveal>{s.heading}</h2>
                 <Prose html={s.html} />
               </section>
             )

@@ -60,7 +60,7 @@ export function renderMarkdown(markdown, assets) {
   renderer.image = ({ href, text }) => {
     const src = assets[href] ?? href
     const alt = (text ?? '').replace(/"/g, '&quot;')
-    return `<figure><img src="${src}" alt="${alt}" loading="lazy" decoding="async"></figure>`
+    return `<figure data-reveal-mask><img src="${src}" alt="${alt}" loading="lazy" decoding="async"></figure>`
   }
   return marked.parse(markdown, { renderer, async: false })
 }

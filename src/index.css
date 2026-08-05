@@ -125,6 +125,15 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.
   border-radius: 2px;
 }
 
+/* Pre-hide state for GSAP scroll reveals, gated behind the same query GSAP's
+   matchMedia checks. A reduced-motion or JS-failed visitor never has these
+   rules applied, so the content they hide is never the only copy — it's
+   always visible by default and only opts into hiding when motion runs. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] { opacity: 0; transform: translateY(18px); }
+  [data-reveal-mask] { clip-path: inset(0 0 100% 0); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {

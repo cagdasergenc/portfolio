@@ -1854,7 +1854,7 @@ Everything else — nav labels, button text, section headings, the 404, alt text
 
 ```html
 <title>Çağdaş Ergenç — UX and Product Design</title>
-<meta name="description" content="Two UX case studies, written out in full, plus the e-commerce sites I designed and built." />
+<meta name="description" content="Three UX case studies, written out in full, plus the e-commerce sites I designed and built." />
 ```
 
 Set `<html lang="en">`. Remove any leftover Vite boilerplate title or favicon reference to deleted assets.

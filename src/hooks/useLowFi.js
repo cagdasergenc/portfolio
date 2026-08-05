@@ -12,7 +12,9 @@ export function useLowFi() {
 
     const hasWebGL = () => {
       try {
-        return !!document.createElement('canvas').getContext('webgl2')
+        const ctx = document.createElement('canvas').getContext('webgl2')
+        ctx?.getExtension('WEBGL_lose_context')?.loseContext()
+        return !!ctx
       } catch {
         return false
       }

@@ -23,12 +23,23 @@ export default function App() {
     <div className="min-h-screen">
       <div className="backdrop" aria-hidden="true" />
       <ScrollToTop />
+      {/* Visible only on focus. The first Tab stop on every page, so a
+          keyboard or screen-reader visitor can skip the nav instead of
+          walking it on every route change. */}
+      <a
+        href="#content"
+        className="label sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-[100] focus:bg-paper-lit focus:px-4 focus:py-3 focus:text-ink focus:shadow-sun"
+      >
+        Skip to content
+      </a>
       <Nav />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/work/:slug" element={<CaseStudy />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <main id="content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/work/:slug" element={<CaseStudy />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
     </div>
   )
 }

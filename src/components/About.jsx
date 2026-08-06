@@ -15,7 +15,12 @@ export default function About() {
 
   return (
     <section ref={ref} id="about" className="shell py-24">
-      <p className="label" data-reveal>About</p>
+      {/* A heading, not a styled <p>: every other section has one and this
+          landmark needs one too. `.label` (class) beats the global h1,h2,h3
+          rule (element), so it stays visually identical to the other
+          eyebrows. When the owner supplies a bio, a display h2 can join it
+          — the pattern the other sections use. */}
+      <h2 className="label" data-reveal>About</h2>
       <div className="mt-4 grid gap-12 md:grid-cols-[1fr_1.2fr]">
         {/* Photo stays in the left column: it's lit from frame-right, and by
             this point in the scroll --sun-x has travelled right too — so on

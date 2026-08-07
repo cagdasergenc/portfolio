@@ -24,7 +24,16 @@ Values copied verbatim from `docs/superpowers/specs/2026-08-07-behind-glass-desi
 - **Accessibility:** WCAG AA, full keyboard nav, visible focus rings, `prefers-reduced-motion` honoured, real alt text, no horizontal scroll at any width.
 - **Performance:** canvas lazy, below fold, own chunk, never LCP. DPR clamped to 2.
 - **Commit after every task.** Trailer: `Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>`
-- **Sandbox limitation:** the browser pane runs backgrounded — `document.hidden = true`, zero rAF frames. Shaders will not paint, GSAP will not run, screenshots may be blank, and a Lighthouse run would be fiction. Verify by build output, `getComputedStyle`/`getBoundingClientRect` via `javascript_tool`, and computed values in scripts. Never report a number you did not legitimately obtain.
+- **Sandbox rAF is INTERMITTENT — measure it, do not assume it.** The browser pane is sometimes backgrounded (`document.hidden = true`, zero rAF frames: shaders never paint, GSAP never runs, screenshots come back blank) and sometimes foreground and fully animating. Both states have occurred in this project. Before concluding anything is broken or unverifiable, run:
+
+  ```js
+  // returns frames delivered in 500ms; 0 means backgrounded, ~60 means live
+  new Promise(r => { let n = 0; const t = performance.now();
+    const f = () => { n++; performance.now() - t < 500 ? requestAnimationFrame(f) : r({hidden: document.hidden, frames: n}); };
+    requestAnimationFrame(f); setTimeout(() => n === 0 && r({hidden: document.hidden, frames: 0}), 900); })
+  ```
+
+  If frames are flowing, **verify visually — you are expected to.** If they are not, fall back to build output, `getComputedStyle` / `getBoundingClientRect`, and computed values in scripts, and say explicitly in your report which checks were visual and which were static. Never report a number you did not legitimately obtain, and never claim to have watched something you did not.
 
 ---
 

@@ -17,7 +17,7 @@ export default function CaseStudy() {
   return (
     <article ref={ref} className="mx-auto max-w-[1400px] px-6 pb-32 pt-40 md:px-12">
       <p className="label" data-reveal>Case study</p>
-      <h1 className="mt-4 max-w-[18ch] text-[clamp(2.5rem,8vw,7rem)] tracking-[-0.02em]" data-reveal>{project.title}</h1>
+      <h1 className="mt-4 max-w-[18ch] text-display tracking-[-0.02em]" data-reveal>{project.title}</h1>
       <p className="mt-6 max-w-[46ch] text-xl text-muted" data-reveal>{project.tagline}</p>
 
       {/* A deployed, working app is stronger evidence than a PDF, so it goes

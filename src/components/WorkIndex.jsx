@@ -25,7 +25,7 @@ export default function WorkIndex() {
   return (
     <section ref={ref} id="work" className="shell py-24 md:py-32">
       <p className="label" data-reveal>Case studies</p>
-      <h2 className="mb-16 mt-4 text-[clamp(2rem,5vw,3.5rem)]" data-reveal>
+      <h2 className="mb-16 mt-4 text-title" data-reveal>
         {projects.length} projects, start to finish.
       </h2>
       {showScene ? (

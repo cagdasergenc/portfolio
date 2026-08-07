@@ -43,7 +43,7 @@ export default function WorkGrid({ projects }) {
                   <span className="label">{p.year}</span>
                 </div>
                 <div>
-                  <h3 className="text-[clamp(1.75rem,4vw,2.75rem)] leading-[1.05]">
+                  <h3 className="text-card leading-[1.05]">
                     {p.title}
                     {p.live_url && (
                       <span className="label ml-3 align-middle text-accent">Live</span>

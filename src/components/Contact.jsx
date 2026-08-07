@@ -9,7 +9,7 @@ export default function Contact() {
   return (
     <section ref={ref} id="contact" className="shell py-32">
       <p className="label" data-reveal>Contact</p>
-      <h2 className="mt-4 max-w-[16ch] text-[clamp(2.5rem,7vw,5.5rem)]" data-reveal>
+      <h2 className="mt-4 max-w-[16ch] text-display" data-reveal>
         Barcelona. Available now, remote across the EU.
       </h2>
       <ul className="mt-12 flex flex-wrap gap-x-10 gap-y-4 text-lg" data-reveal>

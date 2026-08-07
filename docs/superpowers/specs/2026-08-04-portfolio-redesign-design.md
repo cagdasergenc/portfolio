@@ -191,9 +191,27 @@ both `#F2EEE6` and `#12100C`.
 
 ### 5.2 Type
 
-- **Display:** Instrument Serif
+- **Display:** Quilon (self-hosted variable, 400–700, Fontshare Free Licence)
 - **Body / UI:** Geist Sans
 - **Labels / metadata:** Geist Mono
+
+Instrument Serif was the original choice and was replaced: it had become the
+default "tasteful free serif" and read as anonymous rather than chosen. Quilon
+is chunkier and more printed-feeling, which suits paper, and it carries a
+weight range so hierarchy runs on **weight as well as size** — h1/h2 at 700,
+card titles at 400.
+
+Type scale is defined by role, not by value, in `@theme`:
+
+| Token | Clamp | Used by |
+| --- | --- | --- |
+| `--text-hero` | `clamp(2.2rem, 8.5vw, 7.5rem)` | Home h1 |
+| `--text-display` | `clamp(2rem, 5.5vw, 4rem)` | Case-study h1, 404, Contact |
+| `--text-title` | `clamp(1.75rem, 4vw, 2.75rem)` | Section h2 |
+| `--text-card` | `clamp(1.35rem, 2.6vw, 1.85rem)` | Card titles |
+
+This replaced six one-off clamps, three of which started at the same `2.5rem`
+and differed only in their maximum — a collection of values, not a system.
 
 All three are free and self-hosted. No Google Fonts CDN — self-host as woff2
 with `font-display: swap` and preload the display face.

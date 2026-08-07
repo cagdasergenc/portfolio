@@ -1,9 +1,19 @@
 @import "tailwindcss";
 
-@import "@fontsource/instrument-serif/400.css";
-@import "@fontsource/instrument-serif/400-italic.css";
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/geist-mono";
+
+/* Quilon, self-hosted from Fontshare (licence in src/fonts/FFL.txt).
+   One variable file covers 400–700, which is smaller than the two static
+   weights it replaces. Replaced Instrument Serif: a fine face, but it had
+   become the default "tasteful free serif" and read as anonymous. */
+@font-face {
+  font-family: 'Quilon';
+  src: url('./fonts/Quilon-Variable.woff2') format('woff2-variations');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* Registered so they interpolate and so calc() can rely on <number>. */
 @property --sun-x { syntax: '<number>'; inherits: true; initial-value: -0.35; }
@@ -17,9 +27,17 @@
   --color-accent:    #B54B2B;
   --color-dark:      #12100C;
 
-  --font-display: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-display: "Quilon", ui-serif, Georgia, serif;
   --font-sans:    "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono:    "Geist Mono Variable", ui-monospace, monospace;
+
+  /* Type scale by ROLE, not by value. Previously six one-off clamps, three
+     of which started at 2.5rem and differed only in their max — a collection,
+     not a system. Each role now has one definition and one place to change. */
+  --text-hero:    clamp(2.2rem, 8.5vw, 7.5rem);
+  --text-display: clamp(2rem, 5.5vw, 4rem);
+  --text-title:   clamp(1.75rem, 4vw, 2.75rem);
+  --text-card:    clamp(1.35rem, 2.6vw, 1.85rem);
 }
 
 :root {
@@ -54,7 +72,13 @@ body {
 
 @media (min-width: 768px) { body { font-size: 18px; } }
 
-h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.02; }
+/* Weight carries hierarchy alongside size. Quilon is chunkier than the face
+   it replaced, so line-height opens slightly to stop bold display type
+   locking up. Card titles stay at 400 so they sit clearly below section
+   headings even when the size gap is small. */
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.05; }
+h1, h2 { font-weight: 700; }
+h3 { font-weight: 400; }
 
 /* The lit ground and the paper fibre share one fixed layer BEHIND the
    content. Fixed rather than scrolling, because the sun is already
@@ -113,6 +137,9 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.
 
 .label {
   font-family: var(--font-mono);
+  /* Explicit: About's eyebrow is an <h2> for landmark semantics, and would
+     otherwise inherit the 700 above. */
+  font-weight: 400;
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;

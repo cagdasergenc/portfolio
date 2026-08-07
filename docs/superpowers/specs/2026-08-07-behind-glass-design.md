@@ -97,7 +97,7 @@ the owner picks one. Neither merges to `main` until then.
 | Token | Value | Use |
 | --- | --- | --- |
 | `--void` | `#0A0A0C` | Ground. Near-black, faintly blue. |
-| `--glass` | `rgb(255 255 255 / 0.06)` | Panel fill |
+| `--glass` | `rgb(12 12 14 / 0.65)` | Panel fill — **smoked, not frosted** (see §5.2) |
 | `--edge` | `rgb(255 255 255 / 0.18)` | Lit rim — this is what sells the material |
 | `--text` | `#F4F4F6` | Primary |
 | `--text-dim` | `#9B9BA6` | Secondary, metadata |
@@ -114,7 +114,34 @@ background**, so no single contrast figure describes it. This is the nav
 `mix-blend-multiply` bug from Lit Paper at larger scale — there, ink over the
 dark Insight band measured 1.10:1 and nobody noticed until the final review.
 
-**Rule:** every glass surface carrying text must have an opacity floor that
+**Resolved by measurement.** The original white glass at 0.06 was tested with
+`minGlassAlpha` and returned **`null` for both text tokens**: white glass
+composited over a white cover is white at every alpha, so no opacity rescues
+light text. The fill is therefore **smoked** — `rgb(12 12 14 / 0.65)` — because
+a dark tint always darkens what sits behind it, so contrast holds over a
+blown-out cover and over the void alike.
+
+Measured at 0.65 against the worst case (a cover containing pure white):
+
+| Text token | On glass | Verdict |
+| --- | --- | --- |
+| `--text` | 5.63:1 | passes — titles may sit on glass |
+| `--text-dim` | 2.25:1 | fails — metadata must not |
+
+`--text-dim` would need alpha **0.90** to pass, at which point the surface
+stops being glass. So:
+
+> **Glass carries titles. The ground carries metadata.**
+
+Metadata sits on the void, where `--text-dim` measures 7.19:1. This is a rule,
+not a guideline — there is no combination where dim text on glass over a
+bright cover is legible while the glass still reads as glass.
+
+Smoked also serves the anti-cliché condition in §2.1: frosted white is the
+Apple/glassmorphism default. Smoked glass is a different, far less copied
+material.
+
+**General rule:** every glass surface carrying text must have an opacity floor that
 guarantees AA against the *worst-case* content behind it, computed against
 both the lightest and darkest pixel a cover can present. Where that floor
 would make the glass too opaque to read as glass, the text moves off the glass

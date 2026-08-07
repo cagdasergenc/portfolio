@@ -3,53 +3,34 @@
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/geist-mono";
 
-/* Quilon, self-hosted from Fontshare (licence in src/fonts/FFL.txt).
-   One variable file covers 400–700, which is smaller than the two static
-   weights it replaces. Replaced Instrument Serif: a fine face, but it had
-   become the default "tasteful free serif" and read as anonymous. */
 @font-face {
-  font-family: 'Quilon';
-  src: url('./fonts/Quilon-Variable.woff2') format('woff2-variations');
-  font-weight: 400 700;
+  font-family: 'Switzer';
+  src: url('./fonts/Switzer-Variable.woff2') format('woff2-variations');
+  font-weight: 400 800;
   font-style: normal;
   font-display: swap;
 }
 
-/* Registered so they interpolate and so calc() can rely on <number>. */
-@property --sun-x { syntax: '<number>'; inherits: true; initial-value: -0.35; }
-@property --sun-y { syntax: '<number>'; inherits: true; initial-value: 0.92; }
+@property --push-x     { syntax: '<number>'; inherits: true; initial-value: 0.5; }
+@property --push-y     { syntax: '<number>'; inherits: true; initial-value: 0.5; }
+@property --push-force { syntax: '<number>'; inherits: true; initial-value: 0; }
 
 @theme {
-  --color-paper:     #F2EEE6;
-  --color-paper-lit: #FAF7F0;
-  --color-ink:       #17150F;
-  --color-muted:     #6B6459;
-  --color-accent:    #B54B2B;
-  --color-dark:      #12100C;
+  --color-void:     #0A0A0C;
+  --color-text:     #F4F4F6;
+  --color-text-dim: #9B9BA6;
 
-  --font-display: "Quilon", ui-serif, Georgia, serif;
+  --font-display: "Switzer", ui-sans-serif, system-ui, sans-serif;
   --font-sans:    "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono:    "Geist Mono Variable", ui-monospace, monospace;
 
-  /* Type scale by ROLE, not by value. Previously six one-off clamps, three
-     of which started at 2.5rem and differed only in their max — a collection,
-     not a system. Each role now has one definition and one place to change. */
   --text-hero:    clamp(2.2rem, 8.5vw, 7.5rem);
   --text-display: clamp(2rem, 5.5vw, 4rem);
   --text-title:   clamp(1.75rem, 4vw, 2.75rem);
   --text-card:    clamp(1.35rem, 2.6vw, 1.85rem);
-}
 
-:root {
-  /* Shadows fall opposite the sun, and lengthen as it sinks.
-     These magnitudes are deliberately large: the sun crosses the page over
-     the full scroll distance, so a small offset range changes by only a few
-     pixels per screenful and reads as nothing moving at all. Raking light
-     across paper throws long shadows — that is the effect, and it is what
-     carries the visual weight colour normally would. */
-  --shadow-x:    calc(var(--sun-x) * -38px);
-  --shadow-y:    calc((1 - var(--sun-y)) * 84px + 10px);
-  --shadow-blur: calc((1 - var(--sun-y)) * 64px + 22px);
+  --radius-pill: 999px;
+  --radius-panel: 28px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -62,68 +43,28 @@ html {
 
 body {
   margin: 0;
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--color-void);
+  color: var(--color-text);
   font-family: var(--font-sans);
+  /* Light-on-dark compensation: the same metrics that read correctly on
+     paper read thin and grey inverted. */
   font-size: 17px;
-  line-height: 1.6;
+  line-height: 1.7;
+  letter-spacing: 0.006em;
   overflow-x: hidden;
 }
 
 @media (min-width: 768px) { body { font-size: 18px; } }
 
-/* Weight carries hierarchy alongside size. Quilon is chunkier than the face
-   it replaced, so line-height opens slightly to stop bold display type
-   locking up. Card titles stay at 400 so they sit clearly below section
-   headings even when the size gap is small. */
-h1, h2, h3 { font-family: var(--font-display); line-height: 1.05; }
-h1, h2 { font-weight: 700; }
-h3 { font-weight: 400; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.06; letter-spacing: -0.02em; }
+h1, h2 { font-weight: 800; }
+h3 { font-weight: 600; }
 
-/* The lit ground and the paper fibre share one fixed layer BEHIND the
-   content. Fixed rather than scrolling, because the sun is already
-   scroll-driven — the light moves without the layer having to. Keeping
-   both out of the content's stacking context is what stops the grain
-   painting over text: an absolutely-positioned ::after paints above all
-   in-flow siblings whatever its z-index, and multiply-blended noise over
-   every glyph wrecks the type. */
-.backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  /* Held to a narrow luminance range on purpose: this must read as
-     "the paper is lit", never as "there is a gradient here". */
-  background:
-    radial-gradient(
-      120% 90% at calc(50% + var(--sun-x) * 42%) calc(6% + (1 - var(--sun-y)) * 30%),
-      var(--color-paper-lit) 0%,
-      var(--color-paper) 62%
-    );
-}
-
-/* Paper fibre. Without a surface for light to land on, light-key
-   volumetrics read as a dirty screen rather than as lit paper. */
-.backdrop::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  /* 0.32 over a rect already at 0.5 came out at ~0.16 effective and was
-     invisible. The fibre has to be legible up close without reading as a
-     dirty screen from a normal viewing distance. */
-  opacity: 0.85;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.55'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-.shadow-sun {
-  box-shadow: var(--shadow-x) var(--shadow-y) var(--shadow-blur) rgb(23 21 15 / 0.14);
-}
-
-.shadow-sun-lg {
-  box-shadow:
-    calc(var(--shadow-x) * 1.6) calc(var(--shadow-y) * 1.6) calc(var(--shadow-blur) * 1.5) rgb(23 21 15 / 0.18),
-    var(--shadow-x) var(--shadow-y) var(--shadow-blur) rgb(23 21 15 / 0.10);
+.glass {
+  background: rgb(255 255 255 / 0.06);
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(12px);
 }
 
 /* The 12-column grid. Content sits on a 6-column editorial rhythm,
@@ -143,13 +84,13 @@ h3 { font-weight: 400; }
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--color-text-dim);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-text);
   outline-offset: 3px;
-  border-radius: 2px;
+  border-radius: var(--radius-pill);
 }
 
 /* Pre-hide state for GSAP scroll reveals, gated behind the same query GSAP's

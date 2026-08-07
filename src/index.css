@@ -24,7 +24,13 @@
   --font-sans:    "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono:    "Geist Mono Variable", ui-monospace, monospace;
 
-  --text-hero:    clamp(2.2rem, 8.5vw, 7.5rem);
+  /* Switzer is wider than Quilon at the same size. At 19ch (Lit Paper's
+     wrap width) this h1 refused to hold 3 lines at any font size — 70
+     characters at ~19ch/line is 4 lines by arithmetic, not a sizing
+     problem. Widened to 22ch in Hero.jsx and retuned here so the font
+     stays proportional to its own wrap box (Switzer's 1ch ≈ 0.576em) at
+     every viewport from 320 to 2560 — measured, not eyeballed. */
+  --text-hero:    clamp(1.2rem, 6vw, 5.5rem);
   --text-display: clamp(2rem, 5.5vw, 4rem);
   --text-title:   clamp(1.75rem, 4vw, 2.75rem);
   --text-card:    clamp(1.35rem, 2.6vw, 1.85rem);

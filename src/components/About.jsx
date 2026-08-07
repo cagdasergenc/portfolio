@@ -22,22 +22,21 @@ export default function About() {
           — the pattern the other sections use. */}
       <h2 className="label" data-reveal>About</h2>
       <div className="mt-4 grid gap-12 md:grid-cols-[1fr_1.2fr]">
-        {/* Photo stays in the left column: it's lit from frame-right, and by
-            this point in the scroll --sun-x has travelled right too — so on
-            the left, the portrait's light falls into the page in the same
-            direction as every shadow around it. */}
+        {/* Photo stays in the left column, matching the read order every
+            other section on the page uses: eyebrow, then the wide content
+            beside it. */}
         {portrait ? (
           <img
             src={portrait}
             alt="Çağdaş Ergenç, photographed against a warm wall in afternoon light"
-            className="shadow-sun-lg aspect-[4/5] w-full object-cover"
+            className="aspect-[4/5] w-full rounded-panel border border-white/10 object-cover"
             loading="lazy"
             decoding="async"
           />
         ) : (
-          <div className="shadow-sun-lg aspect-[4/5] bg-paper-lit" aria-hidden="true" />
+          <div className="aspect-[4/5] rounded-panel border border-white/10 bg-white/5" aria-hidden="true" />
         )}
-        <div className="max-w-[52ch] space-y-6 text-lg text-muted">
+        <div className="max-w-[52ch] space-y-6 text-lg text-text-dim">
           <p data-reveal>
             Bio placeholder — site owner to supply two or three short
             paragraphs: background and years of experience, how the work

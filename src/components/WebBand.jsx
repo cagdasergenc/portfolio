@@ -10,7 +10,7 @@ export default function WebBand() {
     <section ref={ref} id="web" className="shell py-24">
       <p className="label" data-reveal>Web and e-commerce</p>
       <h2 className="mb-12 mt-4 text-title" data-reveal>Shops I designed and built.</h2>
-      <ul className="divide-y divide-ink/10 border-y border-ink/10">
+      <ul className="divide-y divide-white/10 border-y border-white/10">
         {webWork.map((w) => {
           const inner = (
             <div className="flex items-baseline justify-between gap-6 py-6">

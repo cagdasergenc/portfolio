@@ -27,7 +27,7 @@ export default function App() {
           walking it on every route change. */}
       <a
         href="#content"
-        className="label sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-[100] focus:bg-paper-lit focus:px-4 focus:py-3 focus:text-ink focus:shadow-sun"
+        className="glass sr-only font-mono text-xs uppercase tracking-[0.08em] focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-[100] focus:px-4 focus:py-3"
       >
         Skip to content
       </a>

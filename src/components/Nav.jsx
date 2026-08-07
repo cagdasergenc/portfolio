@@ -1,39 +1,35 @@
 import { Link } from 'react-router-dom'
+import Glass from './Glass'
 
 /**
- * The header previously used `mix-blend-multiply` so it would sit into the
- * paper. That silently broke on every case study: the Insight section is
- * full-bleed `--dark` (#12100C), and multiplying ink over it dropped the
- * logo to 1.10:1 and the nav links to 1.06:1 — invisible, for the whole
- * time that band sat under the fixed header.
- *
- * A scrim solves it without special-casing: the header always has paper
- * underneath it regardless of what is scrolling past, so contrast is the
- * same everywhere. It fades to transparent so it still reads as floating
- * rather than as a solid bar.
+ * A floating glass pill instead of a full-width bar. Lit Paper's nav sat on
+ * a solid scrim and still went invisible over one dark section (1.10:1,
+ * caught only in final review). Here the ground is dark everywhere, so the
+ * risk inverts: a bright cover image passing under the fixed header. The
+ * pill uses the same smoked glass measured in index.css — 5.63:1 for --text
+ * over the worst case (a cover containing pure white) — so it holds
+ * regardless of what scrolls beneath it. Nothing in the pill is dim
+ * metadata, so nothing here hits the 2.25:1 failure the binding rule warns
+ * about; text is left at its inherited body colour (--text) throughout.
  */
 export default function Nav() {
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      {/* Solid paper through the text band, fading only BELOW it. A scrim
-          that starts fading immediately looks fine but measures badly: at
-          85% alpha over the dark section the muted links come out at
-          3.68:1, under the 4.5:1 bar. Extending past the header and holding
-          full opacity to 55% keeps every nav glyph on opaque paper — 15.77:1
-          for the logo, 5.05:1 for the links, identical everywhere on the
-          site regardless of what scrolls beneath. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 -bottom-10 top-0 bg-gradient-to-b from-paper from-55% to-transparent"
-      />
-      <nav className="shell relative flex items-baseline justify-between py-6">
-        <Link to="/" className="font-display text-xl font-bold">Çağdaş Ergenç</Link>
-        <ul className="label flex gap-6">
+    <header className="fixed inset-x-0 top-6 z-50 flex justify-center px-6">
+      <Glass as="nav" className="flex items-center gap-4 px-5 py-3 sm:gap-8 sm:px-6">
+        <Link
+          to="/"
+          className="font-display text-lg font-bold"
+          aria-label="Çağdaş Ergenç — home"
+        >
+          <span aria-hidden="true" className="sm:hidden">ÇE</span>
+          <span aria-hidden="true" className="hidden sm:inline">Çağdaş Ergenç</span>
+        </Link>
+        <ul className="flex gap-3 font-mono text-[12px] uppercase tracking-[0.08em] sm:gap-6">
           <li><a href="/#work">Work</a></li>
           <li><a href="/#about">About</a></li>
           <li><a href="/#contact">Contact</a></li>
         </ul>
-      </nav>
+      </Glass>
     </header>
   )
 }

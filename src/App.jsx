@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
-import { useSun } from './hooks/useSun'
+import { usePush } from './hooks/usePush'
 import Nav from './components/Nav'
 import Home from './routes/Home'
 import CaseStudy from './routes/CaseStudy'
@@ -18,10 +18,9 @@ function ScrollToTop() {
 }
 
 export default function App() {
-  useSun()
+  usePush()
   return (
     <div className="min-h-screen">
-      <div className="backdrop" aria-hidden="true" />
       <ScrollToTop />
       {/* Visible only on focus. The first Tab stop on every page, so a
           keyboard or screen-reader visitor can skip the nav instead of

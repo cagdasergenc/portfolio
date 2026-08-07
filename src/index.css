@@ -60,6 +60,17 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.06; letter-spacing
 h1, h2 { font-weight: 800; }
 h3 { font-weight: 600; }
 
+/* Worst-case contrast (src/lib/contrast.js), cover = [255,255,255] (blown-out
+   white — a real photo can be this bright), glass tint = this white fill:
+     minGlassAlpha(--text,     white glass, white cover) => null
+     minGlassAlpha(--text-dim, white glass, white cover) => null
+   White-on-white glass cannot rescue light text at ANY opacity — the
+   composite is white regardless of alpha. Per spec §5.2 this is the
+   escape hatch, not a bug: Task 5 must place --text/--text-dim OFF the
+   glass over bright covers rather than relying on this fill to darken it.
+   (For reference only, not adopted here: a dark tint [12,12,14] would need
+   alpha 0.6 for --text and 0.84 for --text-dim to clear 4.5:1 — recorded so
+   the option is visible, not applied.) */
 .glass {
   background: rgb(255 255 255 / 0.06);
   border: 1px solid rgb(255 255 255 / 0.18);

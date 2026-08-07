@@ -77,46 +77,59 @@ h3 { font-weight: 600; }
    (For reference only, not adopted here: a dark tint [12,12,14] would need
    alpha 0.6 for --text and 0.84 for --text-dim to clear 4.5:1 — recorded so
    the option is visible, not applied.) */
-.glass {
-  /* SMOKED, not frosted. Decided from measurement, not taste:
-     white glass over a blown-out cover is white at EVERY alpha, so light
-     text on it can never clear AA. A dark tint always darkens what is
-     behind it, so contrast holds over both a white cover and the void.
+/* Custom classes live in @layer components so Tailwind's utilities layer,
+   which the cascade places AFTER this one, can override them.
 
-     At 0.65 over the worst case (a cover containing pure white):
-       --text      5.63:1  PASS  <- titles may sit on glass
-       --text-dim  2.25:1  FAIL  <- metadata must NOT sit on glass
-     Over the void ground: --text 17.90:1.
-     Metadata lives on the ground instead, where --text-dim is 7.19:1.
+   Unlayered CSS beats ALL layered CSS regardless of specificity or source
+   order. With these rules unlayered, `className="label text-text"` silently
+   ignored the utility and rendered --text-dim instead. That is not cosmetic:
+   on the sibling branch the same trap put the "Open the app" CTA at 3.12:1
+   and an Insight heading at 3.25:1, both failing WCAG AA, and a whole-branch
+   review missed it because it checked token pairs rather than computed
+   styles. */
+@layer components {
+  .glass {
+    /* SMOKED, not frosted. Decided from measurement, not taste:
+       white glass over a blown-out cover is white at EVERY alpha, so light
+       text on it can never clear AA. A dark tint always darkens what is
+       behind it, so contrast holds over both a white cover and the void.
 
-     RULE: glass carries titles. The ground carries metadata. No exceptions —
-     --text-dim would need alpha 0.90 to pass, at which point it stops being
-     glass at all. */
-  background: rgb(12 12 14 / 0.65);
-  border: 1px solid rgb(255 255 255 / 0.18);
-  border-radius: var(--radius-pill);
-  backdrop-filter: blur(12px);
+       At 0.65 over the worst case (a cover containing pure white):
+         --text      5.63:1  PASS  <- titles may sit on glass
+         --text-dim  2.25:1  FAIL  <- metadata must NOT sit on glass
+       Over the void ground: --text 17.90:1.
+       Metadata lives on the ground instead, where --text-dim is 7.19:1.
+
+       RULE: glass carries titles. The ground carries metadata. No exceptions —
+       --text-dim would need alpha 0.90 to pass, at which point it stops being
+       glass at all. */
+    background: rgb(12 12 14 / 0.65);
+    border: 1px solid rgb(255 255 255 / 0.18);
+    border-radius: var(--radius-pill);
+    backdrop-filter: blur(12px);
+  }
+
+  /* The 12-column grid. Content sits on a 6-column editorial rhythm,
+     deliberately off-centre rather than symmetrically boxed. */
+  .shell { margin-inline: auto; max-width: 1400px; padding-inline: 1.5rem; }
+  @media (min-width: 768px) { .shell { padding-inline: 3rem; } }
+
+  .grid12 { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 2rem; }
+  .col-read { grid-column: 1 / -1; }
+  @media (min-width: 900px) { .col-read { grid-column: 3 / 10; } }
+
+  .label {
+    font-family: var(--font-mono);
+    /* Explicit: About's eyebrow is an <h2> for landmark semantics, and would
+       otherwise inherit the 700 above. */
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+  }
 }
 
-/* The 12-column grid. Content sits on a 6-column editorial rhythm,
-   deliberately off-centre rather than symmetrically boxed. */
-.shell { margin-inline: auto; max-width: 1400px; padding-inline: 1.5rem; }
-@media (min-width: 768px) { .shell { padding-inline: 3rem; } }
-
-.grid12 { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 2rem; }
-.col-read { grid-column: 1 / -1; }
-@media (min-width: 900px) { .col-read { grid-column: 3 / 10; } }
-
-.label {
-  font-family: var(--font-mono);
-  /* Explicit: About's eyebrow is an <h2> for landmark semantics, and would
-     otherwise inherit the 700 above. */
-  font-weight: 400;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-text-dim);
-}
 
 :focus-visible {
   outline: 2px solid var(--color-text);

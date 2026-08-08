@@ -23,7 +23,13 @@ export default function WebBand() {
               {w.href ? (
                 <a href={w.href} target="_blank" rel="noreferrer" className="block transition-opacity hover:opacity-60">{inner}</a>
               ) : (
-                <div className="opacity-50">{inner}</div>
+                // opacity-50 measured (via getComputedStyle + canvas
+                // rasterization) at rendering the "Offline" label — .label,
+                // already --text-dim — at an actual 2.59:1 against the void,
+                // failing WCAG AA. opacity-80 is the lowest standard Tailwind
+                // step that still clears 4.5:1 for that label (4.92:1) while
+                // keeping a visibly muted "archived" row.
+                <div className="opacity-80">{inner}</div>
               )}
             </li>
           )

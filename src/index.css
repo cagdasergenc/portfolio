@@ -45,6 +45,10 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* No light mode exists. Without this, native form controls and the
+     scrollbar still render light-themed regardless of the page's own dark
+     background. */
+  color-scheme: dark;
 }
 
 body {
@@ -62,9 +66,20 @@ body {
 
 @media (min-width: 768px) { body { font-size: 18px; } }
 
-h1, h2, h3 { font-family: var(--font-display); line-height: 1.06; letter-spacing: -0.02em; }
-h1, h2 { font-weight: 800; }
-h3 { font-weight: 600; }
+/* @layer base (not left unlayered): unlayered CSS beats every layered rule
+   regardless of source order (see the note above `.glass`/`.label`). Left
+   bare, this block's `font-weight: 800` on h1/h2 silently outranked both
+   `.label` (font-weight: 400, `@layer components`) and the inverted Insight
+   heading's `font-normal` utility (`@layer utilities`) on every h2 in the
+   document — measured via getComputedStyle: every section eyebrow rendered
+   800 instead of the intended 400. `@layer base` sits before `components`
+   and `utilities` in Tailwind's own layer order, so both now win over it
+   the ordinary cascade-layer way. */
+@layer base {
+  h1, h2, h3 { font-family: var(--font-display); line-height: 1.06; letter-spacing: -0.02em; }
+  h1, h2 { font-weight: 800; }
+  h3 { font-weight: 600; }
+}
 
 /* Worst-case contrast (src/lib/contrast.js), cover = [255,255,255] (blown-out
    white — a real photo can be this bright), glass tint = this white fill:
@@ -88,26 +103,57 @@ h3 { font-weight: 600; }
    review missed it because it checked token pairs rather than computed
    styles. */
 @layer components {
+  /* SMOKED, not frosted. Decided by measurement: white glass over a
+     blown-out cover is white at EVERY alpha, so light text on it can never
+     clear AA. A dark tint always darkens what is behind it.
+       at 0.65 over the worst case  --text 5.63:1 PASS · --text-dim 2.25:1 FAIL
+     RULE: glass carries titles, the ground carries metadata.
+
+     The glass also READS THE DISPLACEMENT FIELD. Previously --push drove
+     exactly one component that only mounted when cover images existed, so
+     with no covers the cursor did nothing anywhere on the site. Now every
+     glass surface tracks it: the rim highlight follows the pointer and the
+     capsule parallaxes a few pixels behind it. Damped upstream by usePush,
+     so this inherits the viscosity for free. */
   .glass {
-    /* SMOKED, not frosted. Decided from measurement, not taste:
-       white glass over a blown-out cover is white at EVERY alpha, so light
-       text on it can never clear AA. A dark tint always darkens what is
-       behind it, so contrast holds over both a white cover and the void.
-
-       At 0.65 over the worst case (a cover containing pure white):
-         --text      5.63:1  PASS  <- titles may sit on glass
-         --text-dim  2.25:1  FAIL  <- metadata must NOT sit on glass
-       Over the void ground: --text 17.90:1.
-       Metadata lives on the ground instead, where --text-dim is 7.19:1.
-
-       RULE: glass carries titles. The ground carries metadata. No exceptions —
-       --text-dim would need alpha 0.90 to pass, at which point it stops being
-       glass at all. */
-    background: rgb(12 12 14 / 0.65);
-    border: 1px solid rgb(255 255 255 / 0.18);
+    --gx: calc((var(--push-x) - 0.5) * 2);
+    --gy: calc((var(--push-y) - 0.5) * 2);
+    position: relative;
     border-radius: var(--radius-pill);
+    border: 1px solid rgb(255 255 255 / 0.18);
+    background:
+      radial-gradient(
+        130% 190% at calc(50% + var(--gx) * 46%) calc(50% + var(--gy) * 46%),
+        rgb(255 255 255 / calc(0.055 + var(--push-force) * 0.06)) 0%,
+        rgb(255 255 255 / 0.012) 46%,
+        transparent 72%
+      ),
+      rgb(12 12 14 / 0.65);
     backdrop-filter: blur(12px);
+    transform: translate3d(calc(var(--gx) * 3px), calc(var(--gy) * 2px), 0);
+    will-change: transform;
   }
+
+  /* The lit seam. A single hairline that brightens where the pointer is —
+     on a near-black ground this carries more than any fill. */
+  .glass::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    pointer-events: none;
+    background: linear-gradient(
+      calc(90deg + var(--gx) * 60deg),
+      rgb(255 255 255 / calc(0.30 + var(--push-force) * 0.34)),
+      rgb(255 255 255 / 0.05) 42%,
+      transparent 70%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+  }
+
 
   /* The 12-column grid. Content sits on a 6-column editorial rhythm,
      deliberately off-centre rather than symmetrically boxed. */
@@ -121,7 +167,7 @@ h3 { font-weight: 600; }
   .label {
     font-family: var(--font-mono);
     /* Explicit: About's eyebrow is an <h2> for landmark semantics, and would
-       otherwise inherit the 700 above. */
+       otherwise inherit the 800 above. */
     font-weight: 400;
     font-size: 12px;
     letter-spacing: 0.08em;
@@ -148,6 +194,9 @@ h3 { font-weight: 600; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  /* usePush already sets the field once and starts no loop; this pins the
+     derived transforms so nothing drifts, and nothing is left invisible. */
+  .glass { transform: none; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;

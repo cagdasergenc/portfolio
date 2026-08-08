@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { createRefractor } from '../gl/refract'
 import Glass from './Glass'
 import { CAPSULE_CLASS, Meta, FlatCard } from './WorkGridFlat'
 
@@ -36,59 +35,79 @@ export default function GlassCard({ project }) {
     const wrap = wrapRef.current
     if (!wrap) return
 
-    const canvas = document.createElement('canvas')
-    canvas.className = 'absolute inset-0 h-full w-full'
-    wrap.appendChild(canvas)
+    // The WebGL layer is dynamically imported so it lands in its own chunk,
+    // fetched only when a covered project is actually mounted, instead of
+    // bloating every visitor's entry bundle (including the ~40% who land on
+    // the low-fi path per useLowFi and never run a shader at all).
+    // `cancelled` guards the StrictMode double-invoke the same way the
+    // synchronous version did: the first effect's cleanup fires before its
+    // import() resolves, so its `.then` callback below is a no-op and never
+    // creates a canvas.
+    let cancelled = false
+    let cleanup = null
 
-    const refractor = createRefractor(canvas, project.cover)
-    if (!refractor) {
-      canvas.remove()
-      // Deferred: this is an external system (WebGL) reporting its result
-      // back, not a value derivable during render, so it belongs in a
-      // callback rather than synchronously in the effect body.
-      queueMicrotask(() => setFailed(true))
-      return
-    }
+    import('../gl/refract').then(({ createRefractor }) => {
+      if (cancelled) return
 
-    const root = document.documentElement
-    let raf = 0
-    let visible = false
+      const canvas = document.createElement('canvas')
+      canvas.className = 'absolute inset-0 h-full w-full'
+      wrap.appendChild(canvas)
 
-    const tick = () => {
-      raf = 0
-      if (!visible) return
-      const style = getComputedStyle(root)
-      refractor.setPush(
-        parseFloat(style.getPropertyValue('--push-x')) || 0.5,
-        parseFloat(style.getPropertyValue('--push-y')) || 0.5,
-        parseFloat(style.getPropertyValue('--push-force')) || 0,
-      )
-      refractor.render()
-      raf = requestAnimationFrame(tick)
-    }
+      const refractor = createRefractor(canvas, project.cover)
+      if (!refractor) {
+        canvas.remove()
+        // Deferred: this is an external system (WebGL) reporting its result
+        // back, not a value derivable during render, so it belongs in a
+        // callback rather than synchronously in the effect body.
+        queueMicrotask(() => setFailed(true))
+        return
+      }
 
-    const ro = new ResizeObserver(([entry]) => {
-      const { width, height } = entry.contentRect
-      refractor.resize(width, height)
-      refractor.render()
+      const root = document.documentElement
+      let raf = 0
+      let visible = false
+
+      const tick = () => {
+        raf = 0
+        if (!visible) return
+        const style = getComputedStyle(root)
+        refractor.setPush(
+          parseFloat(style.getPropertyValue('--push-x')) || 0.5,
+          parseFloat(style.getPropertyValue('--push-y')) || 0.5,
+          parseFloat(style.getPropertyValue('--push-force')) || 0,
+        )
+        refractor.render()
+        raf = requestAnimationFrame(tick)
+      }
+
+      const ro = new ResizeObserver(([entry]) => {
+        const { width, height } = entry.contentRect
+        refractor.resize(width, height)
+        refractor.render()
+      })
+      ro.observe(wrap)
+
+      // Off-screen cards stop driving the shader entirely rather than just
+      // skipping renders, so a page with several of these never runs more
+      // than the visible ones through requestAnimationFrame.
+      const io = new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting
+        if (visible && !raf) raf = requestAnimationFrame(tick)
+      })
+      io.observe(wrap)
+
+      cleanup = () => {
+        io.disconnect()
+        ro.disconnect()
+        cancelAnimationFrame(raf)
+        refractor.destroy()
+        canvas.remove()
+      }
     })
-    ro.observe(wrap)
-
-    // Off-screen cards stop driving the shader entirely rather than just
-    // skipping renders, so a page with several of these never runs more
-    // than the visible ones through requestAnimationFrame.
-    const io = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting
-      if (visible && !raf) raf = requestAnimationFrame(tick)
-    })
-    io.observe(wrap)
 
     return () => {
-      io.disconnect()
-      ro.disconnect()
-      cancelAnimationFrame(raf)
-      refractor.destroy()
-      canvas.remove()
+      cancelled = true
+      cleanup?.()
     }
   }, [project.cover, noCover])
 

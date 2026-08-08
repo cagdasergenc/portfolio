@@ -18,16 +18,16 @@ export default function Nav() {
       <Glass as="nav" className="flex items-center gap-4 px-5 py-3 sm:gap-8 sm:px-6">
         <Link
           to="/"
-          className="font-display text-lg font-bold"
+          className="font-display text-lg font-bold transition-opacity hover:opacity-70"
           aria-label="Çağdaş Ergenç — home"
         >
           <span aria-hidden="true" className="sm:hidden">ÇE</span>
           <span aria-hidden="true" className="hidden sm:inline">Çağdaş Ergenç</span>
         </Link>
         <ul className="flex gap-3 font-mono text-[12px] uppercase tracking-[0.08em] sm:gap-6">
-          <li><a href="/#work">Work</a></li>
-          <li><a href="/#about">About</a></li>
-          <li><a href="/#contact">Contact</a></li>
+          <li><a className="transition-opacity hover:opacity-70" href="/#work">Work</a></li>
+          <li><a className="transition-opacity hover:opacity-70" href="/#about">About</a></li>
+          <li><a className="transition-opacity hover:opacity-70" href="/#contact">Contact</a></li>
         </ul>
       </Glass>
     </header>

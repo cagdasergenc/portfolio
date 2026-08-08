@@ -40,7 +40,13 @@ export default function CaseStudy() {
           >
             Open the app
           </a>
-          {project.live_hint && <span className="label opacity-60">{project.live_hint}</span>}
+          {/* No extra `opacity-*` here: `.label` (--text-dim on void) is
+              already 7.19:1 — measured, see the metadata-rail comment below.
+              Stacking opacity-60 on top of that used to render this span at
+              an actual 3.22:1, failing WCAG AA silently (getComputedStyle
+              showed the true composite; the `.label` class alone never
+              told you that). */}
+          {project.live_hint && <span className="label">{project.live_hint}</span>}
         </div>
       )}
 
@@ -48,11 +54,14 @@ export default function CaseStudy() {
         {/* Metadata rail per the binding rule (index.css `.glass`): dim text
             fails contrast on the smoked glass fill, so it never sits on a
             panel — it lives directly on the void ground, where --text-dim
-            clears 7.19:1. */}
+            clears 7.19:1. `dt` carries no `opacity-*`: that used to stack on
+            top of `.label`'s own --text-dim and render at an actual 3.22:1
+            (measured via getComputedStyle), quietly contradicting this very
+            comment. */}
         <dl className="label h-fit space-y-4 md:sticky md:top-28">
           {META.filter((k) => project[k]).map((k) => (
             <div key={k}>
-              <dt className="opacity-60">{k}</dt>
+              <dt>{k}</dt>
               <dd className="mt-1 text-text normal-case tracking-normal">{project[k]}</dd>
             </div>
           ))}

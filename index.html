@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- The site has no light mode; without this, native form controls and
+         scrollbars still assume light and flash against the dark page. -->
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0A0A0C" />
     <title>Çağdaş Ergenç — UX and Product Design</title>
     <meta name="description" content="Three UX case studies, written out in full, plus the e-commerce sites I designed and built." />
     <meta property="og:title" content="Çağdaş Ergenç — UX and Product Design" />
@@ -11,6 +15,11 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://cagdasergenc.netlify.app/" />
     <meta name="twitter:card" content="summary" />
+    <!-- Switzer is the display face for every h1/h2/h3, including the Hero
+         h1 that is almost always this page's LCP element. Preloading it
+         (rather than waiting for the CSS @font-face to be discovered) trims
+         one round-trip off first paint of that text. -->
+    <link rel="preload" href="/src/fonts/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
     <div id="root"></div>

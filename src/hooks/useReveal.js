@@ -17,6 +17,23 @@ gsap.registerPlugin(ScrollTrigger)
  */
 export function useReveal(scope) {
   useLayoutEffect(() => {
+    /**
+     * Watchdog. The pre-hide CSS sets opacity:0 and waits for GSAP, which
+     * runs on requestAnimationFrame — so anything that stops rAF (a page
+     * opened in a background tab, a throttled renderer, GSAP failing to
+     * load at all) leaves the entire page permanently blank.
+     *
+     * This is not theoretical: with rAF throttled to zero the hero h1 and
+     * standfirst rendered invisible while the rest of the plate drew fine.
+     *
+     * setTimeout does not depend on rAF, so it still fires in exactly the
+     * situations that break the animation. After 1.6s the pre-hide is
+     * disarmed and everything is simply visible. Content beats choreography.
+     */
+    const watchdog = setTimeout(() => {
+      document.documentElement.setAttribute('data-reveal-failsafe', '')
+    }, 1600)
+
     const mm = gsap.matchMedia()
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
@@ -44,6 +61,9 @@ export function useReveal(scope) {
       return () => ctx.revert()
     })
 
-    return () => mm.revert()
+    return () => {
+      clearTimeout(watchdog)
+      mm.revert()
+    }
   }, [scope])
 }

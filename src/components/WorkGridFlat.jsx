@@ -43,7 +43,7 @@ export function Meta({ project }) {
  * grid (see WorkIndex): it keeps that duplicate out of the tab order so the
  * one real keyboard path is always the accessible `WorkGridFlat` render.
  */
-export function FlatCard({ project, hidden = false }) {
+export function FlatCard({ project, hidden = false, numeral }) {
   return (
     <Link
       to={`/work/${project.slug}`}
@@ -51,7 +51,16 @@ export function FlatCard({ project, hidden = false }) {
       tabIndex={hidden ? -1 : undefined}
       aria-hidden={hidden || undefined}
     >
-      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-panel bg-white/5 transition-transform duration-500 ease-out group-hover:-translate-y-1">
+      {/* The plate numeral sits in the margin, outside the frame, the way a
+          figure is labelled — not as a badge on the artwork. Work is
+          catalogued here, not merchandised. */}
+      {numeral && (
+        <div className="mb-3 flex items-baseline gap-3">
+          <span className="label text-text">{numeral}</span>
+          <span className="h-px flex-1 bg-white/12" aria-hidden="true" />
+        </div>
+      )}
+      <div className="specimen relative aspect-[4/5] w-full bg-white/5 transition-transform duration-500 ease-out group-hover:-translate-y-1">
         {project.cover ? (
           <img
             src={project.cover}
@@ -80,12 +89,31 @@ export function FlatCard({ project, hidden = false }) {
  * most visitors see, so it carries the same layout and proportions as the
  * refracting version — just without the shader.
  */
+const NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII']
+
+/**
+ * Specimens on a 12-column plate, deliberately asymmetric — each one sits in
+ * a different span so the eye steps down the page instead of scanning a
+ * uniform 2-up grid. The sibling branch uses exactly that uniform grid; this
+ * is MASTER.md §4's second structural rule and one of the reasons the two
+ * worlds do not read as the same page in different colours.
+ */
+const PLACEMENT = [
+  'md:col-span-6 md:col-start-1',
+  'md:col-span-5 md:col-start-8 md:mt-24',
+  'md:col-span-5 md:col-start-3',
+]
+
 export default function WorkGridFlat({ projects }) {
   return (
-    <ul className="grid gap-x-8 gap-y-16 md:grid-cols-2">
-      {projects.map((p) => (
-        <li key={p.slug} data-reveal>
-          <FlatCard project={p} />
+    <ul className="grid12 mt-16 gap-y-20">
+      {projects.map((p, i) => (
+        <li
+          key={p.slug}
+          data-reveal
+          className={`col-span-full ${PLACEMENT[i % PLACEMENT.length]}`}
+        >
+          <FlatCard project={p} numeral={NUMERALS[i]} />
         </li>
       ))}
     </ul>

@@ -4,6 +4,7 @@ import { useReveal } from '../hooks/useReveal'
 import { useLowFi } from '../hooks/useLowFi'
 import GlassCard from './GlassCard'
 import WorkGridFlat from './WorkGridFlat'
+import Band from './Band'
 
 export default function WorkIndex() {
   const ref = useRef(null)
@@ -17,12 +18,14 @@ export default function WorkIndex() {
   const showGlass = !lowFi && projects.some((p) => p.cover)
 
   return (
-    <section ref={ref} id="work" className="shell py-24 md:py-32">
-      <p className="label" data-reveal>Case studies</p>
-      <h2 className="mb-16 mt-4 text-title" data-reveal>
-        {projects.length} projects, start to finish.
-      </h2>
-      {showGlass ? (
+    <div ref={ref}>
+      <Band
+        id="work"
+        index="I — III"
+        reading={`${projects.length} specimens · research to build`}
+        title={`${projects.length} projects, start to finish.`}
+      >
+        {showGlass ? (
         <>
           <ul className="grid gap-x-8 gap-y-16 md:grid-cols-2" aria-hidden="true">
             {projects.map((p) => (
@@ -39,9 +42,10 @@ export default function WorkIndex() {
             <WorkGridFlat projects={projects} />
           </div>
         </>
-      ) : (
-        <WorkGridFlat projects={projects} />
-      )}
-    </section>
+        ) : (
+          <WorkGridFlat projects={projects} />
+        )}
+      </Band>
+    </div>
   )
 }

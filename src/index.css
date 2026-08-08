@@ -103,6 +103,42 @@ body {
    review missed it because it checked token pairs rather than computed
    styles. */
 @layer components {
+  /* ---- Instrument-plate structure (MASTER.md §4) --------------------
+     The four moves that make this a different world rather than a different
+     palette. The sibling branch is a centred editorial column; this is a
+     measured plate. */
+
+  /* Dense tick field dividing sections, instead of whitespace alone. */
+  .band-ticks {
+    height: 22px;
+    background-image: repeating-linear-gradient(
+      to right,
+      rgb(255 255 255 / 0.30) 0 1px,
+      transparent 1px 9px
+    );
+    /* Ticks fade out to the right so the band reads as a scale that runs
+       off the plate rather than a border that stops. */
+    mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 92%);
+    -webkit-mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 92%);
+  }
+
+  /* Index rail. Each tick's length and brightness fall away from the scroll
+     position, so the rail reads the page the way a cursor reads a scale. */
+  .rail-tick {
+    --d: max(0, 1 - abs(var(--i) - var(--rail-p, 0)) * 6);
+    width: calc(7px + var(--d) * 17px);
+    opacity: calc(0.16 + var(--d) * 0.75);
+  }
+
+  /* A specimen frame: work catalogued rather than merchandised. The numeral
+     sits outside the frame, in the margin, the way a plate labels a figure. */
+  .specimen {
+    position: relative;
+    border: 1px solid rgb(255 255 255 / 0.14);
+    border-radius: var(--radius-panel);
+    overflow: hidden;
+  }
+
   /* SMOKED, not frosted. Decided by measurement: white glass over a
      blown-out cover is white at EVERY alpha, so light text on it can never
      clear AA. A dark tint always darkens what is behind it.
@@ -190,6 +226,19 @@ body {
 @media (prefers-reduced-motion: no-preference) {
   [data-reveal] { opacity: 0; transform: translateY(18px); }
   [data-reveal-mask] { clip-path: inset(0 0 100% 0); }
+
+  /* Failsafe, armed by useReveal's setTimeout watchdog. If GSAP has not
+     revealed the page within 1.6s — because rAF is throttled, the tab
+     opened in the background, or GSAP failed to load — the pre-hide is
+     abandoned and the content simply shows. A page that hides its own
+     copy behind an animation is one failed script away from blank. */
+  html[data-reveal-failsafe] [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  html[data-reveal-failsafe] [data-reveal-mask] {
+    clip-path: none !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

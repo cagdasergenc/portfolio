@@ -1,25 +1,27 @@
-import Hero from '../components/Hero'
 import Rail from '../components/Rail'
-import WorkIndex from '../components/WorkIndex'
+import Stage from '../components/Stage'
 import WebBand from '../components/WebBand'
 import About from '../components/About'
 import Contact from '../components/Contact'
 
 /**
- * The plate sequence.
+ * Opens on the work.
  *
- * On the sibling branch this file is five sections stacked in a centred
- * column, and for a while this one was byte-identical to it — which is
- * exactly the "it's just a copy" problem. It is not any more: the rail runs
- * the full height alongside every plate, and each section is a numbered
- * measurement band rather than a heading over content.
+ * There is no Hero section any more, and that is the point. Both worlds used
+ * to be the same organism — a scrolling document of stacked sections, each
+ * eyebrow → heading → content, work shown as a grid of cards. Changing the
+ * palette and adding rails did not touch that skeleton.
+ *
+ * Now the first viewport IS a project, the work stays on a persistent stage
+ * while the page scrolls, and the positioning line is annotation layered on
+ * it rather than a statement standing before it. The sections that follow
+ * are supporting material, not peers.
  */
 export default function Home() {
   return (
     <>
       <Rail />
-      <Hero />
-      <WorkIndex />
+      <Stage />
       <WebBand />
       <About />
       <Contact />

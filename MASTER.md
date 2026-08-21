@@ -111,7 +111,15 @@ Consumers:
 | --- | --- | --- |
 | `.glass` | x, y, force | rim highlight tracks; 3px parallax shift |
 | `.rail` | y | active tick brightens |
-| WebGL capsule | x, y, force | UV displacement (real refraction) |
+| WebGL capsule (stage) | x, y, force | UV displacement (real refraction) + in-shader scrims |
 
 Under `prefers-reduced-motion` the field is set once and never animates; all
 derived effects become static. Nothing is left invisible.
+
+**Status note, post-audit (2026-08-21):** the WebGL capsule row above was
+aspirational, not shipped — `/design-is` found it unreachable from the live
+page (`DESIGN-IS-2026-08-21/`, principle #6 scored 0/3). `Stage.jsx` was
+rendering a plain `<img>` under `.glass` (CSS-only `backdrop-filter: blur`)
+with no canvas at all. The redesign in progress makes the stage itself the
+shader surface — see the design spec §6 for the corrected architecture — so
+this row becomes true rather than being quietly dropped.

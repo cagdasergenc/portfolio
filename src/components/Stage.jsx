@@ -123,10 +123,35 @@ export default function Stage() {
           </div>
         ))}
 
+        {/* Scrims. The dark world assumes light text on a dark ground — an
+            assumption a full-bleed LIGHT cover breaks completely. Measured
+            against this project's own cream illustration, unprotected
+            overlay text sits at 1.09:1 (--text) and 2.30:1 (--text-dim):
+            invisible, and worse than the nav bug on the sibling branch.
+
+            src/lib/contrast.js gives the floors against a blown-out white
+            cover, the worst case a photo can present:
+              --text      needs void at 0.60
+              --text-dim  needs void at 0.84
+            First pass put the metadata row at 0.79 — measured, and short.
+            Dim text has a far higher floor than display text, so the bottom
+            band is stronger than it looks like it needs to be.
+            So the top band runs to 0.86 where the annotation sits and the
+            bottom to 0.92 where the metadata does, both fading to nothing
+            across the middle so the work itself stays unobstructed. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[52%] bg-gradient-to-b from-void/86 via-void/60 to-transparent"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[56%] bg-gradient-to-t from-void/96 via-void/88 to-transparent"
+        />
+
         {/* The positioning line is annotation ON the work, not a statement
             before it. It fades out as the first project hands over. */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 px-6 pt-28 md:px-12"
+          className="pointer-events-none absolute inset-x-0 top-0 z-10 px-6 pt-28 md:px-12"
           style={{ opacity: Math.max(0, 1 - progress * projects.length * 1.6) }}
         >
           <div className="shell">
@@ -140,7 +165,7 @@ export default function Stage() {
         {/* Stage annotation. The title sits on glass (measured 5.63:1 over a
             blown-out cover); role and year sit on the ground beside it, never
             on the glass, where --text-dim would fail at 2.25:1. */}
-        <div className="relative z-10 pb-14">
+        <div className="relative z-20 pb-14">
           <div className="shell">
             <div className="flex items-end justify-between gap-6">
               <span className="label">{romanise(active + 1)} / {romanise(projects.length)}</span>

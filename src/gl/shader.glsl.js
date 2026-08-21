@@ -26,10 +26,21 @@ uniform vec2  uPush;      // 0..1 pointer field
 uniform float uForce;     // 0..1 pointer speed
 uniform vec4  uCapsule;   // xy = centre (0..1), zw = half-size (0..1)
 uniform float uRadius;    // corner radius, normalised to width
+uniform vec3  uVoid;       // --color-void, as 0..1 floats — no hardcoded duplicate
+uniform vec4  uScrimTop;   // height, alpha at band start, alpha at midpoint, unused
+uniform vec4  uScrimBot;   // height, alpha at band start, alpha at midpoint, unused
 
 float sdRoundBox(vec2 p, vec2 b, float r) {
   vec2 q = abs(p) - b + r;
   return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
+}
+
+/* Piecewise-linear, matching a 3-stop CSS gradient exactly rather than an
+   eased curve — this is a relocation of existing behaviour, not a redesign
+   of it. t is 0 at the band's outer edge, 1 where it has faded to nothing. */
+float scrimAlpha(float t, float a0, float a1) {
+  t = clamp(t, 0.0, 1.0);
+  return t < 0.5 ? mix(a0, a1, t / 0.5) : mix(a1, 0.0, (t - 0.5) / 0.5);
 }
 
 void main() {
@@ -64,6 +75,18 @@ void main() {
   col = mix(col, col * 0.55 + 0.06, inside * 0.55);
   float rim = smoothstep(0.004, 0.0, abs(d));
   col += rim * 0.22;
+
+  // In-shader scrims. vUv.y = 1 at the top of the frame, 0 at the bottom
+  // (confirmed empirically when the capsule position was first tuned).
+  // Top band runs from the top edge down through uScrimTop.x of the frame;
+  // bottom band runs from the bottom edge up through uScrimBot.x.
+  float topT = (1.0 - vUv.y) / max(uScrimTop.x, 1e-4);
+  float topA = (vUv.y > 1.0 - uScrimTop.x) ? scrimAlpha(topT, uScrimTop.y, uScrimTop.z) : 0.0;
+
+  float botT = vUv.y / max(uScrimBot.x, 1e-4);
+  float botA = (vUv.y < uScrimBot.x) ? scrimAlpha(botT, uScrimBot.y, uScrimBot.z) : 0.0;
+
+  col = mix(col, uVoid, max(topA, botA));
 
   outColor = vec4(col, 1.0);
 }`

@@ -50,6 +50,7 @@ export function createRefractor(canvas, imageUrl) {
   const U = {
     cover: u('uCover'), res: u('uRes'), push: u('uPush'),
     force: u('uForce'), capsule: u('uCapsule'), radius: u('uRadius'),
+    voidColor: u('uVoid'), scrimTop: u('uScrimTop'), scrimBot: u('uScrimBot'),
   }
 
   const tex = gl.createTexture()
@@ -72,9 +73,22 @@ export function createRefractor(canvas, imageUrl) {
   img.src = imageUrl
 
   let push = [0.5, 0.5], force = 0
+  // Defaults match the old hardcoded card-shaped capsule and today's
+  // Stage.jsx CSS gradients exactly, so nothing changes visually until a
+  // caller starts feeding it real measured values.
+  let capsule = [0.5, 0.82, 0.42, 0.085]
+  let scrimTop = [0.52, 0.86, 0.60]
+  let scrimBot = [0.56, 0.96, 0.88]
+  let voidRgb = [0.039, 0.039, 0.047] // #0A0A0C — overwritten by setVoidColor before first real render
 
   return {
     setPush(x, y, f) { push = [x, y]; force = f },
+    setCapsule(cx, cy, hw, hh) { capsule = [cx, cy, hw, hh] },
+    setScrims({ topHeight, topStart, topMid, botHeight, botStart, botMid }) {
+      scrimTop = [topHeight, topStart, topMid]
+      scrimBot = [botHeight, botStart, botMid]
+    },
+    setVoidColor(r, g, b) { voidRgb = [r, g, b] },
     resize(w, h) {
       const dpr = Math.min(2, window.devicePixelRatio || 1)
       canvas.width = Math.max(1, Math.round(w * dpr))
@@ -90,9 +104,10 @@ export function createRefractor(canvas, imageUrl) {
       gl.uniform2f(U.res, canvas.width, canvas.height)
       gl.uniform2f(U.push, push[0], push[1])
       gl.uniform1f(U.force, force)
-      // Capsule sits low-left in the card; CSS positions the text to match
-      // using the same fractions. Keep these two in sync by hand.
-      gl.uniform4f(U.capsule, 0.5, 0.82, 0.42, 0.085)
+      gl.uniform4f(U.capsule, capsule[0], capsule[1], capsule[2], capsule[3])
+      gl.uniform3f(U.voidColor, voidRgb[0], voidRgb[1], voidRgb[2])
+      gl.uniform4f(U.scrimTop, scrimTop[0], scrimTop[1], scrimTop[2], 0)
+      gl.uniform4f(U.scrimBot, scrimBot[0], scrimBot[1], scrimBot[2], 0)
       gl.uniform1f(U.radius, 0.08)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
     },

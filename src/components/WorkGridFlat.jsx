@@ -60,7 +60,7 @@ export function FlatCard({ project, hidden = false, numeral }) {
           <span className="h-px flex-1 bg-white/12" aria-hidden="true" />
         </div>
       )}
-      <div className="specimen relative aspect-[4/5] w-full bg-white/5 transition-transform duration-500 ease-out group-hover:-translate-y-1">
+      <div className="specimen relative aspect-video w-full bg-white/5 transition-transform duration-500 ease-out group-hover:-translate-y-1">
         {project.cover ? (
           <img
             src={project.cover}

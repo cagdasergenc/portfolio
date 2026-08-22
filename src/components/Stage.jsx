@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getProjects } from '../lib/content'
 import { useLowFi } from '../hooks/useLowFi'
+import { useCapsuleRect } from '../hooks/useCapsuleRect'
 import Glass from './Glass'
+import StageCanvas from './StageCanvas'
 import WorkGridFlat from './WorkGridFlat'
 
 /**
@@ -31,6 +33,10 @@ export default function Stage() {
   const [active, setActive] = useState(0)
   const [progress, setProgress] = useState(0)
   const lowFi = useLowFi()
+  const current = projects[active]
+  const capsuleRef = useRef(null)
+  const [canvasReady, setCanvasReady] = useState(false)
+  const capsuleRect = useCapsuleRect(capsuleRef, trackRef, [current?.slug])
 
   useEffect(() => {
     if (lowFi) return
@@ -84,8 +90,6 @@ export default function Stage() {
     )
   }
 
-  const current = projects[active]
-
   return (
     <section
       id="work"
@@ -102,24 +106,12 @@ export default function Stage() {
             className="absolute inset-0 transition-opacity duration-700 ease-out"
             style={{ opacity: i === active ? 1 : 0 }}
           >
-            {p.cover ? (
-              <img
-                src={p.cover}
-                alt={`Cover of the ${p.title} case study`}
-                className="h-full w-full object-cover"
-                loading={i === 0 ? 'eager' : 'lazy'}
-                decoding="async"
-              />
-            ) : (
-              /* No cover supplied yet. Rather than an empty frame, the
-                 project's own title fills the stage — the work is still what
-                 you land on, just set rather than photographed. */
-              <div className="flex h-full w-full items-center justify-center px-8">
-                <span className="max-w-[16ch] text-center text-hero leading-[0.95] text-white/8">
-                  {p.title}
-                </span>
-              </div>
-            )}
+            <StageCanvas
+              project={p}
+              active={i === active}
+              capsule={i === active ? capsuleRect : null}
+              onCanvasReady={i === active ? setCanvasReady : undefined}
+            />
           </div>
         ))}
 
@@ -138,14 +130,22 @@ export default function Stage() {
             band is stronger than it looks like it needs to be.
             So the top band runs to 0.86 where the annotation sits and the
             bottom to 0.92 where the metadata does, both fading to nothing
-            across the middle so the work itself stays unobstructed. */}
+            across the middle so the work itself stays unobstructed.
+
+            Fallback scrims. Visible whenever the active project's shader
+            is not yet compositing its own darkening — the brief window
+            before WebGL/texture is ready, or permanently if createRefractor
+            never succeeds. Never both this AND the shader's scrim at once:
+            this fades to 0 the instant onCanvasReady(true) fires. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[52%] bg-gradient-to-b from-void/86 via-void/60 to-transparent"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[52%] bg-gradient-to-b from-void/86 via-void/60 to-transparent transition-opacity duration-300"
+          style={{ opacity: canvasReady ? 0 : 1 }}
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[56%] bg-gradient-to-t from-void/96 via-void/88 to-transparent"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[56%] bg-gradient-to-t from-void/96 via-void/88 to-transparent transition-opacity duration-300"
+          style={{ opacity: canvasReady ? 0 : 1 }}
         />
 
         {/* The positioning line is annotation ON the work, not a statement
@@ -172,11 +172,26 @@ export default function Stage() {
               <span className="label text-right">{current.role}{current.year ? ` · ${current.year}` : ''}</span>
             </div>
             <hr className="mt-3 border-0 border-t border-white/12" />
-            <Link to={`/work/${current.slug}`} className="group mt-6 inline-block">
-              <Glass as="span" className="inline-flex items-center gap-4 px-7 py-4">
-                <span className="text-card text-text">{current.title}</span>
-                <span className="label text-text" aria-hidden="true">Open →</span>
-              </Glass>
+            <Link to={`/work/${current.slug}`} className="group mt-6 inline-block" ref={capsuleRef}>
+              {/*
+                Once the shader is compositing this exact capsule (canvasReady),
+                the DOM wrapper must NOT also apply CSS .glass — that would
+                stack a second blur+tint on top of the shader's own tint+rim,
+                the same double-darkening bug class the contrast audit found
+                once already. `Glass` supplies the fallback look before that;
+                a plain span carries only the text once the shader has it.
+              */}
+              {canvasReady ? (
+                <span className="relative inline-flex items-center gap-4 px-7 py-4">
+                  <span className="text-card text-text">{current.title}</span>
+                  <span className="label text-text" aria-hidden="true">Open →</span>
+                </span>
+              ) : (
+                <Glass as="span" className="inline-flex items-center gap-4 px-7 py-4">
+                  <span className="text-card text-text">{current.title}</span>
+                  <span className="label text-text" aria-hidden="true">Open →</span>
+                </Glass>
+              )}
             </Link>
             {current.tagline && (
               <p className="mt-5 max-w-[46ch] text-text-dim">{current.tagline}</p>

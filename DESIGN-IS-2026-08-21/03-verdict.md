@@ -86,3 +86,48 @@ tasks' own reports:
 Full detail, including which checks were live versus static and the real
 shipped bundle sizes, is in
 `.superpowers/sdd/2026-08-21-behind-glass-redesign/task-9-report.md`.
+
+## Correction (2026-08-22, same day): the checks above were true but insufficient
+
+The final whole-plan review (dispatched on the most capable available model,
+after all 9 tasks individually passed) found that "canvas count = 1" and "GL
+context alive" — the checks above — do not prove the shader was actually
+*working*, only that it existed and hadn't crashed. Two real bugs slipped
+past every per-task review because each was scoped to its own task's diff,
+not the integration between tasks:
+
+- **The capsule-lens position was wrong.** `Stage.jsx` fed the shader's
+  DOM-measurement hook the tall scroll-track section instead of the actual
+  sticky viewport div, so the capsule position drifted continuously with
+  scroll instead of staying constant. Root cause was a factual error in the
+  plan's own Task 5 text ("`trackRef`... already points at the sticky
+  container" — it does not), which the implementer followed faithfully.
+- **The shader was dead in local development.** `refract.js`'s `destroy()`
+  permanently disables a canvas element's ability to ever get a working
+  WebGL context again; `StageCanvas.jsx` reused a single React-rendered
+  canvas node across effect re-runs, so React StrictMode's dev-only
+  mount→cleanup→mount cycle handed the second setup an already-poisoned
+  node. Confirmed live: a console error, `isContextLost() === true`. This
+  also means Task 9's own dev-server verification pass was compromised
+  without knowing it — production doesn't run StrictMode, so the shader
+  did work in the `vite build` + `vite preview` check, but "confirmed live
+  in dev" for the parts that only ran in dev was not actually a clean
+  signal.
+
+Both are fixed as of commit `0722790` (one commit after the Task 9 record
+above), along with a related gap the same review found: the canvas was
+announcing itself ready — and painting over the `<img>` — before its cover
+texture had actually finished loading, contradicting `StageCanvas.jsx`'s
+own documented contract. All three fixes were independently re-verified
+live: the capsule's `getBoundingClientRect().top` now stays constant across
+multiple scroll positions within the same active project (confirming the
+lens tracks the real sticky element, not a drifting proxy for it), the
+canvas context stays alive with no console errors, and the canvas is
+observably absent from the DOM until its texture has loaded.
+
+The general lesson, not specific to this plan: a DOM-existence check
+(`canvas count > 0`) and a not-crashed check (`isContextLost() === false`)
+are necessary but not sufficient evidence that a visual feature is
+*correct*. Verifying the actual measured behavior (here: does the tracked
+position hold still when it should) is what caught what those two checks
+missed.

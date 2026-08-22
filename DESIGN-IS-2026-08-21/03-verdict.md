@@ -43,3 +43,46 @@ right now. That is exactly the situation principle #6 exists to catch.
 4. **#7 long-lasting — Name and own the trend exposure, or reduce it.** Evidence: the spec self-identifies dark glassmorphism and fully-rounded shapes as the two most imitated patterns in current software (`docs/superpowers/specs/2026-08-07-behind-glass-design.md` §2.1, §5.4). The mitigation the spec already proposes — tight tracking, extrabold display type, a hard editorial grid countering the soft shapes — should be checked against what's actually shipping (move 3's `Band.jsx`/`.shell` reuse is part of this), not left as intent.
 
 5. **#3 aesthetic — Retire the orphaned `--text-hero` token and reuse `Band.jsx` in `CaseStudy.jsx`.** Evidence: `--text-hero` used in exactly one place, an 8%-opacity fallback (`Stage.jsx:118`), while the real headline uses `--text-display` under a different name; `CaseStudy.jsx:18-20` hand-rolls layout and eyebrow markup instead of `.shell` and `Band.jsx`. Small, mechanical, and removes two of the three inconsistencies driving the #3 score.
+
+## Redesign response: complete (2026-08-22)
+
+The `docs/superpowers/sdd/2026-08-21-behind-glass-redesign/` plan (9 tasks)
+is the redesign response to this REDESIGN verdict. Commits `1727246..f56897d`
+carry the five top-leverage moves above: move 1 (re-wire the shader — Tasks
+2, 4, 5), move 2 (sheen/contrast fix — Task 7), move 3 (delete the three dead
+files — Task 6), move 4 (trend exposure — addressed structurally by move 5's
+`Band` reuse, per the plan's self-review; no separate task), move 5
+(`--text-hero` retirement / `Band` reuse in `CaseStudy.jsx` — Task 8). This
+note is added by Task 9 (full verification pass), the commit immediately
+following `f56897d` on this branch, which re-ran every check in this
+document against the shipped code rather than trusting the individual
+tasks' own reports:
+
+- **Canvas count on `/`**: confirmed **1** (was 0 at audit time) — live in
+  a real browser, both dev (Vite dev server, React StrictMode) and a
+  production `vite build` + `vite preview`. In the production build the
+  WebGL2 context stayed live (not lost) and the shader visibly took over
+  compositing from the `<img>` fallback once `requestAnimationFrame`
+  started delivering frames in the verification sandbox.
+- **Peak-sheen contrast**: re-verified numerically against the exact
+  shipped `src/index.css` value (peak alpha 0.095) at **4.5035:1** —
+  clears the 4.5:1 AA floor.
+- **Dead-code / orphan-token findings**: `Hero.jsx`, `WorkIndex.jsx`,
+  `GlassCard.jsx` have no remaining imports and no longer exist on disk;
+  `text-hero` has no remaining references. Both closed.
+- **Gate sweep**: `npm run lint` clean, `npm test` 58/58 passing across 5
+  files (confirmed Task 1's 7 `color.test.js` cases and Task 3's 6
+  `useCapsuleRect.test.js` cases both landed), `npm run build` succeeds.
+- **Widths / keyboard / reduced motion**: no horizontal overflow at
+  320/375/768/1024/1440/2560 on `/` or `/work/pocket-pediatrics`; the
+  keyboard path (skip link → Nav → stage capsule → `sr-only` fallback
+  grid) walked and confirmed live with real Tab key presses; `usePush.js`
+  has zero diff across the whole plan (confirmed via `git diff`), and
+  `StageCanvas`'s render loop was confirmed, live, to read
+  `--push-x/-y/-force` off `documentElement` correctly under a frozen
+  static value (the WebGL context stayed alive and kept rendering with no
+  console errors) — the same code path the reduced-motion branch exercises.
+
+Full detail, including which checks were live versus static and the real
+shipped bundle sizes, is in
+`.superpowers/sdd/2026-08-21-behind-glass-redesign/task-9-report.md`.

@@ -160,7 +160,14 @@ body {
     background:
       radial-gradient(
         130% 190% at calc(50% + var(--gx) * 46%) calc(50% + var(--gy) * 46%),
-        rgb(255 255 255 / calc(0.055 + var(--push-force) * 0.06)) 0%,
+        /* Peak sheen alpha capped so composite contrast can never cross
+           below 4.5:1 against a worst-case bright cover, even at
+           --push-force: 1. The original 0.055 + force*0.06 (peak 0.115)
+           was added without re-checking against the contrast floor
+           measured before it existed, and regressed title text to 4.30:1
+           — found by /design-is audit, DESIGN-IS-2026-08-21/. Capped at
+           peak alpha 0.095 (0.055 + force*0.04), verified at 4.50:1. */
+        rgb(255 255 255 / calc(0.055 + var(--push-force) * 0.04)) 0%,
         rgb(255 255 255 / 0.012) 46%,
         transparent 72%
       ),

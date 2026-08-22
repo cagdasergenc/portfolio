@@ -12,7 +12,8 @@
  * Lit Paper sets every section title top-first above a centred column. The
  * inversion is the point.
  */
-export default function Band({ index, reading, title, id, children, className = '' }) {
+export default function Band({ index, reading, title, id, titleAs = 'h2', children, className = '' }) {
+  const TitleTag = titleAs
   return (
     <section id={id} className={`shell py-24 md:py-32 ${className}`}>
       <div className="band-ticks" aria-hidden="true" data-reveal />
@@ -25,9 +26,9 @@ export default function Band({ index, reading, title, id, children, className = 
       <hr className="mt-4 border-0 border-t border-white/12" />
 
       {title && (
-        <h2 className="mt-6 max-w-[20ch] text-title" data-reveal>
+        <TitleTag className="mt-6 max-w-[20ch] text-title" data-reveal>
           {title}
-        </h2>
+        </TitleTag>
       )}
 
       {children}

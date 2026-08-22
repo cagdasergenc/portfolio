@@ -17,7 +17,7 @@ export default function CaseStudy() {
 
   return (
     <div ref={ref}>
-      <Band index="Case study" reading={project.role || ''} title={project.title}>
+      <Band index="Case study" reading={project.role || ''} title={project.title} titleAs="h1">
         <p className="mt-6 max-w-[46ch] text-xl text-text-dim" data-reveal>{project.tagline}</p>
 
         {/* A deployed, working app is stronger evidence than a PDF, so it goes

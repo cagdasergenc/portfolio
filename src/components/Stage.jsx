@@ -30,13 +30,14 @@ import WorkGridFlat from './WorkGridFlat'
 export default function Stage() {
   const projects = getProjects()
   const trackRef = useRef(null)
+  const stageRef = useRef(null)
   const [active, setActive] = useState(0)
   const [progress, setProgress] = useState(0)
   const lowFi = useLowFi()
   const current = projects[active]
   const capsuleRef = useRef(null)
   const [canvasReady, setCanvasReady] = useState(false)
-  const capsuleRect = useCapsuleRect(capsuleRef, trackRef, [current?.slug])
+  const capsuleRect = useCapsuleRect(capsuleRef, stageRef, [current?.slug])
 
   // Explicit reset, not left to the outgoing project's effect cleanup:
   // correctness for the "never both scrims at once" invariant shouldn't
@@ -110,7 +111,7 @@ export default function Stage() {
       style={{ height: `${projects.length * 100}vh` }}
       aria-label="Selected work"
     >
-      <div className="sticky top-0 flex h-screen flex-col justify-end overflow-hidden">
+      <div ref={stageRef} className="sticky top-0 flex h-screen flex-col justify-end overflow-hidden">
         {/* The work itself, full bleed, permanently on stage. */}
         {projects.map((p, i) => (
           <div

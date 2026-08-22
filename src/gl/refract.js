@@ -62,6 +62,7 @@ export function createRefractor(canvas, imageUrl) {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
 
   let destroyed = false
+  let loaded = false
   const img = new Image()
   img.crossOrigin = 'anonymous'
   img.onload = () => {
@@ -69,6 +70,7 @@ export function createRefractor(canvas, imageUrl) {
     gl.bindTexture(gl.TEXTURE_2D, tex)
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img)
+    loaded = true
   }
   img.src = imageUrl
 
@@ -82,6 +84,7 @@ export function createRefractor(canvas, imageUrl) {
   let voidRgb = [0.039, 0.039, 0.047] // #0A0A0C — overwritten by setVoidColor before first real render
 
   return {
+    isReady() { return loaded },
     setPush(x, y, f) { push = [x, y]; force = f },
     setCapsule(cx, cy, hw, hh) { capsule = [cx, cy, hw, hh] },
     setScrims({ topHeight, topStart, topMid, botHeight, botStart, botMid }) {

@@ -24,7 +24,6 @@ const SCRIMS = {
  * plain <img> and never pay for a WebGL context at all.
  */
 export default function StageCanvas({ project, active, capsule, onCanvasReady }) {
-  const canvasRef = useRef(null)
   const containerRef = useRef(null)
   const refractorRef = useRef(null)
   const rafRef = useRef(0)
@@ -34,14 +33,30 @@ export default function StageCanvas({ project, active, capsule, onCanvasReady })
   useEffect(() => {
     if (!active || !project.cover) return
 
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const container = containerRef.current
+    if (!container) return
+
+    // Created and appended imperatively, not via a React-rendered <canvas
+    // ref>: a canvas whose WebGL context has been explicitly lost
+    // (destroy(), below) can never produce a working context again. React
+    // StrictMode's dev-only mount->cleanup->mount would otherwise hand the
+    // second setup the same poisoned DOM node -- creating a fresh element
+    // here guarantees setup always gets a canvas that has never had a
+    // context. It also isn't appended until the texture is actually ready
+    // (see the frame() loop below), so the <img> genuinely stays what's
+    // visible until there's real content to swap to.
+    const canvas = document.createElement('canvas')
+    canvas.className = 'absolute inset-0 h-full w-full'
+    canvas.setAttribute('aria-hidden', 'true')
 
     const refractor = createRefractor(canvas, project.cover)
     if (!refractor) {
       // WebGL2 unavailable or the shader failed to compile on this GPU.
       // The <img> underneath is already showing — nothing to fall back
-      // FROM, there is simply no enhancement this time.
+      // FROM, there is simply no enhancement this time. canvasLive already
+      // defaults false, so this is a no-op in practice, but the lint rule
+      // flags the pattern regardless of that.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCanvasLive(false)
       onCanvasReady?.(false)
       return
@@ -70,8 +85,9 @@ export default function StageCanvas({ project, active, capsule, onCanvasReady })
         parseFloat(style.getPropertyValue('--push-force')) || 0,
       )
       refractor.render()
-      if (!announced) {
+      if (!announced && refractor.isReady()) {
         announced = true
+        container.appendChild(canvas)
         setCanvasLive(true)
         onCanvasReady?.(true)
       }
@@ -84,6 +100,7 @@ export default function StageCanvas({ project, active, capsule, onCanvasReady })
       window.removeEventListener('resize', resize)
       refractor.destroy()
       refractorRef.current = null
+      if (canvas.isConnected) container.removeChild(canvas)
       setCanvasLive(false)
       onCanvasReady?.(false)
     }
@@ -114,9 +131,6 @@ export default function StageCanvas({ project, active, capsule, onCanvasReady })
             {project.title}
           </span>
         </div>
-      )}
-      {active && project.cover && (
-        <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
       )}
     </div>
   )

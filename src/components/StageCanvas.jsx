@@ -32,11 +32,7 @@ export default function StageCanvas({ project, active, capsule, onCanvasReady })
 
   // Mount/tear down the refractor as `active` and `project.cover` change.
   useEffect(() => {
-    if (!active || !project.cover) {
-      setCanvasLive(false)
-      onCanvasReady?.(false)
-      return
-    }
+    if (!active || !project.cover) return
 
     const canvas = canvasRef.current
     if (!canvas) return

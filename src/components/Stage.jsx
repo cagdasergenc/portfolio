@@ -38,6 +38,19 @@ export default function Stage() {
   const [canvasReady, setCanvasReady] = useState(false)
   const capsuleRect = useCapsuleRect(capsuleRef, trackRef, [current?.slug])
 
+  // Explicit reset, not left to the outgoing project's effect cleanup:
+  // correctness for the "never both scrims at once" invariant shouldn't
+  // depend on cleanup-ordering. React's documented pattern for resetting
+  // state in response to a changed dep is to adjust it during render
+  // (not in a useEffect, which is one render+commit too late and trips
+  // react-hooks/set-state-in-effect) — see "Resetting state when a prop
+  // changes" in the React docs.
+  const [readySlug, setReadySlug] = useState(current?.slug)
+  if (readySlug !== current?.slug) {
+    setReadySlug(current?.slug)
+    setCanvasReady(false)
+  }
+
   useEffect(() => {
     if (lowFi) return
     const track = trackRef.current

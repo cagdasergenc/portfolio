@@ -48,7 +48,15 @@ void main() {
   vec2 p = (vUv - uCapsule.xy) * vec2(aspect, 1.0);
   vec2 b = uCapsule.zw * vec2(aspect, 1.0);
 
-  float d = sdRoundBox(p, b, uRadius);
+  // A rounded-box SDF is only well-formed when r <= min(b.x, b.y); past
+  // that it self-intersects into a point instead of a curve. uRadius was
+  // tuned for the old hardcoded card-shaped capsule and is a fixed
+  // fraction of canvas height regardless of the capsule's actual size --
+  // now that the capsule is measured from the real DOM element (and can
+  // be much shorter than it is wide), it has to be clamped per-shape
+  // rather than trusted as a safe constant.
+  float r = min(uRadius, min(b.x, b.y));
+  float d = sdRoundBox(p, b, r);
 
   // Inside the capsule only. edge = 0 at the rim, 1 deep inside.
   float inside = step(d, 0.0);

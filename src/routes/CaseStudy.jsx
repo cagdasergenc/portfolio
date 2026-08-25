@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getProject } from '../lib/content'
+import SEO from '../components/SEO'
 import Band from '../components/Band'
 import Prose from '../components/Prose'
 import { useReveal } from '../hooks/useReveal'
@@ -17,6 +18,11 @@ export default function CaseStudy() {
 
   return (
     <div ref={ref}>
+      <SEO
+        title={`${project.title} — Case Study | Çağdaş Ergenç`}
+        description={project.tagline}
+        path={`/work/${project.slug}`}
+      />
       <Band index="Case study" reading={project.role || ''} title={project.title} titleAs="h1">
         <p className="mt-6 max-w-[46ch] text-xl text-text-dim" data-reveal>{project.tagline}</p>
 

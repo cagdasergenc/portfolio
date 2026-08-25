@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { usePush } from './hooks/usePush'
 import Nav from './components/Nav'
+import PersonSchema from './components/PersonSchema'
 import Home from './routes/Home'
 import CaseStudy from './routes/CaseStudy'
 import NotFound from './routes/NotFound'
@@ -21,6 +22,7 @@ export default function App() {
   usePush()
   return (
     <div className="min-h-screen">
+      <PersonSchema />
       <ScrollToTop />
       {/* Visible only on focus. The first Tab stop on every page, so a
           keyboard or screen-reader visitor can skip the nav instead of

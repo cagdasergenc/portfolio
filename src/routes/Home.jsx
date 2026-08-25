@@ -1,3 +1,4 @@
+import SEO from '../components/SEO'
 import Rail from '../components/Rail'
 import Stage from '../components/Stage'
 import WebBand from '../components/WebBand'
@@ -20,6 +21,11 @@ import Contact from '../components/Contact'
 export default function Home() {
   return (
     <>
+      <SEO
+        title="Çağdaş Ergenç — Product & UX Designer"
+        description="Three UX case studies, written out in full, plus the e-commerce sites I designed and built."
+        path="/"
+      />
       <Rail />
       <Stage />
       <WebBand />

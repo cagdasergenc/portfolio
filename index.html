@@ -8,12 +8,21 @@
          scrollbars still assume light and flash against the dark page. -->
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#0A0A0C" />
-    <title>Çağdaş Ergenç — UX and Product Design</title>
-    <meta name="description" content="Three UX case studies, written out in full, plus the e-commerce sites I designed and built." />
-    <meta property="og:title" content="Çağdaş Ergenç — UX and Product Design" />
-    <meta property="og:description" content="Three UX case studies, written out in full, plus the e-commerce sites I designed and built." />
+    <!-- No static title/description/og:title/og:description/og:url here on
+         purpose. This root renders via createRoot (a client-only render
+         into #root), not hydrateRoot -- React 19's title/meta dedup only
+         works against tags it rendered itself in a previous pass, so a
+         static tag baked into this file would sit alongside every route's
+         <SEO>-rendered one forever, never replaced. Verified live: with a
+         static <title> and <meta name="description"> both present, every
+         route ended up with two of each in the DOM. Every route (Home,
+         CaseStudy, NotFound) renders <SEO> unconditionally, so there's no
+         real gap -- except for crawlers that don't execute JS, which will
+         see nothing here instead of a wrong or duplicated value. That's
+         the better failure mode of the two. -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://cagdasergenc.netlify.app/" />
+    <!-- No og:image yet -- needs a real asset. summary_large_image without
+         one shows a broken/blank preview, worse than summary with none. -->
     <meta name="twitter:card" content="summary" />
     <!-- Switzer is the display face for every h1/h2/h3, including the Hero
          h1 that is almost always this page's LCP element. Preloading it

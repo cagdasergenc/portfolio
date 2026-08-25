@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Hand-written, not generated: this site has exactly one homepage and a
+  small, slow-changing set of case studies, so a build-time sitemap
+  generator would be more code than value. Add a <url> block here when a
+  new project ships. sustainability-report is deliberately left out --
+  it's still placeholder content (see content/sustainability-report/), not
+  ready to be indexed.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://cagdasergenc.com/</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://cagdasergenc.com/work/pocket-pediatrics</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cagdasergenc.com/work/exe</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

@@ -1,36 +1,60 @@
 ---
 title: EXE
-tagline: WRITE ONE SHARP LINE, MAX 12 WORDS
-role: Concept, Interaction Design
-context: IED Barcelona, MA brief
+tagline: A life-admin agent for freelancers, built to execute — within hard limits
+role: Concept, AI Safety Design, Interaction Design
+context: IED Barcelona, MA design brief
 year: 2026
-duration: FILL IN
-team: FILL IN
 tools: Figma
 featured: true
 order: 2
 ---
 
 ## Context
-Where this happened, who it was for, and why it existed. Two or three
-sentences. Name the institution and the constraint you were working inside.
+A design brief for the IED Barcelona MA program, framed as an AI Trust &
+Safety brief for a fictional product team, Runtime Labs, building EXE — a
+personal life-admin agent for freelancers. The brief's premise sits in its
+own subtitle: *execute, don't suggest*. An agent that only suggests is safe
+and mostly useless; one that acts on your behalf is useful and genuinely
+risky. The 21-page brief works through what it would take to make that
+trade-off responsibly.
 
-## Problem
-One sharp statement. Not a paragraph. What was actually broken, for whom.
+## The tension
+Most AI agent concepts stop at the demo stage — drafting an email, filling a
+form, booking a slot with a human still watching. EXE is framed past that
+point: an agent with standing permission to act, unsupervised, on things
+that cost real money or carry real consequences if it gets them wrong.
+Making the agent capable and making it safe aren't sequential steps here —
+the brief treats them as the same design decision, worked through together.
 
-## Research
-What you did, and what you found. Name the methods and the number of people.
-"Six interviews with paediatric nurses" beats "extensive user research".
+## Frameworks applied
+Rather than inventing a safety approach from scratch, the brief applies
+three existing standards to one product: the EU AI Act, NIST's AI Risk
+Management Framework, and the OWASP LLM Top 10. Together they drive the
+brief's core structural decision — autonomy tiers: what EXE can do without
+asking, what it can do with standing but revocable permission, and what
+always requires a human to confirm — plus a set of hard behavioral limits
+the agent cannot be prompted or argued out of.
 
-## Insight
-The turn. The one thing you learned that changed the design. This is the
-section a hiring manager reads to find out how you think — it matters more
-than the screens.
+## Threat modeling
+The brief models two risk scenarios and three attacker profiles — prompt
+injection, delegate misuse, and account takeover — against a named user
+persona, working through what each attack would actually look like against
+an agent that holds real permissions, not a hypothetical one.
 
-## Solution
-What you made, and why those decisions and not the obvious ones. Reference
-images by bare filename: ![Agent handoff, second pass](01-handoff.jpg)
+## Design response
+For each threat, the brief designs a specific response rather than a
+general "add more guardrails" answer: confirmation mechanisms for the
+actions that need one, transparency so the user can see what the agent is
+about to do or has already done, and accountability so any action traces
+back to a decision and a reason. The autonomy tiers are what these
+mechanisms attach to — a tier decides whether a given action gets silent
+execution, a confirmation prompt, or is blocked outright.
 
-## Outcome
-The result, a number, or an honest learning. "We never tested it with
-children" is a stronger ending than a fabricated metric.
+## Status
+This is a completed design brief, not a built or user-tested product —
+worth saying plainly, since the rest of the work on this site is. EXE is 21
+pages of applied framework, threat modeling, and interaction design for the
+confirmation, transparency, and accountability layer. It hasn't been
+prototyped, and none of its assumptions about how a freelancer would
+actually respond to a confirmation prompt mid-task have been tested against
+a real person. That's the obvious next step if it went further.

@@ -3,8 +3,7 @@ title: Pocket Pediatrics
 tagline: Cognitive load is the real stressor for caregivers of medically complex children
 role: AI Prototyping & Build, UX Design, Data Analysis
 context: IED Barcelona with Fujitsu
-year: 2025
-duration: FILL IN
+year: 2026
 team: 4 designers — Larsen, Bommakanti, Moraschi, Ergenç
 tools: Figma, React Native, Expo, Supabase, GPT-4o-mini, Whisper
 live_url: https://pocpedv2.netlify.app

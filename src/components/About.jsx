@@ -45,7 +45,7 @@ export default function About() {
           </p>
           <p data-reveal>
             I work from research through to something people can actually
-            click — user interviews and usability testing, Figma component
+            click: user interviews and usability testing, Figma component
             systems, and functional builds in React Native when static
             screens aren't enough to actually learn something. Comfortable
             reading frontend and backend code, and explaining technical work

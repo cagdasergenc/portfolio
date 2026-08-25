@@ -29,10 +29,24 @@ uniform float uRadius;    // corner radius, normalised to width
 uniform vec3  uVoid;       // --color-void, as 0..1 floats — no hardcoded duplicate
 uniform vec4  uScrimTop;   // height, alpha at band start, alpha at midpoint, unused
 uniform vec4  uScrimBot;   // height, alpha at band start, alpha at midpoint, unused
+uniform float uImageAspect; // cover image's own width/height, for object-fit: cover
 
 float sdRoundBox(vec2 p, vec2 b, float r) {
   vec2 q = abs(p) - b + r;
   return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
+}
+
+/* object-fit: cover, done in the shader. Sampling uCover directly at
+   screen-space UV silently stretches the source image to the canvas's own
+   aspect ratio -- invisible when the two aspects are close (Pocket
+   Pediatrics' 16:9 cover against a widescreen canvas), a visible warp
+   otherwise (EXE's ~5:4 cover against the same canvas). This crops instead
+   of stretching, matching what the plain <img> fallback already does. */
+vec2 coverUV(vec2 uv, float canvasAspect, float imageAspect) {
+  vec2 scale = canvasAspect > imageAspect
+    ? vec2(1.0, imageAspect / canvasAspect)
+    : vec2(canvasAspect / imageAspect, 1.0);
+  return (uv - 0.5) * scale + 0.5;
 }
 
 /* Piecewise-linear, matching a 3-stop CSS gradient exactly rather than an
@@ -72,12 +86,12 @@ void main() {
   vec2 drag = toCursor * prox * uForce * 0.05 * inside;
 
   vec2 uv = vUv + dir * lens + drag;
-  vec3 col = texture(uCover, clamp(uv, 0.0, 1.0)).rgb;
+  vec3 col = texture(uCover, clamp(coverUV(uv, aspect, uImageAspect), 0.0, 1.0)).rgb;
 
   // Chromatic split at the rim — subtle, and only where refraction is strong.
   float ca = (1.0 - edge) * inside * 0.006;
-  col.r = texture(uCover, clamp(uv + dir * ca, 0.0, 1.0)).r;
-  col.b = texture(uCover, clamp(uv - dir * ca, 0.0, 1.0)).b;
+  col.r = texture(uCover, clamp(coverUV(uv + dir * ca, aspect, uImageAspect), 0.0, 1.0)).r;
+  col.b = texture(uCover, clamp(coverUV(uv - dir * ca, aspect, uImageAspect), 0.0, 1.0)).b;
 
   // Glass tint and lit rim.
   col = mix(col, col * 0.55 + 0.06, inside * 0.55);

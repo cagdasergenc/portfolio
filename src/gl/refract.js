@@ -51,6 +51,7 @@ export function createRefractor(canvas, imageUrl) {
     cover: u('uCover'), res: u('uRes'), push: u('uPush'),
     force: u('uForce'), capsule: u('uCapsule'), radius: u('uRadius'),
     voidColor: u('uVoid'), scrimTop: u('uScrimTop'), scrimBot: u('uScrimBot'),
+    imageAspect: u('uImageAspect'),
   }
 
   const tex = gl.createTexture()
@@ -63,6 +64,10 @@ export function createRefractor(canvas, imageUrl) {
 
   let destroyed = false
   let loaded = false
+  // 1 until the real image loads and reveals its own ratio -- matches the
+  // 1x1 placeholder texture already bound above, so there's nothing to
+  // stretch before then either.
+  let imageAspect = 1
   const img = new Image()
   img.crossOrigin = 'anonymous'
   img.onload = () => {
@@ -70,6 +75,7 @@ export function createRefractor(canvas, imageUrl) {
     gl.bindTexture(gl.TEXTURE_2D, tex)
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img)
+    imageAspect = img.naturalWidth / img.naturalHeight
     loaded = true
   }
   img.src = imageUrl
@@ -112,6 +118,7 @@ export function createRefractor(canvas, imageUrl) {
       gl.uniform4f(U.scrimTop, scrimTop[0], scrimTop[1], scrimTop[2], 0)
       gl.uniform4f(U.scrimBot, scrimBot[0], scrimBot[1], scrimBot[2], 0)
       gl.uniform1f(U.radius, 0.08)
+      gl.uniform1f(U.imageAspect, imageAspect)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
     },
     destroy() {

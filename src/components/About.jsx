@@ -38,10 +38,22 @@ export default function About() {
         )}
         <div className="max-w-[52ch] space-y-6 text-lg text-text-dim">
           <p data-reveal>
-            Bio placeholder — site owner to supply two or three short
-            paragraphs: background and years of experience, how the work
-            happens end to end, current status and availability. Replace
-            before shipping.
+            Five years across industrial design, digital product design, and
+            AI-assisted prototyping, built in Turkey, Poland, Germany, and
+            Spain. I'm currently completing an MA in Strategic Design
+            Management at IED Barcelona, graduating December 2026.
+          </p>
+          <p data-reveal>
+            I work from research through to something people can actually
+            click — user interviews and usability testing, Figma component
+            systems, and functional builds in React Native when static
+            screens aren't enough to actually learn something. Comfortable
+            reading frontend and backend code, and explaining technical work
+            to people who didn't build it.
+          </p>
+          <p data-reveal>
+            Based in Barcelona. Available now, open to remote work across the
+            EU.
           </p>
         </div>
       </div>

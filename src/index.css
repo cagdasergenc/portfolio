@@ -199,7 +199,16 @@ body {
   .shell { margin-inline: auto; max-width: 1400px; padding-inline: 1.5rem; }
   @media (min-width: 768px) { .shell { padding-inline: 3rem; } }
 
-  .grid12 { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 2rem; }
+  /* column-gap, not gap: at 2rem across 11 gaps between 12 notional
+     columns, the grid's own minimum width (352px, from gaps alone) exceeds
+     a typical mobile content box before any column has real content --
+     the lone col-span-full child then renders wider than its own grid
+     container, overflowing the shell's right padding by the difference.
+     Confirmed live at 375px: the child measured 352px inside a 327px
+     parent. row-gap keeps its original value; WorkGridFlat's only
+     consumer already overrides it via gap-y-20 regardless. */
+  .grid12 { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); row-gap: 2rem; column-gap: 1rem; }
+  @media (min-width: 768px) { .grid12 { column-gap: 2rem; } }
   .col-read { grid-column: 1 / -1; }
   @media (min-width: 900px) { .col-read { grid-column: 3 / 10; } }
 

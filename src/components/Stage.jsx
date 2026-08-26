@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { getProjects } from '../lib/content'
 import { useLowFi } from '../hooks/useLowFi'
 import { useCapsuleRect } from '../hooks/useCapsuleRect'
+import { nextActiveIndex } from '../lib/activeIndex'
 import Glass from './Glass'
 import StageCanvas from './StageCanvas'
 import WorkGridFlat from './WorkGridFlat'
@@ -57,6 +58,14 @@ export default function Stage() {
     const track = trackRef.current
     if (!track) return
 
+    // A boundary crossed by a hair re-triggers the 700ms crossfade before
+    // the last one finishes -- ordinary scroll jitter right at a boundary
+    // (trackpads and high-precision wheels both produce this) was enough
+    // to do it repeatedly, ghosting two projects together instead of ever
+    // completing one clean transition. Confirmed live: a boundary-scroll
+    // recording showed exactly this. 0.06 is a dead zone, in project units,
+    // an already-active index must be pushed past before giving up its
+    // slot, so noise that doesn't clear it can't retrigger anything.
     let frame = 0
     const apply = () => {
       frame = 0
@@ -64,7 +73,8 @@ export default function Stage() {
       const scrollable = Math.max(1, rect.height - window.innerHeight)
       const p = Math.min(1, Math.max(0, -rect.top / scrollable))
       setProgress(p)
-      setActive(Math.min(projects.length - 1, Math.floor(p * projects.length + 0.0001)))
+      const raw = p * projects.length
+      setActive((prev) => nextActiveIndex(prev, raw, projects.length, 0.06))
     }
     const schedule = () => {
       if (frame) return

@@ -92,6 +92,7 @@ function build(path, raw) {
     slug,
     ...data,
     featured: data.featured === 'true',
+    draft: data.draft === 'true',
     order: Number(data.order ?? 99),
     cover: assets['cover.jpg'] ?? assets['cover.webp'] ?? assets['cover.png'],
     pdf: assets['case-study.pdf'],
@@ -102,8 +103,13 @@ function build(path, raw) {
   }
 }
 
+// Filtered once, at the same source both getProjects and getProject read
+// from -- a draft is unreachable at its /work/:slug URL too, not just
+// missing from the listing. Still on disk, just not shipped until real
+// content replaces the FILL IN placeholders.
 const PROJECTS = Object.entries(RAW)
   .map(([path, raw]) => build(path, raw))
+  .filter((p) => !p.draft)
   .sort((a, b) => a.order - b.order)
 
 export function getProjects() { return PROJECTS }

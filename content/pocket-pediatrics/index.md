@@ -5,7 +5,7 @@ role: AI Prototyping & Build, UX Design, Data Analysis
 context: IED Barcelona with Fujitsu
 year: 2026
 team: 4 designers (Larsen, Bommakanti, Moraschi, Ergenç)
-tools: Figma, React Native, Expo, Supabase, GPT-4o-mini, Whisper
+tools: Figma, Flutter, TypeScript, Supabase, GPT-4o-mini, Whisper
 live_url: https://pocpedv2.netlify.app
 live_hint: log in as oscar
 featured: true
@@ -17,8 +17,8 @@ A brief from Fujitsu at IED Barcelona, working on the FHS experience for
 families managing chronic paediatric conditions. Four of us, based in
 Barcelona, with access to local caregivers and pharmacies for fieldwork.
 
-**My role.** I built the working prototype: the React Native app, the
-Supabase backend, and the GPT-4o-mini and Whisper integration behind the
+**My role.** I built the working prototype: the Flutter app, the TypeScript
+backend on Supabase, and the GPT-4o-mini and Whisper integration behind the
 summaries and the children's story. I ran the iteration cycles on it. I also
 worked on data analysis, journey mapping, the framing that got us from
 scattered findings to a single problem statement, and the UX design of the
@@ -76,9 +76,10 @@ An AI-powered care assistant embedded inside FHS, built around one question:
 what if every caregiver left each appointment with a clear plan and the
 confidence to act on it?
 
-This one runs. It is not a Figma prototype. It is a React Native app on
-Supabase, with GPT-4o-mini generating the plain-language summaries and
-Whisper handling voice input, deployed and testable. Building it rather than
+This one runs. It is not a Figma prototype. It is a Flutter app with a
+TypeScript backend on Supabase, with GPT-4o-mini generating the
+plain-language summaries and Whisper handling voice input, deployed and
+testable. Building it rather than
 mocking it changed what we could learn: the 14 participants used a working
 product, so their feedback was about whether the summaries were actually
 understandable, not whether they could imagine them being understandable.

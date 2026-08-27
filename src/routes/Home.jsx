@@ -23,7 +23,7 @@ export default function Home() {
     <>
       <SEO
         title="Çağdaş Ergenç — Product & UX Designer"
-        description="Three UX case studies, written out in full, plus the e-commerce sites I designed and built."
+        description="Three UX case studies, written out in full, plus the e-commerce sites I designed."
         path="/"
       />
       <Rail />

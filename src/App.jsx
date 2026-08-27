@@ -18,12 +18,30 @@ function ScrollToTop() {
   return null
 }
 
+function TrackPageViews() {
+  const location = useLocation()
+  useEffect(() => {
+    // index.html's gtag config has send_page_view disabled specifically so
+    // this is the only place page_view fires -- once per real navigation,
+    // including the first, rather than the static script's one-time call
+    // plus this one disagreeing after every route change. gtag is missing
+    // entirely for anyone blocking it, so this has to check before calling.
+    if (typeof window.gtag !== 'function') return
+    window.gtag('event', 'page_view', {
+      page_path: location.pathname + location.search,
+      page_location: window.location.href,
+    })
+  }, [location])
+  return null
+}
+
 export default function App() {
   usePush()
   return (
     <div className="min-h-screen">
       <PersonSchema />
       <ScrollToTop />
+      <TrackPageViews />
       {/* Visible only on focus. The first Tab stop on every page, so a
           keyboard or screen-reader visitor can skip the nav instead of
           walking it on every route change. */}

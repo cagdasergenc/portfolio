@@ -111,9 +111,16 @@ export default function CaseStudy() {
             })}
 
             {project.pdf && (
+              // Opens in a new tab rather than forcing `download`: every
+              // major browser renders a PDF inline with its own viewer
+              // (scroll, zoom, and a download button of its own) when
+              // there's no download attribute, so this is both a preview
+              // and a download in one link, matching what "Read the PDF"
+              // actually promises.
               <a
                 href={project.pdf}
-                download
+                target="_blank"
+                rel="noreferrer"
                 /* `hover:text-void` needs to win over `.label`'s unlayered
                    default on :hover too, so this is plain utilities, not
                    `.label` + a color override. */

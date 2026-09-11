@@ -132,14 +132,15 @@ screen readers and indexed by search. Describe what is in the image.
 
 | Project | State | Needed |
 | --- | --- | --- |
-| Pocket Pediatrics | `case-study.pdf` present, **33 MB** | Re-export under 8 MB |
-| EXE | missing | `content/exe/case-study.pdf` |
+| Pocket Pediatrics | `case-study.pdf` present, 8.8 MB, 31 pages | Nothing blocking |
+| EXE | `case-study.pdf` present, 10.4 MB, 21 pages | Nothing blocking |
 | Sustainability report | missing | `content/sustainability-report/case-study.pdf` |
 
-**The 33 MB one is a launch blocker.** It is slower to download than most
-people will wait, and it is 25 rasterised pages with no text layer — so it is
-also unsearchable and unreadable to a screen reader. Re-export from the source
-with image compression on.
+Both decks are still large for a phone connection. Neither is a blocker any
+more: the case-study pages now carry the evidence inline as WebP exports of
+the deck pages, and the PDF is the optional deeper read behind a preview
+card. Set `pdf_pages` in frontmatter whenever a deck is re-exported, since
+the card prints that number.
 
 PDFs are a secondary path here. The case-study pages are the primary one, which
 is the whole reason for this redesign — nobody should need to open a PDF to
@@ -149,17 +150,9 @@ understand your work.
 
 ## 6. About section
 
-**Photo** → `src/assets/about.jpg`
-
-| Spec | Value |
-| --- | --- |
-| Aspect ratio | 4:5 portrait |
-| Size | 1600 × 2000 px |
-| File size | ≤ 400 KB |
-
-The photo you already sent works well — warm light from frame-right against a
-neutral wall, which is the same light the whole site is built around. Send that
-one at full resolution.
+**Photo** → `src/assets/about.jpg` — done. A black and white portrait against
+a dark background, 928 × 1152, 222 KB. The alt text in `About.jsx` describes
+that image; if the portrait is ever swapped, change the alt text with it.
 
 **Bio** — 2–3 short paragraphs. What you do, where you trained, what you are
 looking for. Not a personality statement. Same banned words as §1.

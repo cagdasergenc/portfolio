@@ -1,11 +1,9 @@
 import { useRef } from 'react'
 import { useReveal } from '../hooks/useReveal'
 
-// src/assets/about.jpg does not exist yet — the site owner needs to supply a
-// portrait. import.meta.glob (rather than a static `import portrait from
-// '../assets/about.jpg'`) resolves to an empty object when no file matches,
-// so its absence doesn't fail the build. Once the file is added, this picks
-// it up automatically with no code change.
+// import.meta.glob rather than a static `import portrait from
+// '../assets/about.jpg'`: it resolves to an empty object when no file
+// matches, so removing or replacing the portrait can never fail the build.
 const PORTRAIT_FILES = import.meta.glob('../assets/about.jpg', { eager: true, query: '?url', import: 'default' })
 const portrait = PORTRAIT_FILES['../assets/about.jpg']
 
@@ -28,7 +26,7 @@ export default function About() {
         {portrait ? (
           <img
             src={portrait}
-            alt="Çağdaş Ergenç, photographed against a warm wall in afternoon light"
+            alt="Çağdaş Ergenç, a black and white portrait against a dark background"
             className="aspect-[4/5] w-full rounded-panel border border-white/10 object-cover"
             loading="lazy"
             decoding="async"
@@ -43,13 +41,14 @@ export default function About() {
             Spain. I'm currently completing an MA in Strategic Design
             Management at IED Barcelona, graduating December 2026.
           </p>
+          {/* Deliberately not a second copy of the hero line. The stage
+              states the positioning; this is the detail behind it. */}
           <p data-reveal>
-            I work from research through to something people can actually
-            click: user interviews and usability testing, Figma component
-            systems, and functional builds in React Native when static
-            screens aren't enough to actually learn something. Comfortable
-            reading frontend and backend code, and explaining technical work
-            to people who didn't build it.
+            In practice: user interviews and usability testing, Figma
+            component systems, and functional builds in Flutter and React
+            Native when static screens are not enough to learn anything
+            real. Comfortable reading frontend and backend code, and
+            explaining technical work to people who didn't build it.
           </p>
           <p data-reveal>
             Based in Barcelona. Available now, open to remote work across the

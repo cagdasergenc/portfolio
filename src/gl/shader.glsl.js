@@ -105,6 +105,13 @@ void main() {
   float topT = (1.0 - vUv.y) / max(uScrimTop.x, 1e-4);
   float topA = (vUv.y > 1.0 - uScrimTop.x) ? scrimAlpha(topT, uScrimTop.y, uScrimTop.z) : 0.0;
 
+  // The top band also falls away to the RIGHT. The intro is left-anchored
+  // and never crosses ~0.55 of the frame even at the narrowest desktop
+  // width, so protecting the full width was darkening the half of the
+  // artwork that carries the illustration for no reading benefit. Full
+  // strength across the text, almost nothing by the right edge.
+  topA *= mix(1.0, 0.12, smoothstep(0.58, 0.92, vUv.x));
+
   float botT = vUv.y / max(uScrimBot.x, 1e-4);
   float botA = (vUv.y < uScrimBot.x) ? scrimAlpha(botT, uScrimBot.y, uScrimBot.z) : 0.0;
 

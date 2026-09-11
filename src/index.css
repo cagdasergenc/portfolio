@@ -39,6 +39,10 @@
 
 html {
   scroll-behavior: smooth;
+  /* The nav is a fixed pill 1.5rem from the top, so an anchored heading
+     would otherwise land underneath it. This is the offset every in-page
+     link and every :target now scrolls to. */
+  scroll-padding-top: 7rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* No light mode exists. Without this, native form controls and the
@@ -212,6 +216,58 @@ body {
   .col-read { grid-column: 1 / -1; }
   @media (min-width: 900px) { .col-read { grid-column: 3 / 10; } }
 
+  /* Figures. Deck pages are dense 16:9 slides, so they run the full width
+     of the reading column rather than the 62ch measure of the prose, and
+     every one opens larger on click. The wrapper is a real <button>, which
+     is what makes that reachable by keyboard. */
+  .fig-zoom {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 1px solid rgb(255 255 255 / 0.14);
+    border-radius: var(--radius-panel);
+    overflow: hidden;
+    background: rgb(255 255 255 / 0.04);
+    cursor: zoom-in;
+    transition: border-color 200ms ease-out, transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .fig-zoom:hover { border-color: rgb(255 255 255 / 0.30); transform: translateY(-2px); }
+  .fig-zoom img { display: block; width: 100%; }
+
+  figcaption {
+    margin-top: 0.85rem;
+    max-width: 68ch;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-text-dim);
+  }
+
+  /* The one overlay, used for both an enlarged figure and the deck. Sizing
+     is explicit because a <dialog> defaults to fit-content in both axes,
+     which would collapse the flex column inside it. */
+  .lightbox {
+    /* A modal <dialog> is centred by the UA's own `margin: auto` against
+       `inset: 0`. Tailwind's preflight zeroes margin on every element, so
+       without restoring it here the panel pins itself to the top left. */
+    inset: 0;
+    margin: auto;
+    width: min(1440px, 94vw);
+    height: 88vh;
+    max-width: none;
+    max-height: none;
+    padding: 1.25rem;
+    border: 1px solid rgb(255 255 255 / 0.14);
+    border-radius: var(--radius-panel);
+    background: rgb(16 16 20);
+    color: var(--color-text);
+    box-shadow: 0 28px 90px rgb(0 0 0 / 0.65);
+    overflow: hidden;
+  }
+  .lightbox::backdrop {
+    background: rgb(5 5 7 / 0.82);
+    backdrop-filter: blur(8px);
+  }
+
   .label {
     font-family: var(--font-mono);
     /* Explicit: About's eyebrow is an <h2> for landmark semantics, and would
@@ -230,6 +286,21 @@ body {
   outline-offset: 3px;
   border-radius: var(--radius-pill);
 }
+
+/* Surfaces the browser draws, which otherwise ship with defaults belonging
+   to no design system: a blue selection, a light scrollbar track, and a
+   text caret that is not this palette. */
+::selection { background: var(--color-text); color: var(--color-void); }
+
+* { scrollbar-color: rgb(255 255 255 / 0.22) transparent; scrollbar-width: thin; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255 / 0.18);
+  border: 3px solid var(--color-void);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgb(255 255 255 / 0.34); }
 
 /* Pre-hide state for GSAP scroll reveals, gated behind the same query GSAP's
    matchMedia checks. A reduced-motion or JS-failed visitor never has these

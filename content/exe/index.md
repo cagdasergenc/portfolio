@@ -5,6 +5,13 @@ role: Concept, AI Safety Design, Interaction Design
 context: IED Barcelona, MA design brief
 year: 2026
 tools: Figma
+pdf_pages: 21
+lead_image: 01-brief-premise.webp
+lead_caption: The opening argument of the brief. A product brief says what to build; an agent brief also has to say how far it may act alone, and what happens when it decides for itself.
+summary_problem: An agent that acts on your behalf needs a brief that a normal product brief cannot give it: where its authority stops, and who gets hurt when it works exactly as designed.
+summary_role: Solo. Concept, threat modelling, permission and confirmation design, and the writing across all 21 pages.
+summary_output: A 21-page AI Trust and Safety design brief covering capability tiers, hard architectural limits, two safety frameworks, and three attacker profiles.
+summary_status: Concept only. Never built, never prototyped, never tested with a person. Every interaction shown is proposed, not validated.
 featured: true
 order: 2
 ---
@@ -76,6 +83,8 @@ password reset wouldn't fix it, because Marc's access was never
 illegitimate. Delegation, once granted, is invisible and permanent, and it
 silently gains power every time the product changes.
 
+![Brief page walking through the Marc scenario, showing calendar view access granted in 2024 becoming an inference engine by 2026](05-marc.webp "The scenario that set the brief's priorities. Nothing is hacked and no rule is broken, which is why it survived into the final document as the hardest problem in it.")
+
 ## What it can and cannot do
 Capabilities split into two tiers. **Tier A** is fully autonomous because
 it's reversible, internal, and never touches a third party: reading inbox
@@ -93,6 +102,29 @@ payment method, or act on instructions hidden inside content it reads.
 These aren't guidelines. Each one is enforced in the architecture, not
 left to a prompt, specifically because a prompt is exactly what an
 attacker can talk around.
+
+![Brief page listing Tier A fully autonomous actions against Tier B actions that need confirmation, with the spending caps](02-capabilities.webp "The split that does the work: reversible and internal actions run alone, anything touching a third party proposes and waits. The €150 per transaction and €400 per month caps sit on the virtual card, not in a prompt.")
+
+## How permission actually works
+Two decisions carry most of the safety argument, and both are interaction
+design rather than policy.
+
+**The rule for acting alone.** If a request is novel, EXE asks. If it has
+been seen and confirmed before, it proceeds. Novelty is the cheapest
+reliable proxy for risk, and it gives the system a defined edge instead of
+one it can quietly widen for itself.
+
+![Brief page showing the scope and autonomy rule: if novel then ask, else proceed, with the boundary conditions listed](03-scope-rule.webp "The permission model in one line. Day one everything is novel, so the agent says out loud that it is checking in more while it learns, then steps back as patterns repeat.")
+
+**The confirmation itself.** Confirmations only fire at boundary events, so
+they stay rare enough to mean something. They show the real values rather
+than asking "proceed?", and above the money threshold they need the amount
+typed rather than a single tap.
+
+That last detail exists because of Selin, who taps confirm without reading.
+A confirmation she can clear by reflex is not a checkpoint.
+
+![Proposed confirmation card reading pay dentist deposit, 140 euros, to Clínica Dental Born, with a type-to-confirm field](04-confirmation-card.webp "A proposed interaction, not a tested one. Typing the amount is deliberate friction aimed at the habit a decade of cookie banners has trained, and nobody has yet checked whether it survives contact with a real person in a hurry.")
 
 ## Who it actually touches
 Selin is the primary user, but she's not the only person EXE affects.

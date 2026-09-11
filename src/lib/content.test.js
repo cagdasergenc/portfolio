@@ -120,4 +120,24 @@ describe('renderMarkdown', () => {
     const html = renderMarkdown('![Say "hi" to the team](cover.jpg)', assets)
     expect(html).toContain('alt="Say &quot;hi&quot; to the team"')
   })
+
+  it('turns a markdown image title into a figcaption', () => {
+    const html = renderMarkdown('![alt](cover.jpg "What changed and why")', assets)
+    expect(html).toContain('<figcaption>What changed and why</figcaption>')
+  })
+
+  it('omits the figcaption entirely when there is no title', () => {
+    expect(renderMarkdown('![alt](cover.jpg)', assets)).not.toContain('figcaption')
+  })
+
+  it('wraps the image in a real button so enlarging it is keyboard-reachable', () => {
+    const html = renderMarkdown('![alt](cover.jpg)', assets)
+    expect(html).toContain('<button type="button" class="fig-zoom"')
+    expect(html).toContain('data-zoom="/assets/cover.abc123.jpg"')
+  })
+
+  it('escapes markup in a caption rather than emitting it', () => {
+    const html = renderMarkdown('![alt](cover.jpg "5 < 6 & rising")', assets)
+    expect(html).toContain('<figcaption>5 &lt; 6 &amp; rising</figcaption>')
+  })
 })

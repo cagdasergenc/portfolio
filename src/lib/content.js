@@ -54,13 +54,33 @@ export function splitSections(body) {
   return sections
 }
 
-/** Renders markdown, rewriting bare image filenames to hashed build URLs. */
+const escapeHtml = (s) =>
+  String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+
+/**
+ * Renders markdown, rewriting bare image filenames to hashed build URLs.
+ *
+ * A markdown image title becomes the caption: `![alt](file.webp "caption")`.
+ * The image itself is wrapped in a real <button> rather than given a click
+ * handler, so enlarging a figure is reachable by keyboard and announced as
+ * an action without any extra ARIA. CaseStudy delegates the click.
+ */
 export function renderMarkdown(markdown, assets) {
   const renderer = new marked.Renderer()
-  renderer.image = ({ href, text }) => {
+  renderer.image = ({ href, title, text }) => {
     const src = assets[href] ?? href
-    const alt = (text ?? '').replace(/"/g, '&quot;')
-    return `<figure data-reveal-mask><img src="${src}" alt="${alt}" loading="lazy" decoding="async"></figure>`
+    const alt = escapeHtml(text)
+    const caption = title ? `<figcaption>${escapeHtml(title)}</figcaption>` : ''
+    return (
+      `<figure data-reveal-mask>` +
+      `<button type="button" class="fig-zoom" data-zoom="${escapeHtml(src)}" data-zoom-alt="${alt}">` +
+      `<img src="${escapeHtml(src)}" alt="${alt}" loading="lazy" decoding="async">` +
+      `</button>${caption}</figure>`
+    )
   }
   return marked.parse(markdown, { renderer, async: false })
 }
@@ -96,6 +116,13 @@ function build(path, raw) {
     order: Number(data.order ?? 99),
     cover: assets['cover.jpg'] ?? assets['cover.webp'] ?? assets['cover.png'],
     pdf: assets['case-study.pdf'],
+    // A real spread out of the deck itself, so the PDF card previews the
+    // document rather than repeating the project cover.
+    deckCover: assets['deck-cover.webp'] ?? assets['deck-cover.jpg'],
+    pdfPages: Number(data.pdf_pages) || null,
+    // The one visual that runs immediately under the introduction, named by
+    // bare filename in frontmatter the same way in-body images are.
+    lead: data.lead_image ? assets[data.lead_image] : undefined,
     sections: splitSections(body).map((s) => ({
       heading: s.heading,
       html: renderMarkdown(s.markdown, assets),

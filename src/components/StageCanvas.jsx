@@ -1,14 +1,29 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { createRefractor } from '../gl/refract'
 import { hexToRgbFloat } from '../lib/color'
+import { measureScrims } from '../lib/scrim'
 
-// Same three-stop values Stage.jsx's CSS gradients used before the scrims
-// moved into the shader (Task 2). Keep these two in sync by hand if the
-// visual design changes — there is exactly one rendering path now, so
-// there is exactly one place to change it.
+// The safe default: what a blown-out white cover needs. Every cover starts
+// here and is then measured (see onCoverLoad), which can only ever lighten
+// it. Same three-stop values Stage.jsx's CSS fallback gradients still use,
+// since those render before any measurement exists.
+// Heights are set by what sits in each band, not by taste: the required
+// alpha only holds across the half of a band nearest its edge, so a band
+// has to be about twice the height of its text block. The intro runs to
+// roughly a third of the frame and the stage annotation to roughly a
+// quarter of it, measured at 1440x900.
 const SCRIMS = {
-  topHeight: 0.52, topStart: 0.86, topMid: 0.60,
+  topHeight: 0.66, topStart: 0.86, topMid: 0.60,
   botHeight: 0.56, botStart: 0.96, botMid: 0.88,
+}
+
+const readRgb = (style, name, fallback) => {
+  const hex = style.getPropertyValue(name).trim()
+  try {
+    return hexToRgbFloat(hex).map((c) => Math.round(c * 255))
+  } catch {
+    return fallback
+  }
 }
 
 /**
@@ -27,7 +42,37 @@ export default function StageCanvas({ project, active, capsule, onCanvasReady })
   const containerRef = useRef(null)
   const refractorRef = useRef(null)
   const rafRef = useRef(0)
+  const imgRef = useRef(null)
+  const scrimsRef = useRef(SCRIMS)
   const [canvasLive, setCanvasLive] = useState(false)
+
+  // Measured from the cover itself, so a dark cover is not painted black by
+  // constants derived for a bright one. Applied straight to the live
+  // refractor if there is one, and read by the creation effect otherwise,
+  // because the image and the WebGL context become ready in either order.
+  const measure = useCallback(() => {
+    const img = imgRef.current
+    if (!img?.complete || !img.naturalWidth) return
+    const style = getComputedStyle(document.documentElement)
+    const measured = measureScrims(img, {
+      // The top band carries only near-white type; the bottom also carries
+      // the dim plate index and tagline, whose floor is much higher.
+      textTop: readRgb(style, '--color-text', [244, 244, 246]),
+      textBottom: readRgb(style, '--color-text-dim', [155, 155, 166]),
+      voidRgb: readRgb(style, '--color-void', [10, 10, 12]),
+      heights: SCRIMS,
+    })
+    if (!measured) return
+    scrimsRef.current = measured
+    refractorRef.current?.setScrims(measured)
+  }, [])
+
+  // Covers already in the browser cache are `complete` before React can
+  // attach onLoad, so that event alone would silently never fire.
+  useEffect(() => {
+    scrimsRef.current = SCRIMS
+    measure()
+  }, [measure, project.cover])
 
   // Mount/tear down the refractor as `active` and `project.cover` change.
   useEffect(() => {
@@ -67,7 +112,7 @@ export default function StageCanvas({ project, active, capsule, onCanvasReady })
     const root = document.documentElement
     const voidHex = getComputedStyle(root).getPropertyValue('--color-void').trim() || '#0A0A0C'
     refractor.setVoidColor(...hexToRgbFloat(voidHex))
-    refractor.setScrims(SCRIMS)
+    refractor.setScrims(scrimsRef.current)
 
     const resize = () => {
       const rect = containerRef.current?.getBoundingClientRect()
@@ -118,12 +163,14 @@ export default function StageCanvas({ project, active, capsule, onCanvasReady })
     <div ref={containerRef} className="absolute inset-0">
       {project.cover ? (
         <img
+          ref={imgRef}
           src={project.cover}
           alt={`Cover of the ${project.title} case study`}
           className="h-full w-full object-cover"
           style={{ visibility: canvasLive ? 'hidden' : 'visible' }}
           loading={active ? 'eager' : 'lazy'}
           decoding="async"
+          onLoad={measure}
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center px-8">

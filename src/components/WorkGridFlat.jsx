@@ -76,7 +76,11 @@ export function FlatCard({ project, hidden = false, numeral }) {
           <div className="h-full w-full border border-white/10" />
         )}
         <Glass as="div" className={CAPSULE_CLASS}>
-          <h3 className="truncate text-card text-text">{project.title}</h3>
+          {/* h2, not h3: the only heading above this on the page is the
+              section h1, so h3 skipped a level for every project. */}
+          {/* font-semibold keeps the 600 the h3 had: base layer sets h1/h2
+              to 800, which would have changed the look along with the level. */}
+          <h2 className="truncate text-card font-semibold text-text">{project.title}</h2>
         </Glass>
       </div>
       <Meta project={project} />

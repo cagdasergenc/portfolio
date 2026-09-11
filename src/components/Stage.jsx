@@ -38,7 +38,15 @@ export default function Stage() {
   const current = projects[active]
   const capsuleRef = useRef(null)
   const [canvasReady, setCanvasReady] = useState(false)
-  const capsuleRect = useCapsuleRect(capsuleRef, stageRef, [current?.slug])
+  // `lowFi` is in the deps for a reason that costs a whole first paint if
+  // it is left out: useLowFi starts true, so the first commit renders the
+  // stacked fallback and capsuleRef is attached to nothing. The measure
+  // that runs then finds no element and gives up, and since the effect
+  // never re-ran, the shader kept its default capsule -- a full-width glass
+  // rectangle across the top of the hero -- until the visitor happened to
+  // scroll or resize. canvasReady is here too: the capsule swaps between
+  // Glass and a plain span at that moment, which can change its width.
+  const capsuleRect = useCapsuleRect(capsuleRef, stageRef, [current?.slug, lowFi, canvasReady])
 
   // Explicit reset, not left to the outgoing project's effect cleanup:
   // correctness for the "never both scrims at once" invariant shouldn't
@@ -101,14 +109,21 @@ export default function Stage() {
     return (
       <section id="work" className="shell py-24">
         <div className="band-ticks" aria-hidden="true" />
+        {/* Derived, not written down. This read "I — III" beside a live
+            count of 2 for as long as there were three projects in the
+            folder and one of them was a draft. */}
         <div className="mt-5 flex items-baseline justify-between gap-6">
-          <span className="label">I — III</span>
-          <span className="label">{projects.length} specimens</span>
+          <span className="label">{romanise(1)} — {romanise(projects.length)}</span>
+          <span className="label">{projects.length} {projects.length === 1 ? 'specimen' : 'specimens'}</span>
         </div>
         <hr className="mt-4 border-0 border-t border-white/12" />
-        <h1 className="mt-6 max-w-[22ch] text-display">
-          I work from research through to something people can actually click.
+        <h1 className="mt-6 max-w-[20ch] text-display">
+          I turn complex problems into products people can actually use.
         </h1>
+        <p className="mt-5 max-w-[42ch] text-lg text-text-dim">
+          Product and UX designer in Barcelona. Research, interface design,
+          and prototypes that really run.
+        </p>
         <WorkGridFlat projects={projects} />
       </section>
     )
@@ -173,16 +188,27 @@ export default function Stage() {
         />
 
         {/* The positioning line is annotation ON the work, not a statement
-            before it. It fades out as the first project hands over. */}
+            before it. It fades out as the first project hands over.
+
+            Two elements, both near-white. It used to be three, opening with
+            a mono eyebrow repeating the name already in the nav, under a
+            headline long enough to run four lines across the artwork. The
+            role now lives in the second line, where it reads as information
+            rather than as a label on a label — and keeping both lines at
+            --text (rather than dimming the second) is what lets the top
+            scrim be measured against the lower floor and stay light. */}
         <div
           className="pointer-events-none absolute inset-x-0 top-0 z-10 px-6 pt-28 md:px-12"
           style={{ opacity: Math.max(0, 1 - progress * projects.length * 1.6) }}
         >
           <div className="shell">
-            <p className="label">Çağdaş Ergenç — Product and UX Design</p>
-            <h1 className="mt-4 max-w-[20ch] text-display tracking-[-0.02em]">
-              I work from research through to something people can actually click.
+            <h1 className="max-w-[22ch] text-title tracking-[-0.02em]">
+              I turn complex problems into products people can actually use.
             </h1>
+            <p className="mt-5 max-w-[40ch] text-lg">
+              Product and UX designer in Barcelona. Research, interface
+              design, and prototypes that really run.
+            </p>
           </div>
         </div>
 
@@ -191,9 +217,14 @@ export default function Stage() {
             on the glass, where --text-dim would fail at 2.25:1. */}
         <div className="relative z-20 pb-14">
           <div className="shell">
-            <div className="flex items-end justify-between gap-6">
+            {/* The plate index stays: it is this world's signature and it
+                tells you where you are in the sequence. The role and year
+                that used to sit opposite it did not, and were a second run
+                of dim metadata competing with the tagline three lines
+                below for the same job. They are on the case-study page,
+                which is one click away. */}
+            <div className="flex items-end gap-6">
               <span className="label">{romanise(active + 1)} / {romanise(projects.length)}</span>
-              <span className="label text-right">{current.role}{current.year ? ` · ${current.year}` : ''}</span>
             </div>
             <hr className="mt-3 border-0 border-t border-white/12" />
             <Link to={`/work/${current.slug}`} className="group mt-6 inline-block" ref={capsuleRef}>

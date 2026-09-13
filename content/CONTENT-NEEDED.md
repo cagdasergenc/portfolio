@@ -168,12 +168,13 @@ version — it is linked from the Contact section as a direct download.
 
 ## 8. Confirmations, not files
 
-- **MesfenoWear is offline.** It renders greyed out, labelled "Offline", with
-  no outbound link. Correct, or should it be removed entirely?
-- **Pocket Pediatrics is live** at `pocpedv2.netlify.app`, log in as `oscar`.
-  Its case study leads with "Open the app" and offers the PDF second.
-  Confirm the login still works before launch — a dead demo is worse than no
-  demo.
+- **Pocket Pediatrics is live** at `pocpedv2.netlify.app` (v2), entered with
+  the one-tap Oscar demo account. Confirm the demo still opens before any
+  big send-out: a dead demo is worse than no demo.
+- **Pocket Pediatrics deck** still shows the v1 "See it in Action" QR
+  walkthrough on page 8. A re-export without it is coming.
+- **Research source links** for "National Profile of Caregiver Challenges"
+  and "Inequities in Care Coordination" are named but not linked yet.
 - **`pocket_pediatrics_logo.png`** (183 KB) is currently orphaned. The case
   studies use `cover.jpg` instead of logos now. Delete, or is there a use?
 

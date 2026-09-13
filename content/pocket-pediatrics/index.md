@@ -14,16 +14,15 @@ lead_alt: Three iPhone screens from the live Pocket Pediatrics v2 app: the Visit
 lead_caption: The live v2 app, opened with the Oscar demo account. Visits keeps every appointment with its AI summary, Today shows Martí's glucose trend and care plan, and Share lets a caregiver pick exactly which notes from a visit go to the care circle.
 summary_problem: Caregivers of medically complex children lose the thread between appointments. Information is scattered, jargon goes unexplained, and children are told nothing they can understand.
 summary_role: I built the working prototype (Flutter, TypeScript on Supabase, GPT-4o-mini and Whisper) and ran its iteration cycles. I also did data analysis, journey mapping, and the UX of the flows.
-summary_output: Three additions inside the Fujitsu health platform, tested as a running app: appointment summaries in plain language, follow-up instructions, and sharing tools including a child's story.
+summary_output: Three additions inside Fujitsu Healthcare Suite, tested as a running app: appointment summaries in plain language, follow-up instructions, and sharing tools including a child's story.
 summary_status: Tested with 14 caregivers across 5 flows. Features scored 4.0 to 4.8 out of 5, overall experience 3.8. Time saved and comprehension gained were not measured.
 featured: true
 order: 1
 ---
 
 ## Context
-A brief from Fujitsu at IED Barcelona, working on FHS, the Fujitsu health
-platform the brief was built around, for families managing chronic paediatric
-conditions.
+A brief from Fujitsu at IED Barcelona, working on FHS (Fujitsu Healthcare
+Suite) for families managing chronic paediatric conditions.
 
 Four of us, based in Barcelona, with access to local caregivers and pharmacies
 for fieldwork.

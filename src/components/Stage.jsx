@@ -107,7 +107,7 @@ export default function Stage() {
    */
   if (lowFi) {
     return (
-      <section id="work" className="shell py-24">
+      <section id="work" className="shell pb-16 pt-28">
         <div className="band-ticks" aria-hidden="true" />
         {/* Derived, not written down. This read "I — III" beside a live
             count of 2 for as long as there were three projects in the

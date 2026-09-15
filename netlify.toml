@@ -1,8 +1,18 @@
+# Netlify is retired as a host. cagdasergenc.com is served by Vercel
+# (vercel.json, DNS on Vercel), so this project only ever receives
+# *.netlify.app traffic. Its one job now is to send every request to the
+# same path on the real domain, so no duplicate copy of the portfolio
+# stays reachable or indexed.
+#
+# No build: nothing here needs the app. `public` is published only
+# because Netlify requires a publish folder. force = true makes the
+# redirect win even for files that exist in it (robots.txt, favicon).
 [build]
-  command = "npm run build"
-  publish = "dist"
+  command = ""
+  publish = "public"
 
 [[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
+  to = "https://cagdasergenc.com/:splat"
+  status = 301
+  force = true

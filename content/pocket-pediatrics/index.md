@@ -9,9 +9,9 @@ tools: Figma, Flutter, TypeScript, Supabase, GPT-4o-mini, Whisper
 live_url: https://pocpedv2.netlify.app
 live_hint: tap the Oscar demo account
 pdf_pages: 31
-lead_image: app-v2-showcase.webp
-lead_alt: Three iPhone screens from the live Pocket Pediatrics v2 app: the Visits list with AI summaries, the Today view with a glucose chart and care plan, and the Share screen with structured notes selected to send
-lead_caption: The live v2 app, opened with the Oscar demo account. Visits keeps every appointment with its AI summary, Today shows Martí's glucose trend and care plan, and Share lets a caregiver pick exactly which notes from a visit go to the care circle.
+lead_image: v2-overview.webp
+lead_alt: Pocket Pediatrics, built with Flutter, Supabase and OpenAI. Three iPhone screens from the live v2 app: sign-in with a one-tap Oscar demo account, Martí's Today view with a glucose chart and care plan, and a detailed visit summary with structured notes.
+lead_caption: The live v2 app. Sign in with the Oscar demo account, see Martí's day, and read any visit as a plain summary with structured notes.
 summary_problem: Caregivers of medically complex children lose the thread between appointments. Information is scattered, jargon goes unexplained, and children are told nothing they can understand.
 summary_role: I built the working prototype (Flutter, TypeScript on Supabase, GPT-4o-mini and Whisper) and ran its iteration cycles. I also did data analysis, journey mapping, and the UX of the flows.
 summary_output: Three additions inside Fujitsu Healthcare Suite, tested as a running app: appointment summaries in plain language, follow-up instructions, and sharing tools including a child's story.
@@ -120,7 +120,9 @@ Same three features, with a tidied information architecture and a reworked
 interface. The screens in the test results below are from the version the 14
 participants used, so the live app will not match them screen for screen.
 
-![Two iPhone screens from the v2 app: a visit summary with medical terms underlined and a Detailed or Simple toggle, and the Care chat with suggested questions and a microphone for voice input](app-v2-summary-care.webp "Inside v2. A visit summary with its medical terms underlined to tap for an explanation and a switch between Detailed and Simple, next to the Care chat, where a caregiver can type or speak a question about Martí.")
+![Daily diabetes care. A glucose trend with time in range, a care plan checklist, and a care circle of family and school staff. Two phones show Martí's Today view and the Profile screen listing a school nurse and his grandmother in his care circle.](v2-daily-care.webp "Martí's day at a glance, and the people it gets shared with. The care circle is set by the parent, one person at a time.")
+
+![AI symptom check. Suggested questions come from the child's own data, and the assistant asks one clarifying question a turn. Two phones show the Care chat's suggested questions and a reply asking about Martí's recent symptoms.](v2-ai-symptom-check.webp "The Care chat runs on GPT-4o-mini, with Whisper behind the microphone for questions spoken instead of typed.")
 
 ![Target-state journey showing scheduling, translation and structured follow-up absorbed into the platform](06-journey-target.webp "The same journey with the three additions in place. Nothing new to adopt: the point was to remove steps from a platform families already have, not to add a fourth app to the pile.")
 
@@ -129,6 +131,8 @@ A jargon-free record of every visit, structured so the whole care circle can
 read and act on it. Aimed at the 49% recall gap.
 
 ![Test results for the summary and notes screens, scoring 4.6 for clarity and 4.6 for completeness, with the app screens beside them](02-summary-notes.webp "Problem: the full summary read as overwhelming and users confused 'recent history' with 'follow-up'. Decision: flip the hierarchy so structured notes come first and the long summary collapses, ordered red flags, next steps, medications, notes. Scored 4.6 out of 5 on both clarity and completeness.")
+
+![Visit notes, shared. Every visit has a detailed and a simple summary, and parents choose exactly what the care team gets. Two phones show a visit summary with structured notes and the Share screen with care plan tasks and notes selected to send.](v2-visit-notes.webp "The same summary and notes in v2. Sharing now starts from a visit, then lets the parent tick exactly which sections go out.")
 
 ### Sharing with the care circle
 Custom profiles for the people around the child, so a partner and a grandparent

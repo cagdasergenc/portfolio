@@ -5,7 +5,7 @@ import { minGlassAlpha } from './contrast'
  * worst cover imaginable.
  *
  * The fixed constants this replaces were derived against a blown-out white
- * cover, which is genuinely what Pocket Pediatrics' cream illustration
+ * cover, which is genuinely what Pocket Pediatrics' old cream illustration
  * needs. EXE's cover is near-black, and the same constants painted 96%
  * void over an image that was already dark, leaving a black rectangle where
  * the project should have been recognisable.

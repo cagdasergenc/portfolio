@@ -156,7 +156,7 @@ export default function Stage() {
 
         {/* Scrims. The dark world assumes light text on a dark ground — an
             assumption a full-bleed LIGHT cover breaks completely. Measured
-            against this project's own cream illustration, unprotected
+            against Pocket Pediatrics' old cream illustration, unprotected
             overlay text sits at 1.09:1 (--text) and 2.30:1 (--text-dim):
             invisible, and worse than the nav bug on the sibling branch.
 

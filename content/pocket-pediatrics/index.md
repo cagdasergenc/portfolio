@@ -8,10 +8,10 @@ team: 4 designers (Larsen, Bommakanti, Moraschi, Ergenç)
 tools: Figma, Flutter, TypeScript, Supabase, GPT-4o-mini, Whisper
 live_url: https://pocpedv2.netlify.app
 live_hint: tap the Oscar demo account
-pdf_pages: 31
-lead_image: v2-overview.webp
-lead_alt: Pocket Pediatrics, built with Flutter, Supabase and OpenAI. Three iPhone screens from the live v2 app: sign-in with a one-tap Oscar demo account, Martí's Today view with a glucose chart and care plan, and a detailed visit summary with structured notes.
-lead_caption: The live v2 app. Sign in with the Oscar demo account, see Martí's day, and read any visit as a plain summary with structured notes.
+pdf_pages: 37
+lead_image: slide-09-start-on-today.webp
+lead_alt: Deck slide, See it in action 1 of 6, Start on Today. Log in as Oscar with one tap and no password, see Martí's day at a glance with the glucose trend, time in range and care plan, and log a reading with its value, time and a note. Three phone screens from the live v2 app show Log in, Today and Add reading.
+lead_caption: The live v2 app, from the deck's walkthrough. Log in as Oscar with one tap, see Martí's day, log a reading.
 summary_problem: Caregivers of medically complex children lose the thread between appointments. Information is scattered, jargon goes unexplained, and children are told nothing they can understand.
 summary_role: I built the working prototype (Flutter, TypeScript on Supabase, GPT-4o-mini and Whisper) and ran its iteration cycles. I also did data analysis, journey mapping, and the UX of the flows.
 summary_output: Three additions inside Fujitsu Healthcare Suite, tested as a running app: appointment summaries in plain language, follow-up instructions, and sharing tools including a child's story.
@@ -58,11 +58,13 @@ data analysis and journey mapping; sacrificial concepts to test ideas early;
 prototype and user testing with 14 participants across 5 flows; and a final
 iteration pass.
 
+![Deck slide, Research Process. Six stages along one path: community outreach with surveys and posters, interviews for qualitative depth, data analysis and journey mapping, sacrificial concepts, prototype and user testing with 14 participants and 5 flows, and prototype iteration. A side card reads: cognitive load is the core stressor, and it shaped every design decision.](slide-03-research-process.webp "Six stages, from broad signals to a tested prototype. Cognitive load came out as the lead insight.")
+
 My part sat on the analysis side and after it. Working through what the
 interviews returned, mapping it, and building the prototype the last two stages
 tested.
 
-![Current-state customer journey for a caregiver, from booking through follow-up, with the emotional low points marked in red](05-journey-now.webp "Mapping the current journey is where the design problem stopped being 'build a health app'. The lows cluster after the visit, not during it, which is the part no one was designing for.")
+![Deck slide, current customer journey from check-in to follow-up. The emotion line goes from confused at check-in, to relieved in the waiting room, to frustrated when the doctor explains results in Spanish with no interpreter, to confused at home, unclear on what to do next. Below: research shows patients forget 40% to 80% of medical information right after a consultation, and about 50% of what is remembered can be inaccurate.](slide-28-journey-now.webp "Where the visit breaks down today. The low point is results explained in a language the parent does not speak, and the confusion follows them home.")
 
 ### What kept recurring
 Caregivers spend 40%+ of their week managing care across a typical 11 to 15
@@ -75,6 +77,8 @@ medical terms unexplained, and 1 in 4 parents has low health literacy, rising to
 67% of parents said they needed help coordinating care at all, and 15.8% forgo
 medical care outright once coordination passes five hours a week.
 
+![Deck slide, The Insights. Six statistics across three insights. Reduce cognitive load: 40%+ of the week spent managing care, and 11 to 15 doctor visits a year. Speak their language: 49% of appointment information roughly remembered, 80% of visits leave medical terms unexplained, and 1 in 4 parents has low health literacy. Centralize information: 67% of parents need coordination help, and 15.8% forgo care past 5 hours a week of coordinating.](slide-05-insights.webp "Six numbers, three insights, one overloaded caregiver. The sources are linked below.")
+
 ### The two caregivers who anchored it
 Jesse, 30, a graphic designer with two children under three, whose health
 information was scattered across apps, chats, paper and calendars. Nothing in
@@ -85,12 +89,17 @@ guidance between appointments and treated every escalation as a solo decision
 with no safety net. "The hardest part is not knowing if it's a bad day or an
 emergency."
 
+![Deck slide, Meet the Caregivers. Juggling Jesse, 30, a graphic designer in Barcelona and mom of two under three: health info scattered across apps, chats, paper and calendars. Overwhelmed Oscar, 35, a project manager in Barcelona and single dad of a son with diabetes: no guidance between appointments. Each card lists pain points and a quote. Footer: managing a chronic disease costs caregivers about 32 hours a week of mental load.](slide-04-caregivers.webp "Jesse and Oscar, the two personas the interviews came down to.")
+
 ### Sources
-Caregiver burden and admin hours: PubMed, National Profile of Caregiver
-Challenges. Unexplained jargon: Surgeon Use of Medical Jargon with Parents in
-the Outpatient Setting (PMC6525640). Coordination help and forgone care:
-Inequities in Care Coordination. Recall after a consultation: Patients' Memory
-for Medical Information.
+Time spent managing care and visits a year: [A National Profile of Caregiver
+Challenges of More-Complex Children with Special Health Care Needs](https://pmc.ncbi.nlm.nih.gov/articles/PMC3923457/)
+(2011). Unexplained jargon: [Surgeon Use of Medical Jargon with Parents in the
+Outpatient Setting](https://pmc.ncbi.nlm.nih.gov/articles/PMC6525640/) (2019).
+Coordination help and forgone care: [Inequities in Time Spent Coordinating Care
+for Children and Youth with Special Health Care Needs](https://pmc.ncbi.nlm.nih.gov/articles/PMC10495536/)
+(2023). Recall after a consultation: [Patients' memory for medical
+information](https://pmc.ncbi.nlm.nih.gov/articles/PMC539473/) (2003).
 
 ## Insight
 The barrier is not access to care. Access already exists. What is missing is
@@ -106,6 +115,8 @@ An AI-powered care assistant embedded inside FHS, built around one question:
 what if every caregiver left each appointment with a clear plan and the
 confidence to act on it?
 
+![Deck slide, Our solution. An AI-powered care assistant embedded within FHS, asking what if every caregiver left each appointment with a clear plan and the confidence to act on it. Three additions: 01 appointment management with booking that integrates with caregivers' calendars, 02 follow-up instructions as a clear, jargon-free record of every visit, and 03 sharing tools, including a children's story.](slide-07-solution.webp "Three additions inside a platform families already have.")
+
 This one runs. It is not a Figma prototype. It is a Flutter app with a
 TypeScript backend on Supabase, with GPT-4o-mini generating the plain-language
 summaries and Whisper handling voice input, deployed and testable.
@@ -117,42 +128,52 @@ being understandable.
 
 ### The live app is v2
 Same three features, with a tidied information architecture and a reworked
-interface. The screens in the test results below are from the version the 14
-participants used, so the live app will not match them screen for screen.
+interface. The ratings and feedback in the test results below come from the
+version the 14 participants used. The deck now shows those findings next to v2
+screens.
 
-![Daily diabetes care. A glucose trend with time in range, a care plan checklist, and a care circle of family and school staff. Two phones show Martí's Today view and the Profile screen listing a school nurse and his grandmother in his care circle.](v2-daily-care.webp "Martí's day at a glance, and the people it gets shared with. The care circle is set by the parent, one person at a time.")
+![Deck slide, See it in action 2 of 6, Ask Care before you worry. Start from a suggestion drafted from Martí's own readings, describe what you see by typing or speaking while the assistant asks one question at a time, and learn whether to book a visit. Phone screens show Suggestions, First question and Follow-up.](slide-10-ask-care.webp "The Care chat runs on GPT-4o-mini, with Whisper behind the microphone for questions spoken instead of typed.")
 
-![AI symptom check. Suggested questions come from the child's own data, and the assistant asks one clarifying question a turn. Two phones show the Care chat's suggested questions and a reply asking about Martí's recent symptoms.](v2-ai-symptom-check.webp "The Care chat runs on GPT-4o-mini, with Whisper behind the microphone for questions spoken instead of typed.")
-
-![Target-state journey showing scheduling, translation and structured follow-up absorbed into the platform](06-journey-target.webp "The same journey with the three additions in place. Nothing new to adopt: the point was to remove steps from a platform families already have, not to add a fourth app to the pile.")
+![Deck slide, to-be journey for the appointment and follow-up. During the visit, the FHS app and an AI translator interpret the doctor's explanation, and the parent is sent a transcript with action items. At home, the app notifies them with the diagnosis and gives clear next steps. The emotion line stays positive: happy, relieved, confident, secure, guided.](slide-31-journey-target.webp "The same stretch with FHS carrying the load. Nothing new to adopt: the point was to remove steps from a platform families already have, not to add a fourth app to the pile.")
 
 ### Appointment summaries and structured notes
 A jargon-free record of every visit, structured so the whole care circle can
 read and act on it. Aimed at the 49% recall gap.
 
-![Test results for the summary and notes screens, scoring 4.6 for clarity and 4.6 for completeness, with the app screens beside them](02-summary-notes.webp "Problem: the full summary read as overwhelming and users confused 'recent history' with 'follow-up'. Decision: flip the hierarchy so structured notes come first and the long summary collapses, ordered red flags, next steps, medications, notes. Scored 4.6 out of 5 on both clarity and completeness.")
+![Deck slide, See it in action 3 of 6, Understand the visit. Open the latest visit from Visits and read the summary, tap an underlined medical term for a plain-language explanation, and scan the structured notes: red flags, decisions, next steps and medication. Phone screens show Summary, Term explained and Structured notes.](slide-11-understand-the-visit.webp "One visit at three depths: the summary, a term explained in plain words, and the structured notes.")
 
-![Visit notes, shared. Every visit has a detailed and a simple summary, and parents choose exactly what the care team gets. Two phones show a visit summary with structured notes and the Share screen with care plan tasks and notes selected to send.](v2-visit-notes.webp "The same summary and notes in v2. Sharing now starts from a visit, then lets the parent tick exactly which sections go out.")
+![Deck slide, test results for Appointment Summary and Structured Notes. 4.6 out of 5 for summary clarity and 4.6 for info completeness, with what's working, what needs fixing and recommendations, beside the Structured Notes and Care Plan screens.](slide-35-summary-notes-results.webp "Problem: the full summary read as overwhelming, jargon went unexplained, and users confused 'recent history' with 'follow-up'. Recommendation: structured notes first with the summary collapsed, ordered red flags, next steps, medications, notes, plus a glossary on every medical term. Scored 4.6 out of 5 on both clarity and completeness.")
 
 ### Sharing with the care circle
 Custom profiles for the people around the child, so a partner and a grandparent
 do not need the same level of detail. Aimed at the 67% who asked for
 coordination help.
 
-![Test results for the sharing feature, rated 4.8 out of 5, with the sharing menu and landing screens](03-sharing.webp "Problem: 7 of 14 users looked for the share button on the summary screen, not on its own tab, and nothing confirmed that anything had sent. Decision: move 'Send To' above the content and add a confirmation. The confirmation was fixed before the next test round; role presets are still open.")
+![Deck slide, See it in action 5 of 6, Share with the care circle. Choose a visit, choose what to include with each section showing its real content before sending, then send and keep a record in Share history of who got it and when. Phone screens show Choose a visit, Share with and Share history.](slide-13-share.webp "In v2 sharing starts from a visit. The parent ticks exactly which sections go out, and Share history shows who got what, and when.")
+
+![Deck slide, test results for the Sharing Feature. 4.8 out of 5, the number one rated feature, with what's working and what needs fixing, beside the Sharing Menu and Sharing Landing Page screens.](slide-36-sharing-results.webp "Problem: 7 of 14 users looked for sharing on the summary screen instead of its own tab, nothing confirmed a send, and Send To sat below the content. Recommendation, from the deck's action list: an inline share button per section and a confirmation after sending.")
+
+### A story for the child
+The story feature was not in the original brief. It came out of interviews,
+where parents kept describing having to explain a diagnosis twice: once to
+themselves, then again to their child.
+
+![Deck slide, See it in action 4 of 6, Explain it to Martí. See what's next, the follow-up appointment and what it will check, then Talk to Martí, a short story that explains the visit in words a child understands. Phone screens show What's next and Talk to Martí.](slide-12-explain-to-marti.webp "In v2 the story sits under What's next on each visit, renamed Talk to Martí.")
+
+![Deck slide, test results for The Story Feature. 4.0 out of 5 average, with what's working, what needs fixing and recommendations, beside the Defining Medical Terms and Story for Martí screens.](slide-37-story-results.webp "Problem: the name 'Simple Story' did not say what the feature was for, it only covered today's visit, and it sat in the wrong place. Recommendation: rename it 'Talk to [child's name]' and move it to the follow-up screen.")
 
 ### Appointment management
 Integration with a caregiver's own calendar, aimed at the hours lost to
 scheduling and admin.
 
-The story feature was not in the original brief. It came out of interviews,
-where parents kept describing having to explain a diagnosis twice: once to
-themselves, then again to their child.
+![Deck slide, See it in action 6 of 6, Book and record the next visit. Book in plain words by typing or saying something like a pediatrician next week, after 4 pm, then start the visit to record it and get the summary in your language. Phone screens show Book and Live visit.](slide-14-book-and-record.webp "Book in plain words, then record the visit to get the summary in your language.")
 
 ## Outcome
 Tested with 14 caregivers across 5 user flows: 7 in-person think-aloud sessions
 in homes and cafés, 7 virtual run-throughs, and 2 expert reviews. Ages 24 to 62,
 varying digital literacy.
+
+![Deck slide, How We Tested. 7 in-person interviews with face-to-face think-aloud walkthroughs in homes and public places, 7 virtual run-throughs on the working Flutter prototype used live over screen share, 2 expert consultations, and 14 total participants aged 24 to 62. Five core journeys: open notification and log in, find the appointment summary, find follow-up tasks, share with a partner, create the child's story.](slide-33-how-we-tested.webp "Every run-through used the working prototype, in person or over a screen share.")
 
 Every feature scored 4.0 out of 5 or higher. Sharing was rated the single most
 useful addition at 4.8, with all 14 participants scoring it 4 or 5. Summary
@@ -162,8 +183,6 @@ Overall experience, averaged across clarity, completeness and trust, scored
 3.8 out of 5. That number is lower than any individual feature, and it is the
 honest one: people liked the parts and were less sure about the whole.
 
-![Test results for the children's story feature, scoring 4.0 out of 5, with the story and medical-term screens](04-story.webp "Problem: 'Story' read as fiction, so parents did not expect a real explanation of a real diagnosis behind it. Decision: rename it to 'Talk to [child's name]'. That rename went in before the next test round.")
-
 ### What this does not yet prove
 The demo validated usability and the feature concept. It did not measure time
 saved or comprehension gained.
@@ -171,3 +190,5 @@ saved or comprehension gained.
 Those are the numbers that would actually justify the work, and they need
 pre/post time-tracking and a comprehension quiz against a control. That is the
 next study, not a claim we can make from this one.
+
+![Deck slide, what the team will measure next. Initial demo results: sharing 4.8 out of 5, summary clarity and completeness 4.6, story 4.0. Future targets: fewer of the 249 hours a year spent on scheduling and admin, measured with pre and post time-tracking; an 80%+ comprehension score after AI translation, measured with a pre and post quiz; better follow-through on medication and next steps, measured through app engagement and outcomes.](slide-16-next-measures.webp "What the demo showed, and what the next study has to measure.")

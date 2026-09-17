@@ -132,7 +132,7 @@ screen readers and indexed by search. Describe what is in the image.
 
 | Project | State | Needed |
 | --- | --- | --- |
-| Pocket Pediatrics | `case-study.pdf` present, 8.8 MB, 31 pages | Nothing blocking |
+| Pocket Pediatrics | `case-study.pdf` present, 12.4 MB, 37 pages, real text layer and 6 source links | Nothing blocking |
 | EXE | `case-study.pdf` present, 10.4 MB, 21 pages | Nothing blocking |
 | Sustainability report | missing | `content/sustainability-report/case-study.pdf` |
 
@@ -171,10 +171,14 @@ version — it is linked from the Contact section as a direct download.
 - **Pocket Pediatrics is live** at `pocpedv2.netlify.app` (v2), entered with
   the one-tap Oscar demo account. Confirm the demo still opens before any
   big send-out: a dead demo is worse than no demo.
-- **Pocket Pediatrics deck** still shows the v1 "See it in Action" QR
-  walkthrough on page 8. A re-export without it is coming.
-- **Research source links** for "National Profile of Caregiver Challenges"
-  and "Inequities in Care Coordination" are named but not linked yet.
+- **Pocket Pediatrics deck** was replaced on 2026-09-17 (text-readable,
+  37 pages, source links on pages 5, 27 and 28). The user's 53 MB export was
+  shrunk to 12.4 MB by recompressing images only, so text and links are
+  untouched. Every image on the case study page is a slide from this deck,
+  named `slide-NN-*.webp` where NN is the deck page (`deck-cover.webp` is
+  page 1). Deck issues to fix at the source: page 36's recommendations are a
+  copy of page 35's, and page 27 cites the patient-memory paper for a
+  "6 minutes per consultation in Spain" figure that paper does not contain.
 - **`pocket_pediatrics_logo.png`** (183 KB) is currently orphaned. The case
   studies use `cover.jpg` instead of logos now. Delete, or is there a use?
 

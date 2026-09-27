@@ -60,8 +60,9 @@ export default function About() {
             technical work to people who didn't build it.
           </p>
           <p data-reveal>
-            Based in Barcelona. Available now, open to relocating or working
-            remote across the EU.
+            Based in Barcelona. Available now, with some constraints until
+            15 December 2026, and open to relocating or working remote across
+            the EU.
           </p>
         </div>
       </div>

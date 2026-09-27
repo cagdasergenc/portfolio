@@ -39,30 +39,32 @@ export default function About() {
           {/* Kept in step with the master CV (src/assets/resume.pdf), which
               is the source of truth for dates, stack, and availability. */}
           <p data-reveal>
-            Five years of professional experience across Turkey, Poland,
-            Germany, and Spain. Most of it was industrial design; digital
-            UI/UX is a deliberate specialization I've been building seriously
-            since 2023. I'm completing an MA in Strategic Design Management at
-            IED Barcelona, graduating December 2026.
+            Five years of design work across Turkey, Poland, Germany and
+            Spain. Most of it industrial design. I moved to digital UI/UX in
+            2023 and have worked at it since. MA in Strategic Design
+            Management at IED Barcelona, finishing December 2026.
           </p>
           {/* Deliberately not a second copy of the hero line. The stage
               states the positioning; this is the detail behind it. */}
           <p data-reveal>
-            In practice: user interviews and usability testing, Figma
-            component systems, and functional builds in Flutter and React
-            when static screens are not enough to learn anything real.
+            Day to day: user interviews and usability testing, Figma
+            component systems, and builds in Flutter or React when a static
+            screen cannot answer the question.
           </p>
           <p data-reveal>
-            AI is part of the daily process, not a bolt-on. I run problems
-            through Claude Code before opening a design tool, and prototype
-            with Lovable and other AI coding assistants to reach a working
-            build faster. I read frontend and backend code, and can explain
-            technical work to people who didn't build it.
+            AI is part of the process. I run problems through Claude Code
+            before opening a design tool, and prototype with Lovable to get
+            to something that runs. I read frontend and backend code and can
+            explain it to people who do not.
+          </p>
+          <p data-reveal>
+            Right now I am the designer on CBI, a program run by Esade, UPC
+            and IED Barcelona, working a challenge through a quantum
+            computing lens.
           </p>
           <p data-reveal>
             Based in Barcelona. Available now, with some constraints until
-            15 December 2026, and open to relocating or working remote across
-            the EU.
+            15 December 2026. Open to relocating or remote across the EU.
           </p>
         </div>
       </div>

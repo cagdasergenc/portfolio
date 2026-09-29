@@ -53,7 +53,7 @@ float sdRoundBox(vec2 p, vec2 b, float r) {
    aspect ratio -- invisible when the two aspects are close (Pocket
    Pediatrics' 16:9 cover against a widescreen canvas), a visible warp
    otherwise (EXE's ~5:4 cover against the same canvas). This crops instead
-   of stretching, matching what the plain <img> fallback already does. */
+   of stretching, matching what the plain image fallback already does. */
 vec2 coverUV(vec2 uv, float canvasAspect, float imageAspect) {
   vec2 scale = canvasAspect > imageAspect
     ? vec2(1.0, imageAspect / canvasAspect)

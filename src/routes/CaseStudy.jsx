@@ -25,6 +25,8 @@ import Prose from '../components/Prose'
 import Lightbox from '../components/Lightbox'
 import { useReveal } from '../hooks/useReveal'
 import NotFound from './NotFound'
+import resume from '../assets/resume.pdf?url'
+import { trackEvent } from '../lib/analytics'
 
 const META = ['role', 'context', 'year', 'duration', 'team', 'tools']
 
@@ -56,15 +58,16 @@ export default function CaseStudy() {
     const btn = e.target.closest?.('[data-zoom]')
     if (!btn) return
     setZoom({ type: 'image', src: btn.dataset.zoom, alt: btn.dataset.zoomAlt, title: btn.dataset.zoomAlt })
-  }, [])
+  }, [setZoom])
 
-  const closeZoom = useCallback(() => setZoom(null), [])
+  const closeZoom = useCallback(() => setZoom(null), [setZoom])
 
   if (!project) return <NotFound />
 
   const summary = SUMMARY.filter(([, key]) => project[key])
   const deckLabel = project.pdfPages ? `Preview the deck (${project.pdfPages} pages)` : 'Preview the deck'
-  const openDeck = () =>
+  const openDeck = () => {
+    trackEvent('deck_open', { project_slug: project.slug })
     setZoom({
       type: 'pdf',
       src: project.pdf,
@@ -72,6 +75,7 @@ export default function CaseStudy() {
       pages: project.pdfPages,
       title: `${project.title} deck`,
     })
+  }
 
   return (
     <div ref={ref}>
@@ -90,6 +94,9 @@ export default function CaseStudy() {
           {project.live_url && (
             <a
               href={project.live_url}
+              data-analytics="prototype_click"
+              data-project={project.slug}
+              data-placement="case_study"
               target="_blank"
               rel="noreferrer"
               /* Not `.label` here: that class is a plain (unlayered) rule in
@@ -241,7 +248,16 @@ export default function CaseStudy() {
           </div>
         </div>
 
-        <Link to="/#work" className="label mt-24 inline-block py-2 underline underline-offset-4">All work</Link>
+        <div className="case-contact">
+          <p className="label">Work with me</p>
+          <h2>Looking for a Product / UX designer?</h2>
+          <p>I’m based in Barcelona and open to roles across the EU.</p>
+          <div className="intro-actions">
+            <a className="action-primary" href="mailto:cagdasergencc@gmail.com" data-analytics="contact_click" data-placement="case_study">Get in touch ↗</a>
+            <a className="action-secondary" href={resume} download="Cagdas-Ergenc-CV.pdf" data-analytics="cv_click" data-placement="case_study">Download CV ↓</a>
+            <Link to="/#work" className="action-secondary">All work →</Link>
+          </div>
+        </div>
       </Band>
 
       <Lightbox item={zoom} onClose={closeZoom} />

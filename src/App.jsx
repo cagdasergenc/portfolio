@@ -21,6 +21,7 @@ import PersonSchema from './components/PersonSchema'
 import Home from './routes/Home'
 import CaseStudy from './routes/CaseStudy'
 import NotFound from './routes/NotFound'
+import { actionFromElement, trackEvent } from './lib/analytics'
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation()
@@ -34,19 +35,32 @@ function ScrollToTop() {
 }
 
 function TrackPageViews() {
-  const location = useLocation()
+  const { pathname } = useLocation()
   useEffect(() => {
     // index.html's gtag config has send_page_view disabled specifically so
     // this is the only place page_view fires -- once per real navigation,
     // including the first, rather than the static script's one-time call
     // plus this one disagreeing after every route change. gtag is missing
     // entirely for anyone blocking it, so this has to check before calling.
-    if (typeof window.gtag !== 'function') return
-    window.gtag('event', 'page_view', {
-      page_path: location.pathname + location.search,
-      page_location: window.location.href,
+    trackEvent('page_view', {
+      page_path: pathname,
+      page_location: window.location.origin + pathname,
     })
-  }, [location])
+  }, [pathname])
+  return null
+}
+
+function TrackPortfolioActions() {
+  useEffect(() => {
+    const onClick = (event) => {
+      const element = event.target.closest?.('[data-analytics]')
+      if (!element) return
+      const action = actionFromElement(element)
+      if (action) trackEvent(action.name, action.parameters)
+    }
+    document.addEventListener('click', onClick)
+    return () => document.removeEventListener('click', onClick)
+  }, [])
   return null
 }
 
@@ -57,6 +71,7 @@ export default function App() {
       <PersonSchema />
       <ScrollToTop />
       <TrackPageViews />
+      <TrackPortfolioActions />
       {/* Visible only on focus. The first Tab stop on every page, so a
           keyboard or screen-reader visitor can skip the nav instead of
           walking it on every route change. */}

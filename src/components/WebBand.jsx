@@ -3,13 +3,15 @@ import { webWork } from '../data/web'
 import { useReveal } from '../hooks/useReveal'
 
 /**
- * Preview cards, not a list of rows: each leads with a real screenshot of
- * the live site. The whole card is one link, so the tab order stays at one
- * stop per shop and the entire surface is the touch target.
+ * The shops section on the landing page.
  *
- * Padding is deliberately lopsided, like every landing section: evenly
- * padded stacks read as templated. The big top gives the pinned stage room
- * to end before the shops begin.
+ * Used by: routes/Home.jsx
+ * Uses: data/web.js for the shops, hooks/useReveal.js for the entry animation
+ *
+ * How it works: one preview card per shop, each leading with a real
+ * screenshot of the live site. The whole card is a single link, so the tab
+ * order is one stop per shop and the entire surface is the tap target.
+ * The padding is lopsided on purpose. Evenly padded stacks read as templated.
  */
 export default function WebBand() {
   const ref = useRef(null)

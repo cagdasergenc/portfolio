@@ -1,3 +1,10 @@
+/* The whole design system: colour, type, spacing and the shared classes.
+   Every component reads from here, nothing invents its own values.
+
+   Tailwind 4 is configured in CSS rather than a config file, so the tokens
+   below are both the design system and the Tailwind theme. The .glass,
+   .shell, .label and .band-ticks classes are the pieces components reuse. */
+
 @import "tailwindcss";
 
 @import "@fontsource-variable/geist";
@@ -24,7 +31,7 @@
   --font-sans:    "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono:    "Geist Mono Variable", ui-monospace, monospace;
 
-  /* Switzer is wider than the face it replaced at the same size — retune
+  /* Switzer is wider than the face it replaced at the same size, retune
      wrap widths in ch alongside any clamp change; a clamp adjustment alone
      does not move the wrap point, since ch scales with font-size. */
   --text-display: clamp(2rem, 5.5vw, 4rem);
@@ -71,7 +78,7 @@ body {
    bare, this block's `font-weight: 800` on h1/h2 silently outranked both
    `.label` (font-weight: 400, `@layer components`) and the inverted Insight
    heading's `font-normal` utility (`@layer utilities`) on every h2 in the
-   document — measured via getComputedStyle: every section eyebrow rendered
+   document, measured via getComputedStyle: every section eyebrow rendered
    800 instead of the intended 400. `@layer base` sits before `components`
    and `utilities` in Tailwind's own layer order, so both now win over it
    the ordinary cascade-layer way. */
@@ -82,15 +89,15 @@ body {
 }
 
 /* Worst-case contrast (src/lib/contrast.js), cover = [255,255,255] (blown-out
-   white — a real photo can be this bright), glass tint = this white fill:
+   white, a real photo can be this bright), glass tint = this white fill:
      minGlassAlpha(--text,     white glass, white cover) => null
      minGlassAlpha(--text-dim, white glass, white cover) => null
-   White-on-white glass cannot rescue light text at ANY opacity — the
-   composite is white regardless of alpha. Per spec §5.2 this is the
-   escape hatch, not a bug: Task 5 must place --text/--text-dim OFF the
+   White-on-white glass cannot rescue light text at ANY opacity, the
+   composite is white regardless of alpha. That is the escape hatch, not a
+   bug: the fix is to place --text/--text-dim OFF the
    glass over bright covers rather than relying on this fill to darken it.
    (For reference only, not adopted here: a dark tint [12,12,14] would need
-   alpha 0.6 for --text and 0.84 for --text-dim to clear 4.5:1 — recorded so
+   alpha 0.6 for --text and 0.84 for --text-dim to clear 4.5:1, recorded so
    the option is visible, not applied.) */
 /* Custom classes live in @layer components so Tailwind's utilities layer,
    which the cascade places AFTER this one, can override them.
@@ -98,14 +105,14 @@ body {
    Unlayered CSS beats ALL layered CSS regardless of specificity or source
    order. With these rules unlayered, `className="label text-text"` silently
    ignored the utility and rendered --text-dim instead. That is not cosmetic:
-   on the sibling branch the same trap put the "Open the app" CTA at 3.12:1
+   the same trap once put the "Open the app" CTA at 3.12:1
    and an Insight heading at 3.25:1, both failing WCAG AA, and a whole-branch
    review missed it because it checked token pairs rather than computed
    styles. */
 @layer components {
-  /* ---- Instrument-plate structure (MASTER.md §4) --------------------
+  /* ---- Instrument-plate structure ------------------------------------
      The four moves that make this a different world rather than a different
-     palette. The sibling branch is a centred editorial column; this is a
+     palette. A centred editorial column would be the safe version; this is a
      measured plate. */
 
   /* Dense tick field dividing sections, instead of whitespace alone. */
@@ -165,7 +172,7 @@ body {
            --push-force: 1. The original 0.055 + force*0.06 (peak 0.115)
            was added without re-checking against the contrast floor
            measured before it existed, and regressed title text to 4.30:1
-           — found by /design-is audit, DESIGN-IS-2026-08-21/. Capped at
+           found in review. Capped at
            peak alpha 0.095 (0.055 + force*0.04), verified at 4.50:1. */
         rgb(255 255 255 / calc(0.055 + var(--push-force) * 0.04)) 0%,
         rgb(255 255 255 / 0.012) 46%,
@@ -177,8 +184,7 @@ body {
     will-change: transform;
   }
 
-  /* The lit seam. A single hairline that brightens where the pointer is —
-     on a near-black ground this carries more than any fill. */
+  /* The lit seam. A single hairline that brightens where the pointer is, on a near-black ground this carries more than any fill. */
   .glass::after {
     content: '';
     position: absolute;
@@ -304,15 +310,15 @@ body {
 
 /* Pre-hide state for GSAP scroll reveals, gated behind the same query GSAP's
    matchMedia checks. A reduced-motion or JS-failed visitor never has these
-   rules applied, so the content they hide is never the only copy — it's
+   rules applied, so the content they hide is never the only copy, it's
    always visible by default and only opts into hiding when motion runs. */
 @media (prefers-reduced-motion: no-preference) {
   [data-reveal] { opacity: 0; transform: translateY(18px); }
   [data-reveal-mask] { clip-path: inset(0 0 100% 0); }
 
   /* Failsafe, armed by useReveal's setTimeout watchdog. If GSAP has not
-     revealed the page within 1.6s — because rAF is throttled, the tab
-     opened in the background, or GSAP failed to load — the pre-hide is
+     revealed the page within 1.6s, because rAF is throttled, the tab
+     opened in the background, or GSAP failed to load, the pre-hide is
      abandoned and the content simply shows. A page that hides its own
      copy behind an animation is one failed script away from blank. */
   html[data-reveal-failsafe] [data-reveal] {

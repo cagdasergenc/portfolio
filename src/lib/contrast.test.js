@@ -1,3 +1,5 @@
+// Guards the contrast maths in lib/contrast.js: the WCAG numbers and the
+// glass alpha the whole dark theme is built on.
 import { describe, it, expect } from 'vitest'
 import { relativeLuminance, contrastRatio, composite, minGlassAlpha } from './contrast'
 

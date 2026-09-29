@@ -1,3 +1,21 @@
+/**
+ * One project page, served at /work/:slug.
+ *
+ * Used by: App.jsx
+ * Uses: lib/content.js (all the text and images), components/Band.jsx,
+ *       Prose.jsx, Lightbox.jsx, SEO.jsx, hooks/useReveal.js, routes/NotFound.jsx
+ *
+ * How it works:
+ * - getProject(slug) returns one project built from content/<slug>/index.md.
+ *   An unknown slug renders NotFound rather than an empty page.
+ * - Everything on the page comes off that object: the summary list from the
+ *   summary_* fields, the sidebar links and section ids from the "##"
+ *   headings, the deck card from case-study.pdf. Add a heading to the
+ *   markdown and a sidebar link appears with it.
+ * - Clicks in the prose are caught once, here, in onProseClick. The figures
+ *   arrive as an HTML string so there is no React element per image to bind to.
+ * - Lightbox takes whatever is in `zoom`: a figure, or the PDF from the deck card.
+ */
 import { useCallback, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getProject } from '../lib/content'
@@ -58,7 +76,7 @@ export default function CaseStudy() {
   return (
     <div ref={ref}>
       <SEO
-        title={`${project.title} — Case Study | Çağdaş Ergenç`}
+        title={`${project.title} · Case Study | Çağdaş Ergenç`}
         description={project.tagline}
         path={`/work/${project.slug}`}
       />
@@ -76,7 +94,7 @@ export default function CaseStudy() {
               rel="noreferrer"
               /* Not `.label` here: that class is a plain (unlayered) rule in
                  index.css, so its `color` beats ANY Tailwind color utility on
-                 the same element regardless of class order — measured via
+                 the same element regardless of class order, measured via
                  getComputedStyle, this silently stayed --text-dim before the
                  fix. Typography is reproduced as plain utilities instead so
                  `text-void` actually wins. */
@@ -91,7 +109,7 @@ export default function CaseStudy() {
             </button>
           )}
           {/* No extra `opacity-*` here: `.label` (--text-dim on void) is
-              already 7.19:1 — measured, see the metadata-rail comment below.
+              already 7.19:1, measured, see the metadata-rail comment below.
               Stacking opacity-60 on top of that used to render this span at
               an actual 3.22:1, failing WCAG AA silently. */}
           {project.live_hint && <span className="label">{project.live_hint}</span>}
@@ -130,7 +148,7 @@ export default function CaseStudy() {
         <div className="mt-20 grid gap-16 md:grid-cols-[210px_1fr]">
           {/* Metadata rail per the binding rule (index.css `.glass`): dim text
               fails contrast on the smoked glass fill, so it never sits on a
-              panel — it lives directly on the void ground, where --text-dim
+              panel, it lives directly on the void ground, where --text-dim
               clears 7.19:1. `dt` carries no `opacity-*`: that used to stack on
               top of `.label`'s own --text-dim and render at an actual 3.22:1
               (measured via getComputedStyle), quietly contradicting this very
@@ -164,10 +182,10 @@ export default function CaseStudy() {
               <button>, so this adds no interactive surface of its own. */}
           <div onClick={onProseClick}>
             {project.sections.map((s) => {
-              // Insight is the punctuation beat: in Lit Paper the ground is
+              // Insight is the punctuation beat. On a light ground this band
               // light and this band goes near-black. Here the ground is
               // ALREADY near-black (--color-void), so the same dark band would
-              // sit flush against the page and disappear — no error, just a
+              // sit flush against the page and disappear, no error, just a
               // section that silently stops reading as distinct. The fix is
               // to invert the other way: this band goes to --text (near-white)
               // with void text on it, so it punctuates a dark page the same

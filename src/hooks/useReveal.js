@@ -1,3 +1,14 @@
+/**
+ * Fades sections in as they enter the viewport.
+ *
+ * Used by: components/About.jsx, Contact.jsx, WebBand.jsx, routes/CaseStudy.jsx
+ * Uses: GSAP and ScrollTrigger
+ *
+ * How it works: call it with a ref to a container and every [data-reveal]
+ * inside animates once on entry. Nothing pins, scrubs or takes over the
+ * scroll. Under prefers-reduced-motion it does nothing at all and the CSS
+ * leaves the elements visible, so no content depends on the animation running.
+ */
 import { useLayoutEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -6,12 +17,12 @@ gsap.registerPlugin(ScrollTrigger)
 
 /**
  * Reveals [data-reveal] and [data-reveal-mask] descendants as they enter.
- * Entry only — nothing pins, nothing scrubs, nothing hijacks the scroll.
+ * Entry only, nothing pins, nothing scrubs, nothing hijacks the scroll.
  *
  * A [data-reveal] element may carry `data-reveal-delay="0.1"` for a small
  * per-element stagger without a timeline (three elements don't justify one).
  *
- * No-ops entirely under prefers-reduced-motion: reduce — the matching CSS
+ * No-ops entirely under prefers-reduced-motion: reduce, the matching CSS
  * pre-hide rule in index.css is scoped to the same query, so a
  * reduced-motion visitor is simply never hidden in the first place.
  */
@@ -19,7 +30,7 @@ export function useReveal(scope) {
   useLayoutEffect(() => {
     /**
      * Watchdog. The pre-hide CSS sets opacity:0 and waits for GSAP, which
-     * runs on requestAnimationFrame — so anything that stops rAF (a page
+     * runs on requestAnimationFrame, so anything that stops rAF (a page
      * opened in a background tab, a throttled renderer, GSAP failing to
      * load at all) leaves the entire page permanently blank.
      *

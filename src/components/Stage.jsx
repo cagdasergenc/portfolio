@@ -9,24 +9,29 @@ import StageCanvas from './StageCanvas'
 import WorkGridFlat from './WorkGridFlat'
 
 /**
- * The persistent stage.
+ * The stage: the first thing on the page, one project filling the viewport,
+ * swapping to the next as you scroll.
  *
- * This is the DNA change. Both worlds were the same organism underneath: a
- * vertically scrolling document of stacked sections, each one eyebrow →
- * heading → content, work presented as a grid of discrete cards. Rails,
- * numerals and smoked glass were decoration on that skeleton, not a
- * replacement for it.
+ * Used by: routes/Home.jsx
+ * Uses: lib/content.js for the projects, lib/activeIndex.js to decide which
+ *       one is active, hooks/useLowFi.js, hooks/useCapsuleRect.js,
+ *       components/StageCanvas.jsx (the WebGL cover), WorkGridFlat.jsx
+ *       (the plain fallback), Glass.jsx
  *
- * Here the page opens ON the work rather than on a statement, and the work
- * never leaves: a viewport-filling stage stays fixed while the page scrolls,
- * and scrolling swaps which project occupies it. The site behaves like a
- * viewer, not a document.
- *
- * It does NOT hijack the scroll. The track is a real element of real height
- * and the stage is `position: sticky` inside it, so the scrollbar, keyboard
- * paging, scroll memory and deep links all behave exactly as the browser
- * intends. Sticky gives the effect; scroll-jacking would only take control
- * away.
+ * How it works:
+ * - The track is a real element several viewports tall and the stage is
+ *   position: sticky inside it. That gives the pinning without touching the
+ *   scrollbar, so keyboard paging, scroll memory and deep links still work.
+ *   Nothing here hijacks scrolling.
+ * - Scroll progress becomes a project index through nextActiveIndex, which
+ *   has a dead zone so a boundary crossed by a hair does not flicker between
+ *   two projects.
+ * - useLowFi decides whether the shader runs at all. On reduced motion, a
+ *   small screen or no WebGL, the stacked WorkGridFlat list renders instead
+ *   and it is a real path, not a broken one.
+ * - useCapsuleRect measures where the title capsule actually sits and hands
+ *   those coordinates to the shader so the glass bends the cover in exactly
+ *   that spot.
  */
 export default function Stage() {
   const projects = getProjects()
@@ -53,7 +58,7 @@ export default function Stage() {
   // depend on cleanup-ordering. React's documented pattern for resetting
   // state in response to a changed dep is to adjust it during render
   // (not in a useEffect, which is one render+commit too late and trips
-  // react-hooks/set-state-in-effect) — see "Resetting state when a prop
+  // react-hooks/set-state-in-effect), see "Resetting state when a prop
   // changes" in the React docs.
   const [readySlug, setReadySlug] = useState(current?.slug)
   if (readySlug !== current?.slug) {
@@ -109,11 +114,11 @@ export default function Stage() {
     return (
       <section id="work" className="shell pb-16 pt-28">
         <div className="band-ticks" aria-hidden="true" />
-        {/* Derived, not written down. This read "I — III" beside a live
+        {/* Derived, not written down. This read "I, III" beside a live
             count of 2 for as long as there were three projects in the
             folder and one of them was a draft. */}
         <div className="mt-5 flex items-baseline justify-between gap-6">
-          <span className="label">{romanise(1)} — {romanise(projects.length)}</span>
+          <span className="label">{romanise(1)} / {romanise(projects.length)}</span>
           <span className="label">{projects.length} {projects.length === 1 ? 'specimen' : 'specimens'}</span>
         </div>
         <hr className="mt-4 border-0 border-t border-white/12" />
@@ -154,17 +159,17 @@ export default function Stage() {
           </div>
         ))}
 
-        {/* Scrims. The dark world assumes light text on a dark ground — an
+        {/* Scrims. The dark world assumes light text on a dark ground, an
             assumption a full-bleed LIGHT cover breaks completely. Measured
             against Pocket Pediatrics' old cream illustration, unprotected
             overlay text sits at 1.09:1 (--text) and 2.30:1 (--text-dim):
-            invisible, and worse than the nav bug on the sibling branch.
+            invisible. That is why the scrims exist at all.
 
             src/lib/contrast.js gives the floors against a blown-out white
             cover, the worst case a photo can present:
               --text      needs void at 0.60
               --text-dim  needs void at 0.84
-            First pass put the metadata row at 0.79 — measured, and short.
+            First pass put the metadata row at 0.79, measured, and short.
             Dim text has a far higher floor than display text, so the bottom
             band is stronger than it looks like it needs to be.
             So the top band runs to 0.86 where the annotation sits and the
@@ -172,7 +177,7 @@ export default function Stage() {
             across the middle so the work itself stays unobstructed.
 
             Fallback scrims. Visible whenever the active project's shader
-            is not yet compositing its own darkening — the brief window
+            is not yet compositing its own darkening, the brief window
             before WebGL/texture is ready, or permanently if createRefractor
             never succeeds. Never both this AND the shader's scrim at once:
             this fades to 0 the instant onCanvasReady(true) fires. */}
@@ -194,7 +199,7 @@ export default function Stage() {
             a mono eyebrow repeating the name already in the nav, under a
             headline long enough to run four lines across the artwork. The
             role now lives in the second line, where it reads as information
-            rather than as a label on a label — and keeping both lines at
+            rather than as a label on a label, and keeping both lines at
             --text (rather than dimming the second) is what lets the top
             scrim be measured against the lower floor and stay light. */}
         <div
@@ -230,7 +235,7 @@ export default function Stage() {
             <Link to={`/work/${current.slug}`} className="group mt-6 inline-block" ref={capsuleRef}>
               {/*
                 Once the shader is compositing this exact capsule (canvasReady),
-                the DOM wrapper must NOT also apply CSS .glass — that would
+                the DOM wrapper must NOT also apply CSS .glass, that would
                 stack a second blur+tint on top of the shader's own tint+rim,
                 the same double-darkening bug class the contrast audit found
                 once already. `Glass` supplies the fallback look before that;

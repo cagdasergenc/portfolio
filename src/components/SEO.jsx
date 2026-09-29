@@ -1,3 +1,14 @@
+/**
+ * Per route title and meta tags.
+ *
+ * Used by: routes/Home.jsx, routes/CaseStudy.jsx, routes/NotFound.jsx, PersonSchema.jsx
+ * Uses: nothing
+ *
+ * How it works: React 19 hoists <title>, <meta> and <link> to <head> from
+ * anywhere in the tree and dedupes them, so no helmet library is needed.
+ * index.html deliberately carries no page specific tags, so each route is the
+ * only source of its own and nothing can silently win over it.
+ */
 export const SITE_URL = 'https://cagdasergenc.com'
 export const SITE_NAME = 'Çağdaş Ergenç'
 

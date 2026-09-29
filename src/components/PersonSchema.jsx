@@ -1,3 +1,14 @@
+/**
+ * JSON-LD telling search engines who this site is about.
+ *
+ * Used by: App.jsx, so it is on every page
+ * Uses: components/SEO.jsx for SITE_URL
+ *
+ * How it works: one static Person object is stringified into a
+ * <script type="application/ld+json">. Google reads JSON-LD anywhere in the
+ * document, so this does not need to reach <head>. Keep the fields in step
+ * with the CV and the About text.
+ */
 import { SITE_URL } from './SEO'
 
 // Google reads JSON-LD anywhere in the document, not only <head> -- no

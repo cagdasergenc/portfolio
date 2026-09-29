@@ -1,17 +1,15 @@
 import { useEffect, useRef } from 'react'
 
 /**
- * The index rail — a fixed tick scale down the right edge marking scroll
- * position in the plate's own notation.
+ * The rail: a fixed tick scale down the right edge showing scroll position.
  *
- * This is one of the four things that make this world structurally distinct
- * from the sibling branch rather than a re-skin of it: Lit Paper is a centred
- * editorial column and has no rail at all.
+ * Used by: routes/Home.jsx
+ * Uses: nothing
  *
- * Decorative by design. It duplicates no navigation and carries no
- * information a sighted visitor cannot get from the page itself, so it is
- * aria-hidden and out of the tab order. Adding it as a second nav would mean
- * two competing ways to reach the same sections.
+ * How it works: 48 ticks, and a scroll listener brightens the ones near the
+ * current position. It is decorative, so it is aria-hidden and out of the tab
+ * order. It repeats no navigation, because a second way to reach the same
+ * sections would just compete with the nav.
  */
 const TICKS = 48
 

@@ -1,3 +1,13 @@
+/**
+ * The About section on the landing page.
+ *
+ * Used by: routes/Home.jsx
+ * Uses: hooks/useReveal.js, src/assets/about.jpg
+ *
+ * How it works: static copy, kept in step with the CV in src/assets/resume.pdf,
+ * which is the source of truth for dates, stack and availability. When the CV
+ * changes, this text and Contact.jsx get checked against it.
+ */
 import { useRef } from 'react'
 import { useReveal } from '../hooks/useReveal'
 

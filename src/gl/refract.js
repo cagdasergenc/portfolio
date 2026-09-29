@@ -1,3 +1,20 @@
+/**
+ * The WebGL renderer behind the stage: uploads a cover image and draws it
+ * through the refraction shader every frame.
+ *
+ * Used by: components/StageCanvas.jsx
+ * Uses: gl/shader.glsl.js for the two shader sources
+ *
+ * How it works:
+ * - createRefractor(canvas, src) sets up the context, compiles the shaders,
+ *   loads the image as a texture and starts a requestAnimationFrame loop.
+ * - It returns handles the React side uses: setCapsule to move the glass,
+ *   setScrims to change the shading, and destroy to release everything.
+ * - Pointer values come in through the CSS variables usePush writes, so the
+ *   shader and the DOM can never disagree about where the pointer is.
+ * - Every failure path returns null instead of throwing, so the caller can
+ *   just keep showing the plain image.
+ */
 import { VERT, FRAG } from './shader.glsl'
 
 function compile(gl, type, src) {
@@ -87,7 +104,7 @@ export function createRefractor(canvas, imageUrl) {
   let capsule = [0.5, 0.82, 0.42, 0.085]
   let scrimTop = [0.52, 0.86, 0.60]
   let scrimBot = [0.56, 0.96, 0.88]
-  let voidRgb = [0.039, 0.039, 0.047] // #0A0A0C — overwritten by setVoidColor before first real render
+  let voidRgb = [0.039, 0.039, 0.047] // #0A0A0C, overwritten by setVoidColor before first real render
 
   return {
     isReady() { return loaded },

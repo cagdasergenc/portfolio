@@ -1,3 +1,22 @@
+/**
+ * The stage's cover image, upgraded to a WebGL surface when the browser can
+ * take it.
+ *
+ * Used by: components/Stage.jsx, one instance per project
+ * Uses: gl/refract.js (the renderer), lib/scrim.js (how dark to shade the
+ *       cover), lib/color.js (CSS colour to shader floats)
+ *
+ * How it works:
+ * - It always renders a plain <img> first, so the largest image on the page
+ *   loads at normal speed and is never waiting on WebGL.
+ * - Once the cover has loaded and the project is active, a <canvas> mounts on
+ *   top, the image is uploaded as a texture, and the img is hidden.
+ * - Each cover is measured on load: measureScrims reads the pixels under the
+ *   headline and the metadata and returns how dark those two bands need to be
+ *   for the text to stay readable. A dark cover therefore never gets painted
+ *   black just because a bright one would need it.
+ * - If anything fails, the img stays visible and the page still works.
+ */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createRefractor } from '../gl/refract'
 import { hexToRgbFloat } from '../lib/color'
@@ -28,14 +47,14 @@ const readRgb = (style, name, fallback) => {
 
 /**
  * One project's background layer on the stage. Renders an <img>
- * immediately and unconditionally — that is what a visitor sees at first
+ * immediately and unconditionally, that is what a visitor sees at first
  * paint regardless of what happens next. Only once WebGL2 initialises AND
  * the cover texture has loaded does a <canvas> mount on top and take over;
  * at that exact moment the canvas is showing the same pixels the <img>
  * was already showing (push is centred, force is 0 until the pointer
  * moves), so the swap is invisible and never delays LCP.
  *
- * Only the ACTIVE project holds a live refractor — inactive projects stay
+ * Only the ACTIVE project holds a live refractor, inactive projects stay
  * plain <img> and never pay for a WebGL context at all.
  */
 export default function StageCanvas({ project, active, capsule, onCanvasReady }) {
@@ -97,7 +116,7 @@ export default function StageCanvas({ project, active, capsule, onCanvasReady })
     const refractor = createRefractor(canvas, project.cover)
     if (!refractor) {
       // WebGL2 unavailable or the shader failed to compile on this GPU.
-      // The <img> underneath is already showing — nothing to fall back
+      // The <img> underneath is already showing, nothing to fall back
       // FROM, there is simply no enhancement this time. canvasLive already
       // defaults false, so this is a no-op in practice, but the lint rule
       // flags the pattern regardless of that.

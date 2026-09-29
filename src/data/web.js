@@ -1,3 +1,13 @@
+/**
+ * The two shops I designed, shown as cards on the landing page.
+ *
+ * Used by: components/WebBand.jsx
+ * Uses: the screenshots in src/assets/web/
+ *
+ * How it works: plain array, no CMS. `note` is the one design decision named
+ * on each card, and each one is readable off the live site itself, so anyone
+ * can check it against the work. Adding a shop here adds a card.
+ */
 import shotDnbDtf from '../assets/web/dabdtf.webp'
 import shotShirtPrint from '../assets/web/shirtprintcenter.webp'
 

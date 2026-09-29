@@ -1,3 +1,5 @@
+// Guards lib/push.js: damping must settle at the same rate at any frame rate,
+// and the field values must stay inside 0..1.
 import { describe, it, expect } from 'vitest'
 import { pointerToField, damp, forceFromVelocity } from './push'
 

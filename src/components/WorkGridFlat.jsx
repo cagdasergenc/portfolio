@@ -1,13 +1,25 @@
+/**
+ * The plain version of the stage: a stacked list of project cards.
+ *
+ * Used by: components/Stage.jsx whenever useLowFi is true, which means
+ *          reduced motion, a small screen, or no WebGL
+ * Uses: components/Glass.jsx
+ *
+ * How it works: same projects, same capsule, no canvas and no scroll pinning.
+ * This is a real path and not an error state, so it gets the same care as the
+ * shader version. CAPSULE_CLASS below is shared with the shader's own capsule
+ * coordinates, so the two stay in the same place.
+ */
 import { Link } from 'react-router-dom'
 import Glass from './Glass'
 
 /**
  * Where the title capsule sits over the media area. Mirrors `uCapsule` in
- * src/gl/refract.js — centre (0.5, 0.82), half-size (0.42, 0.085) in the
+ * src/gl/refract.js, centre (0.5, 0.82), half-size (0.42, 0.085) in the
  * shader's bottom-up UV space (y=1 at the top of the canvas, confirmed by
- * rendering it in Task 4). Converted to CSS distance-from-top that is
+ * rendering it). Converted to CSS distance-from-top that is
  * inset-x 8%, top 9.5%, height 17%. GlassCard reuses this constant so the
- * DOM capsule and the shader's capsule land in the same place — keep the
+ * DOM capsule and the shader's capsule land in the same place, keep the
  * two in sync by hand if either changes.
  */
 export const CAPSULE_CLASS =
@@ -16,7 +28,7 @@ export const CAPSULE_CLASS =
 /**
  * Role, year, the tagline, and the Live flag all read as dim metadata, so
  * per the measured contrast rule (index.css, `.glass`) none of it may sit
- * on the glass capsule — only the title does. It renders below the card on
+ * on the glass capsule, only the title does. It renders below the card on
  * the void ground instead, where `--text-dim` clears 7.19:1 instead of the
  * 2.25:1 it would fail at on glass over a bright cover.
  */
@@ -35,7 +47,7 @@ export function Meta({ project }) {
 
 /**
  * One card: media area with the title capsule on top, metadata below. No
- * refraction — GlassCard falls back to this exact markup when WebGL2 is
+ * refraction, GlassCard falls back to this exact markup when WebGL2 is
  * unavailable or a project has no cover, so the two paths are visually
  * identical apart from the shader.
  *
@@ -52,7 +64,7 @@ export function FlatCard({ project, hidden = false, numeral }) {
       aria-hidden={hidden || undefined}
     >
       {/* The plate numeral sits in the margin, outside the frame, the way a
-          figure is labelled — not as a badge on the artwork. Work is
+          figure is labelled, not as a badge on the artwork. Work is
           catalogued here, not merchandised. */}
       {numeral && (
         <div className="mb-3 flex items-baseline gap-3">
@@ -71,7 +83,7 @@ export function FlatCard({ project, hidden = false, numeral }) {
           />
         ) : (
           // No `p.cover` exists for any project yet. Rather than an empty
-          // box, the slot stays a deliberate dark panel — the title still
+          // box, the slot stays a deliberate dark panel, the title still
           // reads in its capsule, so this never looks broken.
           <div className="h-full w-full border border-white/10" />
         )}
@@ -89,17 +101,16 @@ export function FlatCard({ project, hidden = false, numeral }) {
 }
 
 /**
- * The mobile, reduced-motion and no-WebGL path. Per spec §6.1 this is what
+ * The mobile, reduced-motion and no-WebGL path. This is what
  * most visitors see, so it carries the same layout and proportions as the
- * refracting version — just without the shader.
+ * refracting version, just without the shader.
  */
 const NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII']
 
 /**
- * Specimens on a 12-column plate, deliberately asymmetric — each one sits in
+ * Specimens on a 12-column plate, deliberately asymmetric, each one sits in
  * a different span so the eye steps down the page instead of scanning a
- * uniform 2-up grid. The sibling branch uses exactly that uniform grid; this
- * is MASTER.md §4's second structural rule and one of the reasons the two
+ * uniform 2-up grid. A uniform grid is the obvious version of this, and one
  * worlds do not read as the same page in different colours.
  */
 const PLACEMENT = [

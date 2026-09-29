@@ -1,3 +1,15 @@
+/**
+ * How dark the shading over a cover has to be, measured per cover.
+ *
+ * Used by: components/StageCanvas.jsx
+ * Uses: lib/contrast.js
+ *
+ * How it works: it samples the pixels of the cover where the headline and the
+ * metadata sit, takes a high percentile rather than the average so a bright
+ * patch cannot hide under a dark mean, and asks contrast.js what alpha that
+ * needs. BOUNDS then clamps the answer, so a dark cover is never painted
+ * black and a bright one is never left unreadable.
+ */
 import { minGlassAlpha } from './contrast'
 
 /**

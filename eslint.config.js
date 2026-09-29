@@ -1,3 +1,6 @@
+// Lint rules. Flat config, browser globals, React Hooks rules, and the
+// Fast Refresh plugin so a component file exporting non-components is caught.
+
 import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'

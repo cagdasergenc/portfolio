@@ -2,21 +2,21 @@ import { Link } from 'react-router-dom'
 import Glass from './Glass'
 
 /**
- * A floating glass pill instead of a full-width bar. Lit Paper's nav sat on
- * a solid scrim and still went invisible over one dark section (1.10:1,
- * caught only in final review). Here the ground is dark everywhere, so the
- * risk inverts: a bright cover image passing under the fixed header. The
- * pill uses the same smoked glass measured in index.css — 5.63:1 for --text
- * over the worst case (a cover containing pure white) — so it holds
- * regardless of what scrolls beneath it. Nothing in the pill is dim
- * metadata, so nothing here hits the 2.25:1 failure the binding rule warns
- * about; text is left at its inherited body colour (--text) throughout.
+ * The fixed nav: a floating glass pill, not a full width bar.
  *
- * Every link is its own 44px-high target. The type stays at 12px: the size
- * comes from padding, so the pill reads the same and the tap area is the
- * one a thumb actually needs. Hover tints the target rather than fading the
- * label, which keeps the text at full contrast and shows the real bounds of
- * the thing being pressed.
+ * Used by: App.jsx, so it sits on every page
+ * Uses: components/Glass.jsx for the surface
+ *
+ * How it works:
+ * - The links are hash links to the sections on the home page, so they work
+ *   from a case study page too. App.jsx skips its scroll reset when a URL
+ *   carries a hash, which is what keeps them working.
+ * - The pill floats because the cover images underneath it change colour.
+ *   The glass fill is measured for the worst case, a cover containing pure
+ *   white, and still reads at 5.63:1. Nothing in here is dim text, which
+ *   would not survive that.
+ * - Every link is a 44px tap target. The type stays at 12px and the size
+ *   comes from padding, so it reads small but a thumb still hits it.
  */
 const ITEM = 'inline-flex min-h-11 items-center rounded-pill px-3 transition-colors hover:bg-white/10'
 
@@ -27,7 +27,7 @@ export default function Nav() {
         <Link
           to="/"
           className={`${ITEM} font-display text-lg font-bold`}
-          aria-label="Çağdaş Ergenç — home"
+          aria-label="Çağdaş Ergenç, home"
         >
           <span aria-hidden="true" className="sm:hidden">ÇE</span>
           <span aria-hidden="true" className="hidden sm:inline">Çağdaş Ergenç</span>

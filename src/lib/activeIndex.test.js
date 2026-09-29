@@ -1,3 +1,5 @@
+// Guards lib/activeIndex.js: the dead zone that stops the stage flickering
+// between two projects at a boundary.
 import { describe, it, expect } from 'vitest'
 import { nextActiveIndex } from './activeIndex'
 

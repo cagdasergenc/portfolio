@@ -1,16 +1,14 @@
 /**
- * A measurement band — the section header for this world.
+ * A section header: tick field, index on the left, reading on the right, and
+ * the title under a hairline rule at the foot.
  *
- * Three of MASTER.md §4's structural rules live here, and together they are
- * what stops this reading as the sibling branch with different colours:
+ * Used by: routes/CaseStudy.jsx
+ * Uses: nothing
  *
- *   - a dense tick field divides sections, instead of whitespace alone
- *   - sections carry a plate index (I / II / III) and a right-aligned reading
- *   - the display title sits UNDER a hairline rule at the FOOT of the band,
- *     not above its content
- *
- * Lit Paper sets every section title top-first above a centred column. The
- * inversion is the point.
+ * How it works: takes index, reading, title and children, and wraps them in
+ * one section with its own id so the nav and the sidebar can link to it.
+ * titleAs lets the case study render the title as an h1 while other uses get
+ * an h2, so heading order stays correct on every page.
  */
 export default function Band({ index, reading, title, id, titleAs = 'h2', children, className = '' }) {
   const TitleTag = titleAs

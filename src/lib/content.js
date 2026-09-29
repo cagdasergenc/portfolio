@@ -1,3 +1,24 @@
+/**
+ * The content pipeline: every word and image on a case study page starts here.
+ *
+ * Used by: routes/CaseStudy.jsx and components/Stage.jsx
+ * Uses: marked, plus Vite's import.meta.glob
+ *
+ * How it works:
+ * - It globs content/<slug>/index.md at build time, so there is no CMS and no
+ *   fetch at runtime. The folder name becomes the URL slug.
+ * - parseFrontmatter reads the flat key: value block at the top of the file.
+ * - splitSections cuts the body on "##" headings, so each heading becomes a
+ *   section on the page and a link in the sidebar.
+ * - renderMarkdown turns the body into HTML. Images are rewritten into a
+ *   <button data-zoom> wrapped in a figure, which is what lets CaseStudy open
+ *   the lightbox with one delegated click handler. The image title becomes
+ *   the caption.
+ * - Images and the PDF are resolved through the same glob, so Vite fingerprints
+ *   them and a bare filename in the markdown is all I ever write.
+ * - Anything with draft: true is filtered out here, so it is missing from the
+ *   listing and unreachable at its URL, not just hidden.
+ */
 import { marked } from 'marked'
 
 /**
@@ -46,8 +67,7 @@ export function splitSections(body) {
       continue
     }
 
-    // Lines before the first `##` heading (no `current` yet) are dropped —
-    // intentional: the fixed six-section case-study model has no "intro" slot.
+    // Lines before the first `##` heading (no `current` yet) are dropped, // intentional: the fixed six-section case-study model has no "intro" slot.
     if (current) current.lines.push(line)
   }
   if (current) sections.push({ heading: current.heading, markdown: current.lines.join('\n') })

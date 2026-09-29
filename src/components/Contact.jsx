@@ -1,3 +1,13 @@
+/**
+ * The contact section, and the CV download.
+ *
+ * Used by: routes/Home.jsx
+ * Uses: hooks/useReveal.js, src/assets/resume.pdf
+ *
+ * How it works: the CV is imported as a URL so Vite fingerprints it and the
+ * browser cannot serve a stale copy after I replace the file. The download
+ * attribute sets the filename people end up with on their disk.
+ */
 import { useRef } from 'react'
 import resume from '../assets/resume.pdf?url'
 import { useReveal } from '../hooks/useReveal'

@@ -25,3 +25,6 @@ dist-ssr
 *.sln
 *.sw?
 .impeccable/
+
+# knowledge graph output, local only
+graphify-out/

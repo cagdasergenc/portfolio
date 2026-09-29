@@ -1,3 +1,5 @@
+// Guards the DOM rect to shader capsule conversion, including the y axis flip
+// that CSS and WebGL disagree about.
 import { describe, it, expect } from 'vitest'
 import { rectToCapsule } from './useCapsuleRect'
 

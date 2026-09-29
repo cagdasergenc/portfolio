@@ -1,3 +1,18 @@
+/**
+ * The shell every page shares: routes, the nav, scroll reset and analytics.
+ *
+ * Used by: main.jsx
+ * Uses: routes/Home.jsx, routes/CaseStudy.jsx, routes/NotFound.jsx,
+ *       components/Nav.jsx, components/PersonSchema.jsx, hooks/usePush.js
+ *
+ * How it works:
+ * - Routes maps "/" to Home, "/work/:slug" to CaseStudy, everything else to NotFound.
+ * - ScrollToTop sends a new page to the top, unless the URL carries a #hash.
+ * - TrackPageViews sends one GA4 page_view per route change. gtag itself is
+ *   loaded in index.html, so this only fires if that script is there.
+ * - usePush runs once here for the whole page and writes the pointer values
+ *   that the glass surfaces and the shader both read.
+ */
 import { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { usePush } from './hooks/usePush'

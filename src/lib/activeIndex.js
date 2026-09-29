@@ -1,5 +1,9 @@
 /**
- * Which project should be active, given continuous scroll progress. A
+ * Which project should be active, given continuous scroll progress.
+ *
+ * Used by: components/Stage.jsx
+ * Uses: nothing
+ * A
  * boundary crossed by a hair (ordinary scroll jitter, not real intent)
  * must not flip the result -- doing so retriggers the crossfade before the
  * last one finishes, ghosting two projects together instead of ever

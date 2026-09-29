@@ -1,9 +1,22 @@
+/**
+ * Measures where the title capsule really sits, in the coordinates the shader
+ * uses.
+ *
+ * Used by: components/Stage.jsx
+ * Uses: nothing
+ *
+ * How it works: reads the capsule's DOM rect and the stage's rect, converts to
+ * 0..1 centre and half size, and flips the y axis, because the shader counts
+ * from the bottom and CSS counts from the top. This is the only place that
+ * flip happens. It re-measures on resize and whenever the active project or
+ * the render path changes.
+ */
 import { useEffect, useState } from 'react'
 
 /**
  * DOM rect -> shader-space capsule. Shader y is 1 at the top of the frame,
  * 0 at the bottom (established when the capsule position was first tuned,
- * see src/gl/refract.js) — the opposite of CSS's top-down convention, so
+ * see src/gl/refract.js), the opposite of CSS's top-down convention, so
  * this is the one place that flip happens.
  */
 export function rectToCapsule(capRect, stageRect) {

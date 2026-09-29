@@ -1,3 +1,5 @@
+// Guards lib/scrim.js: a bright cover must get a strong scrim, a dark cover
+// must not be painted black, and both stay inside BOUNDS.
 import { describe, it, expect } from 'vitest'
 import { requiredAlpha } from './scrim'
 import { contrastRatio, composite } from './contrast'

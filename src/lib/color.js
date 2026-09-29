@@ -1,5 +1,9 @@
 /**
- * Hex string -> [r, g, b] as 0..1 floats, for WebGL uniform3f. The one
+ * Hex string -> [r, g, b] as 0..1 floats, for WebGL uniform3f.
+ *
+ * Used by: components/StageCanvas.jsx
+ * Uses: nothing
+ * The one
  * conversion point between a CSS custom property (--color-void, the single
  * source of truth) and the shader, so the two can never drift independently.
  */

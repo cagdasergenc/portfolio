@@ -1,7 +1,20 @@
+/**
+ * The pointer field the whole page reads.
+ *
+ * Used by: App.jsx, once for the entire site
+ * Uses: lib/push.js for the maths
+ *
+ * How it works: on pointer move it writes --push-x, --push-y and --push-force
+ * on <html>. CSS uses them for the glass sheen and the capsule offset, and the
+ * shader reads the same variables, so chrome and glass can never disagree.
+ * The value chases the pointer with damping instead of snapping to it. That
+ * lag is the whole effect: snapping reads as a hover state, lagging reads as a
+ * material.
+ */
 import { useEffect } from 'react'
 import { pointerToField, damp, forceFromVelocity } from '../lib/push'
 
-const LAMBDA = 5.5   // viscosity — lower is thicker
+const LAMBDA = 5.5   // viscosity, lower is thicker
 const CAP = 45       // px/frame at which force saturates
 
 /**

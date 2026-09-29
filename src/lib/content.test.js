@@ -1,3 +1,5 @@
+// Guards lib/content.js: frontmatter parsing, section splitting, and the
+// figure markup that CaseStudy's click handler depends on.
 import { describe, it, expect } from 'vitest'
 import { parseFrontmatter, splitSections, renderMarkdown } from './content'
 

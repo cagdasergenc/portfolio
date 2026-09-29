@@ -1,3 +1,14 @@
+/**
+ * Decides whether the page runs the shader or the plain fallback.
+ *
+ * Used by: components/Stage.jsx
+ * Uses: nothing
+ *
+ * How it works: returns true for reduced motion, screens under 900px, or no
+ * WebGL context. It starts true and only turns false once the checks pass, so
+ * the first paint is never the heavy path. True is not a failure state, it is
+ * the other supported path.
+ */
 import { useEffect, useState } from 'react'
 
 /** True when the 3D path should be skipped: reduced motion, a small

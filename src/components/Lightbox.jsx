@@ -1,13 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
 
 /**
- * One overlay for both jobs: enlarging a figure, and reading a deck.
+ * One overlay doing two jobs: enlarging a figure, and reading a deck PDF.
  *
- * Built on native <dialog>.showModal() rather than a hand-rolled overlay,
- * which is where the accessibility requirements come from for free: focus is
- * trapped inside, the rest of the page goes inert, Escape closes, and the
- * browser restores focus to whatever opened it. The only things left to add
- * are a visible close control and dismissal by backdrop click.
+ * Used by: routes/CaseStudy.jsx, which passes whatever is in its `zoom` state
+ * Uses: nothing
+ *
+ * How it works:
+ * - Built on the native <dialog> element and showModal(). That gives focus
+ *   trapping, an inert page behind it, Escape to close and focus restored to
+ *   whatever opened it, without writing any of that by hand. What is left to
+ *   add is the close button and closing on a backdrop click.
+ * - item.type decides the content: "image" shows the figure, "pdf" embeds the
+ *   deck in an iframe.
+ * - Below 768px the PDF iframe is a postage stamp and iOS Safari only renders
+ *   its first page, so narrow screens get the cover plus a link to open the
+ *   file instead.
  */
 export default function Lightbox({ item, onClose }) {
   const ref = useRef(null)

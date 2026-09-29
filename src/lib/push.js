@@ -1,3 +1,15 @@
+/**
+ * The maths behind the pointer field.
+ *
+ * Used by: hooks/usePush.js
+ * Uses: nothing
+ *
+ * How it works: pointerToField normalises the pointer to 0..1. damp is a frame
+ * rate independent exponential decay, so the settle feels the same at 30fps
+ * and at 120fps. forceFromVelocity turns pointer speed into the 0..1 force the
+ * sheen and the shader read. Kept separate from the hook so it can be tested
+ * without a browser (see push.test.js).
+ */
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
 
 /** Pointer position as a normalised 0..1 field coordinate. */

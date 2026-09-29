@@ -1,7 +1,18 @@
+/**
+ * Renders the HTML that lib/content.js compiled from a case study's markdown.
+ *
+ * Used by: routes/CaseStudy.jsx, once per section
+ * Uses: nothing
+ *
+ * How it works: the markdown is mine, compiled at build time, so injecting it
+ * is safe. All the typography lives in the arbitrary variant classes below
+ * rather than in a plugin, so what a paragraph, a list item or a figure looks
+ * like is visible in one line here.
+ */
 export default function Prose({ html }) {
   return (
     // dangerouslySetInnerHTML is safe here: `html` is markdown authored by
-    // the site owner and compiled at build time by content.js — never user
+    // the site owner and compiled at build time by content.js, never user
     // input at runtime.
     <div
       /* Figures deliberately escape the 62ch measure that paragraphs keep:

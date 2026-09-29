@@ -1,3 +1,15 @@
+/**
+ * The two shaders, as template strings.
+ *
+ * Used by: gl/refract.js
+ * Uses: nothing
+ *
+ * How it works: VERT draws one full screen triangle pair and passes UVs
+ * through. FRAG does the real work: it resamples the cover texture with
+ * displaced coordinates inside the capsule, so the image genuinely bends
+ * instead of being blurred, and it paints the top and bottom scrims that keep
+ * the headline and the metadata readable over any cover.
+ */
 export const VERT = `#version 300 es
 in vec2 aPos;
 out vec2 vUv;
@@ -11,7 +23,7 @@ void main() {
  * displaced UVs, so cover pixels genuinely bend. This is not a blur.
  *
  * The capsule is an SDF rounded box. Refraction strength rises sharply near
- * its edge — that edge gradient is what reads as thickness, the same way a
+ * its edge, that edge gradient is what reads as thickness, the same way a
  * real lens distorts most at its rim.
  */
 export const FRAG = `#version 300 es
@@ -26,7 +38,7 @@ uniform vec2  uPush;      // 0..1 pointer field
 uniform float uForce;     // 0..1 pointer speed
 uniform vec4  uCapsule;   // xy = centre (0..1), zw = half-size (0..1)
 uniform float uRadius;    // corner radius, normalised to width
-uniform vec3  uVoid;       // --color-void, as 0..1 floats — no hardcoded duplicate
+uniform vec3  uVoid;       // --color-void, as 0..1 floats, no hardcoded duplicate
 uniform vec4  uScrimTop;   // height, alpha at band start, alpha at midpoint, unused
 uniform vec4  uScrimBot;   // height, alpha at band start, alpha at midpoint, unused
 uniform float uImageAspect; // cover image's own width/height, for object-fit: cover
@@ -50,7 +62,7 @@ vec2 coverUV(vec2 uv, float canvasAspect, float imageAspect) {
 }
 
 /* Piecewise-linear, matching a 3-stop CSS gradient exactly rather than an
-   eased curve — this is a relocation of existing behaviour, not a redesign
+   eased curve, this is a relocation of existing behaviour, not a redesign
    of it. t is 0 at the band's outer edge, 1 where it has faded to nothing. */
 float scrimAlpha(float t, float a0, float a1) {
   t = clamp(t, 0.0, 1.0);
@@ -88,7 +100,7 @@ void main() {
   vec2 uv = vUv + dir * lens + drag;
   vec3 col = texture(uCover, clamp(coverUV(uv, aspect, uImageAspect), 0.0, 1.0)).rgb;
 
-  // Chromatic split at the rim — subtle, and only where refraction is strong.
+  // Chromatic split at the rim, subtle, and only where refraction is strong.
   float ca = (1.0 - edge) * inside * 0.006;
   col.r = texture(uCover, clamp(coverUV(uv + dir * ca, aspect, uImageAspect), 0.0, 1.0)).r;
   col.b = texture(uCover, clamp(coverUV(uv - dir * ca, aspect, uImageAspect), 0.0, 1.0)).b;

@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { webWork } from '../data/web'
 import { useReveal } from '../hooks/useReveal'
+import { track } from '../lib/analytics'
 
 /**
  * The shops section on the landing page.
@@ -27,6 +28,7 @@ export default function WebBand() {
               href={w.href}
               target="_blank"
               rel="noreferrer"
+              onClick={() => track('shop_visit', { shop: w.title })}
               className="group block rounded-panel transition-opacity hover:opacity-95"
             >
               <div className="specimen relative aspect-[16/9] w-full overflow-hidden bg-white/5">

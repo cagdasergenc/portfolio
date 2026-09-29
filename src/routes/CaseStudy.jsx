@@ -16,7 +16,7 @@
  *   arrive as an HTML string so there is no React element per image to bind to.
  * - Lightbox takes whatever is in `zoom`: a figure, or the PDF from the deck card.
  */
-import { useCallback, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getProject } from '../lib/content'
 import SEO from '../components/SEO'
@@ -24,6 +24,7 @@ import Band from '../components/Band'
 import Prose from '../components/Prose'
 import Lightbox from '../components/Lightbox'
 import { useReveal } from '../hooks/useReveal'
+import { track } from '../lib/analytics'
 import NotFound from './NotFound'
 
 const META = ['role', 'context', 'year', 'duration', 'team', 'tools']
@@ -52,19 +53,22 @@ export default function CaseStudy() {
   // content.js as an HTML string, so there is no React element to attach a
   // handler to. Every zoomable figure ships as a real <button data-zoom>,
   // which keeps this a plain click on a focusable control.
-  const onProseClick = useCallback((e) => {
+  // Plain functions, not useCallback: the React Compiler memoizes these
+  // itself, and hand-written deps here only fight it.
+  const onProseClick = (e) => {
     const btn = e.target.closest?.('[data-zoom]')
     if (!btn) return
     setZoom({ type: 'image', src: btn.dataset.zoom, alt: btn.dataset.zoomAlt, title: btn.dataset.zoomAlt })
-  }, [])
+  }
 
-  const closeZoom = useCallback(() => setZoom(null), [])
+  const closeZoom = () => setZoom(null)
 
   if (!project) return <NotFound />
 
   const summary = SUMMARY.filter(([, key]) => project[key])
   const deckLabel = project.pdfPages ? `Preview the deck (${project.pdfPages} pages)` : 'Preview the deck'
-  const openDeck = () =>
+  const openDeck = () => {
+    track('deck_preview', { project: project.slug })
     setZoom({
       type: 'pdf',
       src: project.pdf,
@@ -72,6 +76,7 @@ export default function CaseStudy() {
       pages: project.pdfPages,
       title: `${project.title} deck`,
     })
+  }
 
   return (
     <div ref={ref}>
@@ -92,6 +97,7 @@ export default function CaseStudy() {
               href={project.live_url}
               target="_blank"
               rel="noreferrer"
+              onClick={() => track('open_live_app', { project: project.slug })}
               /* Not `.label` here: that class is a plain (unlayered) rule in
                  index.css, so its `color` beats ANY Tailwind color utility on
                  the same element regardless of class order, measured via

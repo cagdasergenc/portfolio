@@ -29,17 +29,35 @@
          (rather than waiting for the CSS @font-face to be discovered) trims
          one round-trip off first paint of that text. -->
     <link rel="preload" href="/src/fonts/Switzer-Variable.woff2" as="font" type="font/woff2" crossorigin />
-    <!-- GA4. send_page_view disabled here on purpose: this config call only
-         ever fires once (this file loads once), but React Router changes
-         the URL many times without a reload. TrackPageViews in App.jsx
-         sends every page_view instead, including the first, so there's
-         exactly one place doing it instead of two systems disagreeing. -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MEDT993FR5"></script>
+    <!-- Only the live portfolio contributes analytics. Route page views are
+         sent by App; local development and deployment previews stay out. -->
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-      gtag('config', 'G-MEDT993FR5', { send_page_view: false });
+      if (['cagdasergenc.com', 'www.cagdasergenc.com'].includes(location.hostname)) {
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        const campaign = {};
+        const query = new URLSearchParams(location.search);
+        // Keep attribution labels without forwarding the rest of the URL.
+        // Campaign links use short lowercase slugs, never names or emails.
+        for (const [parameter, field] of Object.entries({
+          utm_source: 'campaign_source',
+          utm_medium: 'campaign_medium',
+          utm_campaign: 'campaign_name',
+        })) {
+          const value = query.get(parameter);
+          if (value && /^[a-z][a-z0-9_-]{0,63}$/.test(value)) campaign[field] = value;
+        }
+        window.gtag('config', 'G-MEDT993FR5', {
+          send_page_view: false,
+          page_location: location.origin + location.pathname,
+          ...campaign,
+        });
+        const analyticsScript = document.createElement('script');
+        analyticsScript.async = true;
+        analyticsScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-MEDT993FR5';
+        document.head.appendChild(analyticsScript);
+      }
     </script>
   </head>
   <body>

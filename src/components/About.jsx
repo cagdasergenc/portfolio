@@ -49,28 +49,27 @@ export default function About() {
           {/* Kept in step with the master CV (src/assets/resume.pdf), which
               is the source of truth for dates, stack, and availability. */}
           <p data-reveal>
-            Five years of design work across Turkey, Poland, Germany and
-            Spain. Most of it industrial design. I moved to digital UI/UX in
-            2023 and have worked at it since. MA in Strategic Design
-            Management at IED Barcelona, finishing December 2026.
+            I’m a Product / UX designer focused on research, interface design,
+            and working prototypes. Recent work includes Shopify and
+            WooCommerce journeys, Figma component libraries, and a caregiver
+            app tested with 14 participants. I’m completing an MA in Strategic
+            Design Management at IED Barcelona in December 2026.
           </p>
-          {/* Deliberately not a second copy of the hero line. The stage
-              states the positioning; this is the detail behind it. */}
+          {/* The intro states the positioning; this is the detail behind it. */}
           <p data-reveal>
-            Day to day: user interviews and usability testing, Figma
-            component systems, and builds in Flutter or React when a static
-            screen cannot answer the question.
-          </p>
-          <p data-reveal>
-            AI is part of the process. I run problems through Claude Code
-            before opening a design tool, and prototype with Lovable to get
-            to something that runs. I read frontend and backend code and can
-            explain it to people who do not.
+            I start with interviews, usability tests, and task flows, then
+            prototype in Figma, Flutter, or React when an idea needs to be
+            tested in use.
           </p>
           <p data-reveal>
-            Right now I am the designer on CBI, a program run by Esade, UPC
-            and IED Barcelona, working a challenge through a quantum
-            computing lens.
+            I use AI tools to explore and prototype faster, then check the
+            results with people. Working with code helps me discuss design
+            decisions and implementation constraints with developers.
+          </p>
+          <p data-reveal>
+            I’m currently the designer on a Challenge Based Innovation team
+            with Esade, UPC and IED Barcelona, exploring a problem through a
+            quantum-computing lens.
           </p>
           <p data-reveal>
             Based in Barcelona. Available now, with some constraints until

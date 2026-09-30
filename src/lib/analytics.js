@@ -1,22 +1,30 @@
-/**
- * The one place that talks to GA4.
- *
- * Used by: components/Contact.jsx, WebBand.jsx and routes/CaseStudy.jsx for
- *          the events below. Page views are sent separately in App.jsx.
- * Uses: the gtag function that index.html loads
- *
- * How it works: gtag is missing for anyone blocking analytics, and for
- * everyone during local development, so every call checks first and quietly
- * does nothing. Nothing on the site depends on the return value.
- *
- * The five events worth counting, and why:
- * - cv_download      someone took the CV away with them
- * - open_live_app    someone went to try the Pocket Pediatrics demo
- * - deck_preview     someone opened a case study PDF
- * - shop_visit       someone clicked through to a shop I designed
- * - email_click      someone started writing to me
- */
-export function track(event, params = {}) {
-  if (typeof window === 'undefined' || typeof window.gtag !== 'function') return
-  window.gtag('event', event, params)
+const LIVE_HOSTS = new Set(['cagdasergenc.com', 'www.cagdasergenc.com'])
+const ACTIONS = new Set(['case_study_select', 'cv_download', 'email_click', 'linkedin_click', 'open_live_app', 'deck_preview', 'shop_visit'])
+
+export function isLiveHost(hostname) {
+  return LIVE_HOSTS.has(hostname)
 }
+
+// Never send arbitrary link URLs, email addresses, query strings or free text.
+export function actionFromElement(element) {
+  const { analytics, placement, project } = element.dataset
+  if (!ACTIONS.has(analytics)) return null
+  return {
+    name: analytics,
+    parameters: {
+      placement: placement || 'page',
+      ...(project ? { project: project } : {}),
+    },
+  }
+}
+
+export function trackEvent(name, parameters = {}) {
+  if (!isLiveHost(window.location.hostname) || typeof window.gtag !== 'function') return
+  window.gtag('event', name, {
+    page_location: window.location.origin + window.location.pathname,
+    ...parameters,
+  })
+}
+
+// Preserve the existing API used by the shop links.
+export const track = trackEvent

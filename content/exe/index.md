@@ -1,5 +1,8 @@
 ---
 title: EXE
+card_type: AI interaction · Concept brief
+card_description: Designing where an AI assistant can act, when it needs permission, and how people stay in control. Solo concept and interaction design.
+card_evidence: 21-page safety brief · Proposed interactions, not user-tested
 tagline: A life-admin agent for freelancers that executes instead of just suggesting
 role: Concept, AI Safety Design, Interaction Design
 context: IED Barcelona, MA design brief

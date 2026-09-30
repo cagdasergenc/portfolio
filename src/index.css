@@ -293,6 +293,53 @@ body {
   border-radius: var(--radius-pill);
 }
 
+/* The first screen prioritises role, proof and the next action. All text
+   sits on solid ground; the product image keeps its original brightness. */
+@layer components {
+  .portfolio-intro { padding-top: 8rem; padding-bottom: 4rem; }
+  .intro-layout { display: grid; gap: 2.5rem; align-items: center; }
+  .intro-title { max-width: 13ch; margin-top: 1.1rem; font-size: clamp(2.65rem, 4.5vw, 4.65rem); line-height: 1.02; }
+  .intro-description { max-width: 43ch; margin-top: 1.4rem; font-size: 1.1rem; line-height: 1.65; }
+  .intro-location { margin-top: 1rem; max-width: 45ch; font-size: .9rem; color: var(--color-text-dim); }
+  .intro-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; align-items: center; }
+  .action-primary, .action-secondary { display: inline-flex; align-items: center; justify-content: center; gap: .8rem; min-height: 48px; border-radius: 999px; padding: .7rem 1.15rem; font-size: .88rem; line-height: 1.4; font-weight: 600; }
+  .action-primary { background: var(--color-text); color: var(--color-void); border: 1px solid var(--color-text); }
+  .action-secondary { border: 1px solid rgb(255 255 255 / .28); color: var(--color-text); }
+  .action-primary:hover { background: #dcd9ed; border-color: #dcd9ed; }
+  .action-secondary:hover { background: rgb(255 255 255 / .09); }
+  .intro-proof { border-left: 2px solid #bfb0dc; padding-left: 1rem; max-width: 49ch; margin-top: 1.7rem; font-size: .83rem; line-height: 1.65; color: var(--color-text-dim); }
+  .intro-proof strong { color: var(--color-text); font-weight: 600; }
+  .featured-visual { display: block; overflow: hidden; border: 1px solid rgb(255 255 255 / .16); border-radius: 24px; background: #151019; }
+  .featured-visual img { display: block; width: 100%; aspect-ratio: 1.18; object-fit: cover; object-position: 72% center; }
+  .featured-caption { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: #151019; font-size: .95rem; }
+  .selected-work { margin-top: 3rem; }
+  .selected-heading { display: flex; align-items: center; justify-content: space-between; padding-bottom: .75rem; border-bottom: 1px solid rgb(255 255 255 / .2); }
+  .project-choices { display: grid; gap: 1.5rem; margin-top: 1rem; }
+  .project-choice { display: flex; flex-direction: column; height: 100%; padding: 1rem 0 1.5rem; border-bottom: 1px solid rgb(255 255 255 / .2); }
+  .project-choice-top { display: flex; justify-content: space-between; gap: 1rem; }
+  .project-choice h3 { margin-top: .65rem; font-size: 1.8rem; }
+  .project-choice p { margin-top: .75rem; max-width: 54ch; color: var(--color-text-dim); font-size: .96rem; line-height: 1.65; }
+  .project-proof { margin-top: .9rem; font-size: .78rem; color: #d2c4e6; }
+  .project-read { display: block; margin-top: 1rem; font-size: .85rem; text-decoration: underline; text-underline-offset: 5px; }
+  .project-choice:hover h3 { color: #d2c4e6; }
+  .case-contact { margin-top: 5rem; padding-top: 2rem; border-top: 1px solid rgb(255 255 255 / .2); }
+  .case-contact h2 { font-size: clamp(1.75rem, 3vw, 2.5rem); margin-top: 1rem; }
+  .case-contact > p:not(.label) { margin-top: 1rem; color: var(--color-text-dim); }
+  @media (min-width: 900px) {
+    .intro-layout { grid-template-columns: 1.1fr 1fr; gap: 3.5rem; }
+    .project-choices { grid-template-columns: 1fr 1fr; gap: 3.5rem; }
+  }
+  @media (max-width: 599px) {
+    .portfolio-intro { padding-top: 7.5rem; }
+    .intro-copy > .label { font-size: 10px; letter-spacing: .04em; }
+    .intro-title { font-size: 2.75rem; }
+    .intro-actions { gap: .65rem; }
+    .intro-proof { margin-top: 1.35rem; }
+    .featured-visual img { aspect-ratio: 1.35; }
+    .selected-work { margin-top: 2rem; }
+  }
+}
+
 /* Surfaces the browser draws, which otherwise ship with defaults belonging
    to no design system: a blue selection, a light scrollbar track, and a
    text caret that is not this palette. */

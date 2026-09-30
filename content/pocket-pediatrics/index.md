@@ -1,5 +1,8 @@
 ---
 title: Pocket Pediatrics
+card_type: Healthcare · Working prototype
+card_description: Helping parents understand a child's care between appointments. My part: research synthesis, journey mapping, UX flows, and the working build.
+card_evidence: Team study: 14 caregivers · 5 flows · Sharing rated 4.8/5
 tagline: Cognitive load is the real stressor for caregivers of medically complex children
 role: AI Prototyping & Build, UX Design, Data Analysis
 context: IED Barcelona with Fujitsu

@@ -24,8 +24,9 @@ import Band from '../components/Band'
 import Prose from '../components/Prose'
 import Lightbox from '../components/Lightbox'
 import { useReveal } from '../hooks/useReveal'
-import { track } from '../lib/analytics'
 import NotFound from './NotFound'
+import resume from '../assets/resume.pdf?url'
+import { trackEvent } from '../lib/analytics'
 
 const META = ['role', 'context', 'year', 'duration', 'team', 'tools']
 
@@ -53,8 +54,6 @@ export default function CaseStudy() {
   // content.js as an HTML string, so there is no React element to attach a
   // handler to. Every zoomable figure ships as a real <button data-zoom>,
   // which keeps this a plain click on a focusable control.
-  // Plain functions, not useCallback: the React Compiler memoizes these
-  // itself, and hand-written deps here only fight it.
   const onProseClick = (e) => {
     const btn = e.target.closest?.('[data-zoom]')
     if (!btn) return
@@ -68,7 +67,7 @@ export default function CaseStudy() {
   const summary = SUMMARY.filter(([, key]) => project[key])
   const deckLabel = project.pdfPages ? `Preview the deck (${project.pdfPages} pages)` : 'Preview the deck'
   const openDeck = () => {
-    track('deck_preview', { project: project.slug })
+    trackEvent('deck_preview', { project: project.slug })
     setZoom({
       type: 'pdf',
       src: project.pdf,
@@ -95,9 +94,11 @@ export default function CaseStudy() {
           {project.live_url && (
             <a
               href={project.live_url}
+              data-analytics="open_live_app"
+              data-project={project.slug}
+              data-placement="case_study"
               target="_blank"
               rel="noreferrer"
-              onClick={() => track('open_live_app', { project: project.slug })}
               /* Not `.label` here: that class is a plain (unlayered) rule in
                  index.css, so its `color` beats ANY Tailwind color utility on
                  the same element regardless of class order, measured via
@@ -247,7 +248,16 @@ export default function CaseStudy() {
           </div>
         </div>
 
-        <Link to="/#work" className="label mt-24 inline-block py-2 underline underline-offset-4">All work</Link>
+        <div className="case-contact">
+          <p className="label">Work with me</p>
+          <h2>Looking for a Product / UX designer?</h2>
+          <p>I’m based in Barcelona and open to roles across the EU.</p>
+          <div className="intro-actions">
+            <a className="action-primary" href="mailto:cagdasergencc@gmail.com" data-analytics="email_click" data-placement="case_study">Get in touch ↗</a>
+            <a className="action-secondary" href={resume} download="Cagdas-Ergenc-CV.pdf" data-analytics="cv_download" data-placement="case_study">Download CV ↓</a>
+            <Link to="/#work" className="action-secondary">All work →</Link>
+          </div>
+        </div>
       </Band>
 
       <Lightbox item={zoom} onClose={closeZoom} />

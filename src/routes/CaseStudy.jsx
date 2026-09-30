@@ -16,7 +16,7 @@
  *   arrive as an HTML string so there is no React element per image to bind to.
  * - Lightbox takes whatever is in `zoom`: a figure, or the PDF from the deck card.
  */
-import { useCallback, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getProject } from '../lib/content'
 import SEO from '../components/SEO'
@@ -54,20 +54,20 @@ export default function CaseStudy() {
   // content.js as an HTML string, so there is no React element to attach a
   // handler to. Every zoomable figure ships as a real <button data-zoom>,
   // which keeps this a plain click on a focusable control.
-  const onProseClick = useCallback((e) => {
+  const onProseClick = (e) => {
     const btn = e.target.closest?.('[data-zoom]')
     if (!btn) return
     setZoom({ type: 'image', src: btn.dataset.zoom, alt: btn.dataset.zoomAlt, title: btn.dataset.zoomAlt })
-  }, [setZoom])
+  }
 
-  const closeZoom = useCallback(() => setZoom(null), [setZoom])
+  const closeZoom = () => setZoom(null)
 
   if (!project) return <NotFound />
 
   const summary = SUMMARY.filter(([, key]) => project[key])
   const deckLabel = project.pdfPages ? `Preview the deck (${project.pdfPages} pages)` : 'Preview the deck'
   const openDeck = () => {
-    trackEvent('deck_open', { project_slug: project.slug })
+    trackEvent('deck_preview', { project: project.slug })
     setZoom({
       type: 'pdf',
       src: project.pdf,
@@ -94,7 +94,7 @@ export default function CaseStudy() {
           {project.live_url && (
             <a
               href={project.live_url}
-              data-analytics="prototype_click"
+              data-analytics="open_live_app"
               data-project={project.slug}
               data-placement="case_study"
               target="_blank"
@@ -253,8 +253,8 @@ export default function CaseStudy() {
           <h2>Looking for a Product / UX designer?</h2>
           <p>I’m based in Barcelona and open to roles across the EU.</p>
           <div className="intro-actions">
-            <a className="action-primary" href="mailto:cagdasergencc@gmail.com" data-analytics="contact_click" data-placement="case_study">Get in touch ↗</a>
-            <a className="action-secondary" href={resume} download="Cagdas-Ergenc-CV.pdf" data-analytics="cv_click" data-placement="case_study">Download CV ↓</a>
+            <a className="action-primary" href="mailto:cagdasergencc@gmail.com" data-analytics="email_click" data-placement="case_study">Get in touch ↗</a>
+            <a className="action-secondary" href={resume} download="Cagdas-Ergenc-CV.pdf" data-analytics="cv_download" data-placement="case_study">Download CV ↓</a>
             <Link to="/#work" className="action-secondary">All work →</Link>
           </div>
         </div>

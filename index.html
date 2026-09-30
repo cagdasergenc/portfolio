@@ -48,14 +48,14 @@
           const value = query.get(parameter);
           if (value && /^[a-z][a-z0-9_-]{0,63}$/.test(value)) campaign[field] = value;
         }
-        window.gtag('config', 'G-P1EHBYG8NY', {
+        window.gtag('config', 'G-MEDT993FR5', {
           send_page_view: false,
           page_location: location.origin + location.pathname,
           ...campaign,
         });
         const analyticsScript = document.createElement('script');
         analyticsScript.async = true;
-        analyticsScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-P1EHBYG8NY';
+        analyticsScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-MEDT993FR5';
         document.head.appendChild(analyticsScript);
       }
     </script>

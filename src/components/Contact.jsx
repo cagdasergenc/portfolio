@@ -31,9 +31,9 @@ export default function Contact() {
         Some constraints on my time until 15 December 2026.
       </p>
       <ul className="mt-12 flex flex-wrap gap-x-10 gap-y-4 text-lg" data-reveal>
-        <li><a className="underline underline-offset-4 decoration-1" data-analytics="contact_click" data-placement="contact" href="mailto:cagdasergencc@gmail.com">cagdasergencc@gmail.com</a></li>
+        <li><a className="underline underline-offset-4 decoration-1" data-analytics="email_click" data-placement="contact" href="mailto:cagdasergencc@gmail.com">cagdasergencc@gmail.com</a></li>
         <li><a className="underline underline-offset-4 decoration-1" data-analytics="linkedin_click" data-placement="contact" href="https://www.linkedin.com/in/cagdas-ergenc" target="_blank" rel="noreferrer">LinkedIn</a></li>
-        <li><a className="underline underline-offset-4 decoration-1" data-analytics="cv_click" data-placement="contact" href={resume} download="Cagdas-Ergenc-CV.pdf">CV (PDF)</a></li>
+        <li><a className="underline underline-offset-4 decoration-1" data-analytics="cv_download" data-placement="contact" href={resume} download="Cagdas-Ergenc-CV.pdf">CV (PDF)</a></li>
       </ul>
     </section>
   )

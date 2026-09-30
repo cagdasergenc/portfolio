@@ -1,5 +1,5 @@
 const LIVE_HOSTS = new Set(['cagdasergenc.com', 'www.cagdasergenc.com'])
-const ACTIONS = new Set(['case_study_select', 'cv_click', 'contact_click', 'linkedin_click', 'prototype_click', 'deck_open'])
+const ACTIONS = new Set(['case_study_select', 'cv_download', 'email_click', 'linkedin_click', 'open_live_app', 'deck_preview', 'shop_visit'])
 
 export function isLiveHost(hostname) {
   return LIVE_HOSTS.has(hostname)
@@ -13,7 +13,7 @@ export function actionFromElement(element) {
     name: analytics,
     parameters: {
       placement: placement || 'page',
-      ...(project ? { project_slug: project } : {}),
+      ...(project ? { project: project } : {}),
     },
   }
 }
@@ -25,3 +25,6 @@ export function trackEvent(name, parameters = {}) {
     ...parameters,
   })
 }
+
+// Preserve the existing API used by the shop links.
+export const track = trackEvent

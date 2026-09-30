@@ -17,7 +17,7 @@ export default function Intro() {
           <p className="intro-location">Based in Barcelona · Open to Product / UX roles across the EU</p>
           <div className="intro-actions">
             <Link className="action-primary" to={`/work/${featured.slug}`} data-analytics="case_study_select" data-project={featured.slug} data-placement="hero">View featured case study <span aria-hidden="true">↗</span></Link>
-            <a className="action-secondary" href={resume} download="Cagdas-Ergenc-CV.pdf" data-analytics="cv_click" data-placement="hero">Download CV <span aria-hidden="true">↓</span></a>
+            <a className="action-secondary" href={resume} download="Cagdas-Ergenc-CV.pdf" data-analytics="cv_download" data-placement="hero">Download CV <span aria-hidden="true">↓</span></a>
           </div>
           <p className="intro-proof"><strong>14 caregivers. 5 tested flows.</strong><br />A working healthcare prototype, developed with a four-designer team at IED Barcelona for a Fujitsu brief.</p>
         </div>

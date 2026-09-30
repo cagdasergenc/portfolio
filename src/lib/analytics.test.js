@@ -15,21 +15,21 @@ describe('portfolio analytics', () => {
   it('sends only deliberate action metadata, excluding email and link queries', () => {
     const link = document.createElement('a')
     link.href = 'mailto:private@example.com?subject=private'
-    link.dataset.analytics = 'contact_click'
+    link.dataset.analytics = 'email_click'
     link.dataset.placement = 'case_study'
-    expect(actionFromElement(link)).toEqual({ name: 'contact_click', parameters: { placement: 'case_study' } })
+    expect(actionFromElement(link)).toEqual({ name: 'email_click', parameters: { placement: 'case_study' } })
     link.dataset.analytics = 'unrecognised_event'
     expect(actionFromElement(link)).toBeNull()
   })
   it('safely handles blocked analytics and sends once when live', () => {
     vi.stubGlobal('window', { location: { hostname: 'cagdasergenc.com' } })
-    expect(() => trackEvent('cv_click')).not.toThrow()
+    expect(() => trackEvent('cv_download')).not.toThrow()
     const gtag = vi.fn()
     vi.stubGlobal('window', { location: { hostname: 'localhost' }, gtag })
-    trackEvent('cv_click')
+    trackEvent('cv_download')
     expect(gtag).not.toHaveBeenCalled()
     vi.stubGlobal('window', { location: { hostname: 'cagdasergenc.com', origin: 'https://cagdasergenc.com', pathname: '/' }, gtag })
-    trackEvent('cv_click', { placement: 'hero' })
-    expect(gtag).toHaveBeenCalledExactlyOnceWith('event', 'cv_click', { page_location: 'https://cagdasergenc.com/', placement: 'hero' })
+    trackEvent('cv_download', { placement: 'hero' })
+    expect(gtag).toHaveBeenCalledExactlyOnceWith('event', 'cv_download', { page_location: 'https://cagdasergenc.com/', placement: 'hero' })
   })
 })

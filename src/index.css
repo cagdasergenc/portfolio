@@ -307,7 +307,9 @@ body {
   .action-secondary { border: 1px solid rgb(255 255 255 / .28); color: var(--color-text); }
   .action-primary:hover { background: #dcd9ed; border-color: #dcd9ed; }
   .action-secondary:hover { background: rgb(255 255 255 / .09); }
-  .intro-proof { border-left: 2px solid #bfb0dc; padding-left: 1rem; max-width: 49ch; margin-top: 1.7rem; font-size: .83rem; line-height: 1.65; color: var(--color-text-dim); }
+  /* Hairline, like every other rule on the page. A thicker coloured bar
+     would be the only one in the stylesheet. */
+  .intro-proof { border-left: 1px solid rgb(255 255 255 / .2); padding-left: 1rem; max-width: 49ch; margin-top: 1.7rem; font-size: .83rem; line-height: 1.65; color: var(--color-text-dim); }
   .intro-proof strong { color: var(--color-text); font-weight: 600; }
   .featured-visual { display: block; overflow: hidden; border: 1px solid rgb(255 255 255 / .16); border-radius: 24px; background: #151019; }
   .featured-visual img { display: block; width: 100%; aspect-ratio: 1.18; object-fit: cover; object-position: 72% center; }

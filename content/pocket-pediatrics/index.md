@@ -9,8 +9,8 @@ context: IED Barcelona with Fujitsu
 year: 2026
 team: 4 designers (Larsen, Bommakanti, Moraschi, Ergenç)
 tools: Figma, Flutter, TypeScript, Supabase, GPT-4o-mini, Whisper
-live_url: https://pocpedv2.netlify.app
-live_hint: tap the Oscar demo account
+live_url: https://pocket-pediatrics.vercel.app
+live_hint: choose the Oscar profile
 pdf_pages: 37
 lead_image: slide-09-start-on-today.webp
 lead_alt: Deck slide, See it in action 1 of 6, Start on Today. Log in as Oscar with one tap and no password, see Martí's day at a glance with the glucose trend, time in range and care plan, and log a reading with its value, time and a note. Three phone screens from the live v2 app show Log in, Today and Add reading.

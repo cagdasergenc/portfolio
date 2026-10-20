@@ -72,8 +72,8 @@ export default function About() {
             quantum-computing lens.
           </p>
           <p data-reveal>
-            Based in Barcelona. Available now, with some constraints until
-            15 December 2026. Open to relocating or remote across the EU.
+            Based in Barcelona. Available from 15 December 2026, once the MA
+            is finished. Open to relocating or remote across the EU.
           </p>
         </div>
       </div>

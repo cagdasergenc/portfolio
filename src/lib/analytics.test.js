@@ -21,6 +21,18 @@ describe('portfolio analytics', () => {
     link.dataset.analytics = 'unrecognised_event'
     expect(actionFromElement(link)).toBeNull()
   })
+  it('passes a document id only when it is a clean slug', () => {
+    const link = document.createElement('a')
+    link.dataset.analytics = 'document_download'
+    link.dataset.project = 'rewheel'
+    link.dataset.file = 'ergenc_cagdas_rewheel_financial_plan'
+    expect(actionFromElement(link)).toEqual({
+      name: 'document_download',
+      parameters: { placement: 'page', project: 'rewheel', file: 'ergenc_cagdas_rewheel_financial_plan' },
+    })
+    link.dataset.file = 'Real Name (final).xlsx'
+    expect(actionFromElement(link).parameters).not.toHaveProperty('file')
+  })
   it('safely handles blocked analytics and sends once when live', () => {
     vi.stubGlobal('window', { location: { hostname: 'cagdasergenc.com' } })
     expect(() => trackEvent('cv_download')).not.toThrow()

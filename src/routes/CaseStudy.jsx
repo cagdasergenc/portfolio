@@ -14,6 +14,8 @@
  *   markdown and a sidebar link appears with it.
  * - Clicks in the prose are caught once, here, in onProseClick. The figures
  *   arrive as an HTML string so there is no React element per image to bind to.
+ * - project.files (from file_N frontmatter) becomes download buttons next to
+ *   the app and deck buttons. They are plain links, so they work without JS.
  * - Lightbox takes whatever is in `zoom`: a figure, or the PDF from the deck card.
  */
 import { useRef, useState } from 'react'
@@ -115,6 +117,27 @@ export default function CaseStudy() {
               {deckLabel}
             </button>
           )}
+          {/* Word and Excel files listed in frontmatter. Plain links with the
+              download attribute: the filename people get is the original,
+              even though the build serves a fingerprinted copy. The file type
+              and size are in the label so nobody opens a 3 MB file blind. */}
+          {project.files.map((f) => (
+            <a
+              key={f.name}
+              href={f.src}
+              download={f.name}
+              data-analytics="document_download"
+              data-project={project.slug}
+              data-file={f.id}
+              data-placement="case_study"
+              className={OUTLINE}
+            >
+              {/* The note and the arrow stay together, so on a phone the label
+                  wraps and "2.7 MB ↓" never splits across two lines. */}
+              {f.label}{f.note ? ' · ' : ' '}
+              <span className="whitespace-nowrap">{f.note ? `${f.note} ` : ''}<span aria-hidden="true">↓</span></span>
+            </a>
+          ))}
           {/* No extra `opacity-*` here: `.label` (--text-dim on void) is
               already 7.19:1, measured, see the metadata-rail comment below.
               Stacking opacity-60 on top of that used to render this span at

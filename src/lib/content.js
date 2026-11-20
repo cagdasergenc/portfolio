@@ -14,8 +14,11 @@
  *   <button data-zoom> wrapped in a figure, which is what lets CaseStudy open
  *   the lightbox with one delegated click handler. The image title becomes
  *   the caption.
- * - Images and the PDF are resolved through the same glob, so Vite fingerprints
- *   them and a bare filename in the markdown is all I ever write.
+ * - Images, the PDF and any Word or Excel files are resolved through the same
+ *   glob, so Vite fingerprints them and a bare filename is all I ever write.
+ * - Downloads are listed in frontmatter as file_1, file_1_label, file_1_note
+ *   (then file_2 ...), and filesFrom turns them into the buttons CaseStudy
+ *   shows at the top of the page.
  * - Anything with draft: true is filtered out here, so it is missing from the
  *   listing and unreachable at its URL, not just hidden.
  */
@@ -108,9 +111,30 @@ export function renderMarkdown(markdown, assets) {
 const RAW = import.meta.glob('/content/*/index.md', {
   query: '?raw', import: 'default', eager: true,
 })
-const ASSETS = import.meta.glob('/content/*/*.{jpg,jpeg,png,webp,pdf}', {
+const ASSETS = import.meta.glob('/content/*/*.{jpg,jpeg,png,webp,pdf,docx,xlsx}', {
   query: '?url', import: 'default', eager: true,
 })
+
+/**
+ * The downloadable files a project lists in frontmatter. A file that is named
+ * but missing from the folder is skipped, so a typo cannot ship a dead button.
+ * `id` is the lowercase filename stem, safe to send to analytics.
+ */
+export function filesFrom(data, assets) {
+  const files = []
+  for (let i = 1; i <= 4; i++) {
+    const name = data[`file_${i}`]
+    if (!name || !assets[name]) continue
+    files.push({
+      name,
+      src: assets[name],
+      label: data[`file_${i}_label`] || name,
+      note: data[`file_${i}_note`] || '',
+      id: name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, ''),
+    })
+  }
+  return files
+}
 
 function slugOf(path) {
   return path.split('/')[2]
@@ -140,6 +164,7 @@ function build(path, raw) {
     // document rather than repeating the project cover.
     deckCover: assets['deck-cover.webp'] ?? assets['deck-cover.jpg'],
     pdfPages: Number(data.pdf_pages) || null,
+    files: filesFrom(data, assets),
     // The one visual that runs immediately under the introduction, named by
     // bare filename in frontmatter the same way in-body images are.
     lead: data.lead_image ? assets[data.lead_image] : undefined,

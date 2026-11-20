@@ -1,7 +1,7 @@
 // Guards lib/content.js: frontmatter parsing, section splitting, and the
 // figure markup that CaseStudy's click handler depends on.
 import { describe, it, expect } from 'vitest'
-import { parseFrontmatter, splitSections, renderMarkdown } from './content'
+import { parseFrontmatter, splitSections, renderMarkdown, filesFrom } from './content'
 
 describe('parseFrontmatter', () => {
   it('reads flat key/value pairs', () => {
@@ -141,5 +141,19 @@ describe('renderMarkdown', () => {
   it('escapes markup in a caption rather than emitting it', () => {
     const html = renderMarkdown('![alt](cover.jpg "5 < 6 & rising")', assets)
     expect(html).toContain('<figcaption>5 &lt; 6 &amp; rising</figcaption>')
+  })
+})
+
+describe('filesFrom', () => {
+  const assets = { 'Plan_v2.xlsx': '/assets/plan.abc.xlsx', 'Dossier.docx': '/assets/dossier.abc.docx' }
+  it('lists named files in order with labels and a safe id', () => {
+    const data = { file_1: 'Dossier.docx', file_1_label: 'Dossier', file_1_note: 'Word, 2 MB', file_2: 'Plan_v2.xlsx' }
+    expect(filesFrom(data, assets)).toEqual([
+      { name: 'Dossier.docx', src: '/assets/dossier.abc.docx', label: 'Dossier', note: 'Word, 2 MB', id: 'dossier' },
+      { name: 'Plan_v2.xlsx', src: '/assets/plan.abc.xlsx', label: 'Plan_v2.xlsx', note: '', id: 'plan_v2' },
+    ])
+  })
+  it('skips a file that is named but not in the folder', () => {
+    expect(filesFrom({ file_1: 'Missing.docx', file_2: 'Dossier.docx' }, assets).map((f) => f.name)).toEqual(['Dossier.docx'])
   })
 })

@@ -107,7 +107,10 @@ content/pocket-pediatrics/index.md
    fingerprints them. The image title becomes the caption.
 4. Optional: `case-study.pdf` for the deck card, `cover.jpg` for the stage,
    `live_url` and `live_hint` if the project is deployed somewhere.
-5. `draft: true` keeps a project out of the listing and unreachable at its URL
+5. Optional downloads: drop a `.docx` or `.xlsx` in the folder and list it as
+   `file_1: Name.docx`, `file_1_label: Thesis dossier`, `file_1_note: Word, 2 MB`
+   (up to `file_4`). Each becomes a download button at the top of the page.
+6. `draft: true` keeps a project out of the listing and unreachable at its URL
    until it is ready.
 
 Rules I keep for the content itself: real alt text on every image, images 2000px

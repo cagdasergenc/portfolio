@@ -8,6 +8,12 @@ team: Solo thesis project
 tools: Figma, Flutter web, Firebase, AI coding tools
 live_url: https://rewheel.vercel.app
 live_hint: demo data only, no real payments
+file_1: Ergenc_Cagdas_Rewheel_Dossier_Draft.docx
+file_1_label: Thesis dossier, draft
+file_1_note: Word, 2.7 MB
+file_2: Ergenc_Cagdas_Rewheel_Financial_Plan.xlsx
+file_2_label: Financial plan
+file_2_note: Excel, 0.3 MB
 lead_image: slide-07-prototype.webp
 lead_alt: Deck slide, Tuesday night again, with Rewheel. Four phone screens from the live app follow one night. 21:40 Marc posts a photo of the bike without its wheel. 22:05 two offers, wheel included, one can come at 07:15. 07:15 the mechanic fits a new wheel at the bike. 08:15 they ride to school. A line below reads: Standard, within 48 hours. Next morning, +€7. Within 3 hours, +€15. The mechanic keeps 60% of the extra.
 lead_caption: Marc's night in the live prototype. A fault posted at 21:40, two offers by 22:05, a mechanic at the bike at 07:15, school at 08:15. Demo data.
@@ -99,6 +105,8 @@ Fixing the bike is easy. **Getting it fixed is the hard part.**
 - A rider pays **€66** on an average first job. €36 goes to the mechanic, €15 to parts, €9 stays with Rewheel, €6 covers VAT and costs.
 - Winning one rider costs about **€24** in marketing. That rider leaves about **€27** over three years, so **€1.15** back for every €1.
 - It only works if riders come back through the app and bring friends.
+
+Every number here comes from my financial plan: three cases, the assumptions and the evidence behind each one. It is linked at the top of this page.
 
 ![Deck slide, A rider pays 66 euros. About 9 euros stays with Rewheel. A bar splits the 66 euros: 36 mechanic, 15 parts, 9 Rewheel keeps, 6 VAT and costs. 24 euros of marketing to win one new rider, 27 euros kept from that rider over three years, 1.15 euros back for every 1 euro of marketing.](slide-09-the-money.webp "Every number is an assumption. No rider has paid yet.")
 

@@ -1,5 +1,5 @@
 const LIVE_HOSTS = new Set(['cagdasergenc.com', 'www.cagdasergenc.com'])
-const ACTIONS = new Set(['case_study_select', 'cv_download', 'email_click', 'linkedin_click', 'open_live_app', 'deck_preview', 'shop_visit'])
+const ACTIONS = new Set(['case_study_select', 'cv_download', 'email_click', 'linkedin_click', 'open_live_app', 'deck_preview', 'shop_visit', 'document_download'])
 
 export function isLiveHost(hostname) {
   return LIVE_HOSTS.has(hostname)
@@ -7,13 +7,15 @@ export function isLiveHost(hostname) {
 
 // Never send arbitrary link URLs, email addresses, query strings or free text.
 export function actionFromElement(element) {
-  const { analytics, placement, project } = element.dataset
+  const { analytics, placement, project, file } = element.dataset
   if (!ACTIONS.has(analytics)) return null
   return {
     name: analytics,
     parameters: {
       placement: placement || 'page',
       ...(project ? { project: project } : {}),
+      // A lowercase slug the build made from the filename, never the raw name.
+      ...(file && /^[a-z][a-z0-9_]{0,63}$/.test(file) ? { file } : {}),
     },
   }
 }

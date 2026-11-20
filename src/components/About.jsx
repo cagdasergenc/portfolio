@@ -67,9 +67,9 @@ export default function About() {
             decisions and implementation constraints with developers.
           </p>
           <p data-reveal>
-            I’m currently the designer on a Challenge Based Innovation team
-            with Esade, UPC and IED Barcelona, exploring a problem through a
-            quantum-computing lens.
+            I’m currently one of two designers on a Challenge Based Innovation
+            team with Esade, UPC and IED Barcelona, exploring a problem
+            through a quantum-computing lens.
           </p>
           <p data-reveal>
             Based in Barcelona. Available from 15 December 2026, once the MA

@@ -14,8 +14,9 @@
  *   markdown and a sidebar link appears with it.
  * - Clicks in the prose are caught once, here, in onProseClick. The figures
  *   arrive as an HTML string so there is no React element per image to bind to.
- * - project.files (from file_N frontmatter) becomes download buttons next to
- *   the app and deck buttons. They are plain links, so they work without JS.
+ * - A Downloads row sits under the app and deck buttons: the deck PDF first,
+ *   then project.files (the file_N frontmatter). They are plain links, so they
+ *   work without JS.
  * - Lightbox takes whatever is in `zoom`: a figure, or the PDF from the deck card.
  */
 import { useRef, useState } from 'react'
@@ -67,6 +68,18 @@ export default function CaseStudy() {
   if (!project) return <NotFound />
 
   const summary = SUMMARY.filter(([, key]) => project[key])
+  // The deck PDF leads, then the Word and Excel files. Same shape as
+  // project.files so one block of markup renders all of them.
+  const downloads = [
+    ...(project.pdf ? [{
+      name: `Cagdas-Ergenc-${project.title.replace(/\s+/g, '-')}-deck.pdf`,
+      src: project.pdf,
+      label: 'The deck',
+      note: ['PDF', project.pdfPages && `${project.pdfPages} pages`, project.pdf_size].filter(Boolean).join(', '),
+      id: `${project.slug.replace(/-/g, '_')}_deck`,
+    }] : []),
+    ...project.files,
+  ]
   const deckLabel = project.pdfPages ? `Preview the deck (${project.pdfPages} pages)` : 'Preview the deck'
   const openDeck = () => {
     trackEvent('deck_preview', { project: project.slug })
@@ -117,33 +130,40 @@ export default function CaseStudy() {
               {deckLabel}
             </button>
           )}
-          {/* Word and Excel files listed in frontmatter. Plain links with the
-              download attribute: the filename people get is the original,
-              even though the build serves a fingerprinted copy. The file type
-              and size are in the label so nobody opens a 3 MB file blind. */}
-          {project.files.map((f) => (
-            <a
-              key={f.name}
-              href={f.src}
-              download={f.name}
-              data-analytics="document_download"
-              data-project={project.slug}
-              data-file={f.id}
-              data-placement="case_study"
-              className={OUTLINE}
-            >
-              {/* The note and the arrow stay together, so on a phone the label
-                  wraps and "2.7 MB ↓" never splits across two lines. */}
-              {f.label}{f.note ? ' · ' : ' '}
-              <span className="whitespace-nowrap">{f.note ? `${f.note} ` : ''}<span aria-hidden="true">↓</span></span>
-            </a>
-          ))}
           {/* No extra `opacity-*` here: `.label` (--text-dim on void) is
               already 7.19:1, measured, see the metadata-rail comment below.
               Stacking opacity-60 on top of that used to render this span at
               an actual 3.22:1, failing WCAG AA silently. */}
           {project.live_hint && <span className="label">{project.live_hint}</span>}
         </div>
+
+        {/* Everything a visitor can take away, in one row: the deck PDF and any
+            Word or Excel files listed in frontmatter. Plain links with the
+            download attribute, so the filename people get is a readable one
+            even though the build serves a fingerprinted copy. The type and size
+            are in each label so nobody opens a 12 MB file blind. */}
+        {downloads.length > 0 && (
+          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3">
+            <span className="label">Downloads</span>
+            {downloads.map((f) => (
+              <a
+                key={f.name}
+                href={f.src}
+                download={f.name}
+                data-analytics="document_download"
+                data-project={project.slug}
+                data-file={f.id}
+                data-placement="case_study"
+                className={OUTLINE}
+              >
+                {/* The note and the arrow stay together, so on a phone the
+                    label wraps and "2.7 MB ↓" never splits across two lines. */}
+                {f.label}{f.note ? ' · ' : ' '}
+                <span className="whitespace-nowrap">{f.note ? `${f.note} ` : ''}<span aria-hidden="true">↓</span></span>
+              </a>
+            ))}
+          </div>
+        )}
 
         {summary.length > 0 && (
           <dl className="mt-16 grid gap-x-12 gap-y-8 border-t border-white/12 pt-10 md:grid-cols-2" data-reveal>
@@ -264,7 +284,20 @@ export default function CaseStudy() {
                       PDF{project.pdfPages ? ` · ${project.pdfPages} pages` : ''} · landscape
                     </p>
                   </div>
-                  <button type="button" onClick={openDeck} className={SOLID}>Preview PDF</button>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <button type="button" onClick={openDeck} className={SOLID}>Preview PDF</button>
+                    <a
+                      href={project.pdf}
+                      download={downloads[0].name}
+                      data-analytics="document_download"
+                      data-project={project.slug}
+                      data-file={downloads[0].id}
+                      data-placement="deck_card"
+                      className={OUTLINE}
+                    >
+                      Download <span aria-hidden="true">↓</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             )}

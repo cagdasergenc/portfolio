@@ -19,7 +19,7 @@ Tracking loads only on cagdasergenc.com and www.cagdasergenc.com. Local developm
 | open_live_app | Case-study live-app link | placement, project | Existing name preserved |
 | deck_preview | Case-study deck preview control | project | Existing name preserved |
 | shop_visit | Shop link | shop | Existing tracking preserved |
-| document_download | Download button for a Word or Excel file on a case study | placement, project, file | Record of interest in the detail behind a case study. Named document_download because GA4's built-in file_download event already fires for docx and xlsx links; this one adds the project and a clean file id |
+| document_download | Download button for a deck PDF, Word or Excel file on a case study, in the Downloads row or on the deck card | placement, project, file | Record of interest in the detail behind a case study. Named document_download because GA4's built-in file_download event already fires for docx and xlsx links; this one adds the project and a clean file id |
 
 Custom action events include a clean current page_location. Standard file_download and outbound click events may also fire for the same interaction; do not sum them with custom events as separate outcomes.
 

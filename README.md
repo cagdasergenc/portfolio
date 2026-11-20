@@ -105,8 +105,10 @@ content/pocket-pediatrics/index.md
 3. Drop images in the same folder and reference them by bare filename,
    `![alt text](01-thing.webp)`. Never write a path. The build resolves and
    fingerprints them. The image title becomes the caption.
-4. Optional: `case-study.pdf` for the deck card, `cover.jpg` for the stage,
-   `live_url` and `live_hint` if the project is deployed somewhere.
+4. Optional: `case-study.pdf` for the deck card (set `pdf_pages` and `pdf_size`,
+   for example `12.4 MB`, so the Downloads button can say what it is),
+   `cover.jpg` for the stage, `live_url` and `live_hint` if the project is
+   deployed somewhere.
 5. Optional downloads: drop a `.docx` or `.xlsx` in the folder and list it as
    `file_1: Name.docx`, `file_1_label: Thesis dossier`, `file_1_note: Word, 2 MB`
    (up to `file_4`). Each becomes a download button at the top of the page.

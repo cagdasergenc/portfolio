@@ -24,6 +24,8 @@ summary_status: Never run with real users. 7 riders surveyed, 1 repair done by m
 card_type: Mobility · Working prototype
 card_description: Getting a bike repaired without losing the week. A mechanic the rider chooses comes to the bike. Solo thesis project, from research to a live app.
 card_evidence: 7 riders surveyed · 1 timed repair · Pilot not yet run
+pdf_size: 7.4 MB
+pdf_pages: 15
 featured: true
 order: 3
 ---

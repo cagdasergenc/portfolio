@@ -8,6 +8,7 @@ role: Concept, AI Safety Design, Interaction Design
 context: IED Barcelona, MA design brief
 year: 2026
 tools: Figma
+pdf_size: 10.4 MB
 pdf_pages: 21
 lead_image: 01-brief-premise.webp
 lead_caption: The opening argument of the brief. A product brief says what to build; an agent brief also has to say how far it may act alone, and what happens when it decides for itself.

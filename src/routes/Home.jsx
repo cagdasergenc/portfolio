@@ -10,7 +10,7 @@ export default function Home() {
     <>
       <SEO
         title="Çağdaş Ergenç · Product & UX Designer"
-        description="Product and UX designer in Barcelona. Explore a healthcare prototype tested with 14 caregivers, an AI interaction concept, and e-commerce design work."
+        description="Product and UX designer in Barcelona. A healthcare prototype tested with 14 caregivers, a bike-repair marketplace, an AI concept, and e-commerce work."
         path="/"
       />
       <Rail />

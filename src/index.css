@@ -318,6 +318,9 @@ body {
   .selected-heading { display: flex; align-items: center; justify-content: space-between; padding-bottom: .75rem; border-bottom: 1px solid rgb(255 255 255 / .2); }
   .project-choices { display: grid; gap: 1.5rem; margin-top: 1rem; }
   .project-choice { display: flex; flex-direction: column; height: 100%; padding: 1rem 0 1.5rem; border-bottom: 1px solid rgb(255 255 255 / .2); }
+  .project-choice-visual { overflow: hidden; margin-bottom: 1rem; border: 1px solid rgb(255 255 255 / .14); border-radius: 14px; background: #151019; transition: border-color .2s ease; }
+  .project-choice-visual img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+  .project-choice:hover .project-choice-visual { border-color: rgb(255 255 255 / .32); }
   .project-choice-top { display: flex; justify-content: space-between; gap: 1rem; }
   .project-choice h3 { margin-top: .65rem; font-size: 1.8rem; }
   .project-choice p { margin-top: .75rem; max-width: 54ch; color: var(--color-text-dim); font-size: .96rem; line-height: 1.65; }

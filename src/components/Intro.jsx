@@ -32,6 +32,14 @@ export default function Intro() {
           {projects.map((project, index) => (
             <li key={project.slug}>
               <Link className="project-choice" to={`/work/${project.slug}`} data-analytics="case_study_select" data-project={project.slug} data-placement="selected_work">
+                {/* Page 1 of the project's PDF, so each card shows the real
+                    document and not only a title. Decorative: the heading
+                    right below names the project, so there is no alt text. */}
+                {project.deckCover && (
+                  <div className="project-choice-visual">
+                    <img src={project.deckCover} alt="" loading="lazy" decoding="async" />
+                  </div>
+                )}
                 <div className="project-choice-top"><span className="label">{String(index + 1).padStart(2, '0')} / {project.card_type || project.role}</span><span aria-hidden="true">↗</span></div>
                 <h3>{project.title}</h3>
                 <p>{project.card_description || project.tagline}</p>
